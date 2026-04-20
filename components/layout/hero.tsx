@@ -33,8 +33,15 @@ export function Hero() {
     }
   }
 
+  function scrollToContent() {
+    const section = document.getElementById('hero-section')
+    if (section) {
+      window.scrollTo({ top: section.offsetHeight, behavior: 'smooth' })
+    }
+  }
+
   return (
-    <section className="relative h-[600px] md:h-[680px] overflow-hidden">
+    <section id="hero-section" className="relative h-[600px] md:h-[680px] overflow-hidden">
       {/* Slideshow background */}
       {SLIDES.map((slide, i) => (
         <div
@@ -113,18 +120,30 @@ export function Hero() {
 
       </div>
 
-      {/* Indicators dots */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-        {SLIDES.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrent(i)}
-            className={`rounded-full transition-all duration-300 ${
-              i === current ? 'w-6 h-2 bg-white' : 'w-2 h-2 bg-white/40'
-            }`}
-          />
-        ))}
-      </div>
+      {/* Flèche scroll vers le bas */}
+      <button
+        onClick={scrollToContent}
+        aria-label="Voir le contenu"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 group"
+      >
+        <span className="text-white/50 text-xs font-medium tracking-wide group-hover:text-white/80 transition-colors">
+          Découvrir
+        </span>
+        <div className="animate-bounce">
+          <svg
+            width="28" height="28"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="text-white/60 group-hover:text-white transition-colors drop-shadow"
+          >
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </div>
+      </button>
     </section>
   )
 }

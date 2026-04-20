@@ -3,27 +3,18 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
 import { useAuthStore } from '@/lib/store/auth'
 import { useCityStore } from '@/lib/store/city'
-import { getUserProfile } from '@/lib/api/auth'
 import { Button } from '@/components/ui/button'
 import { cn, getInitials } from '@/lib/utils'
 
 export function Navbar() {
   const pathname = usePathname()
-  const { user, isAuthenticated, logout, updateUser } = useAuthStore()
+  const { user, isAuthenticated, logout } = useAuthStore()
   const { selectedCity } = useCityStore()
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const profileFetched = useRef(false)
-
-  useEffect(() => {
-    if (isAuthenticated && !profileFetched.current) {
-      profileFetched.current = true
-      getUserProfile().then(updateUser).catch(() => {})
-    }
-  }, [isAuthenticated, updateUser])
 
   const navLinks = isAuthenticated
     ? [
@@ -110,13 +101,6 @@ export function Navbar() {
                     <Link href="/profile/settings" className="flex items-center gap-2 px-4 py-2.5 text-sm text-text-primary hover:bg-surface-grey" onClick={() => setUserMenuOpen(false)}>
                       Paramètres
                     </Link>
-                    <div className="border-t border-divider my-1" />
-                    <button
-                      onClick={() => { logout(); setUserMenuOpen(false) }}
-                      className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-error hover:bg-red-50"
-                    >
-                      Déconnexion
-                    </button>
                   </div>
                 </>
               )}
