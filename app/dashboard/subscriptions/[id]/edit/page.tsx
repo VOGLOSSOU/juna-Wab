@@ -206,7 +206,7 @@ export default function EditSubscriptionPage() {
           </svg>
         </button>
         <div>
-          <h1 className="text-xl font-bold text-[var(--color-text-primary)]">Modifier l'abonnement</h1>
+          <h1 className="text-xl font-bold text-[var(--color-text-primary)]">Modifier l&apos;abonnement</h1>
           <p className="text-sm text-[var(--color-text-secondary)] truncate max-w-xs">{subscription.name}</p>
         </div>
       </div>

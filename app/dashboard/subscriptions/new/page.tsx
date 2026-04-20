@@ -490,7 +490,7 @@ export default function NewSubscriptionPage() {
                 href="/dashboard/meals"
                 className="text-sm font-medium text-[var(--color-primary)] hover:underline"
               >
-                Créer mes repas d'abord
+                Créer mes repas d&apos;abord
               </a>
             </div>
           ) : (
@@ -666,7 +666,7 @@ export default function NewSubscriptionPage() {
                 <line x1="12" y1="5" x2="12" y2="19" />
                 <line x1="5" y1="12" x2="19" y2="12" />
               </svg>
-              Créer l'abonnement
+              Créer l&apos;abonnement
             </>
           )}
         </button>

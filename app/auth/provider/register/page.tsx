@@ -269,7 +269,7 @@ export default function ProviderRegisterPage() {
         <div>
           <h2 className="text-2xl font-bold text-text-primary">Demande envoyée !</h2>
           <p className="text-text-secondary mt-2 leading-relaxed">
-            Votre dossier prestataire est en cours d'examen. L'équipe JUNA vous contactera après validation.
+            Votre dossier prestataire est en cours d&apos;examen. L&apos;équipe JUNA vous contactera après validation.
           </p>
         </div>
 
@@ -320,7 +320,7 @@ export default function ProviderRegisterPage() {
         )}
 
         <button onClick={() => router.push('/')} className="text-sm text-text-secondary hover:text-primary transition-colors">
-          Retourner à l'accueil
+          Retourner à l&apos;accueil
         </button>
       </div>
     )
@@ -691,7 +691,7 @@ export default function ProviderRegisterPage() {
               <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
             </svg>
             <p className="text-sm text-amber-800">
-              Votre compte passera en <strong>attente de validation</strong>. Une fois approuvé par l'équipe JUNA, reconnectez-vous pour accéder à votre dashboard.
+              Votre compte passera en <strong>attente de validation</strong>. Une fois approuvé par l&apos;équipe JUNA, reconnectez-vous pour accéder à votre dashboard.
             </p>
           </div>
 
