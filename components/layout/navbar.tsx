@@ -13,7 +13,6 @@ export function Navbar() {
   const pathname = usePathname()
   const { user, isAuthenticated, logout } = useAuthStore()
   const { selectedCity } = useCityStore()
-  const [userMenuOpen, setUserMenuOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const navLinks = isAuthenticated
@@ -76,13 +75,10 @@ export function Navbar() {
             </button>
           )}
 
-          {/* Avatar / user menu */}
+          {/* Avatar — direct link to profile */}
           {isAuthenticated ? (
-            <div className="relative">
-              <button
-                onClick={() => { setUserMenuOpen(!userMenuOpen); setMobileMenuOpen(false) }}
-                className="w-9 h-9 rounded-full bg-primary-surface flex items-center justify-center text-primary font-semibold text-sm hover:bg-primary/10 transition-colors overflow-hidden"
-              >
+            <Link href="/profile">
+              <button className="w-9 h-9 rounded-full bg-primary-surface flex items-center justify-center text-primary font-semibold text-sm hover:bg-primary/10 transition-colors overflow-hidden">
                 {avatar ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={avatar} alt={user?.name ?? ''} className="w-full h-full object-cover" />
@@ -90,21 +86,7 @@ export function Navbar() {
                   getInitials(user?.name ?? 'U')
                 )}
               </button>
-
-              {userMenuOpen && (
-                <>
-                  <div className="fixed inset-0 z-10" onClick={() => setUserMenuOpen(false)} />
-                  <div className="absolute right-0 top-11 z-20 w-48 bg-white rounded-lg shadow-lg border border-border py-1">
-                    <Link href="/profile" className="flex items-center gap-2 px-4 py-2.5 text-sm text-text-primary hover:bg-surface-grey" onClick={() => setUserMenuOpen(false)}>
-                      Mon profil
-                    </Link>
-                    <Link href="/profile/settings" className="flex items-center gap-2 px-4 py-2.5 text-sm text-text-primary hover:bg-surface-grey" onClick={() => setUserMenuOpen(false)}>
-                      Paramètres
-                    </Link>
-                  </div>
-                </>
-              )}
-            </div>
+            </Link>
           ) : (
             <div className="hidden md:flex items-center gap-2">
               <Link href="/auth/login">
@@ -118,7 +100,7 @@ export function Navbar() {
 
           {/* Hamburger — mobile */}
           <button
-            onClick={() => { setMobileMenuOpen(!mobileMenuOpen); setUserMenuOpen(false) }}
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden flex items-center justify-center w-9 h-9 rounded-lg hover:bg-surface-grey transition-colors text-text-primary"
             aria-label="Menu"
           >
