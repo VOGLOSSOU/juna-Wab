@@ -223,16 +223,16 @@ export default function SubscriptionDetailPage() {
           {((deliveryZones && deliveryZones.length > 0) || (pickupPoints && pickupPoints.length > 0)) && (
             <div className="bg-white rounded-xl border border-border p-4 flex flex-col gap-3 shadow-sm">
               <h3 className="font-semibold text-sm">Livraison</h3>
-              {deliveryZones && deliveryZones.length > 0 && (
-                <div>
-                  <p className="text-xs text-text-secondary mb-1.5 font-medium">Zones de livraison</p>
-                  <div className="flex flex-wrap gap-1">
-                    {deliveryZones.map((zone, i) => (
-                      <Badge key={i} variant="outline">{zone}</Badge>
-                    ))}
-                  </div>
-                </div>
-              )}
+               {deliveryZones && deliveryZones.length > 0 && (
+                 <div>
+                   <p className="text-xs text-text-secondary mb-1.5 font-medium">Zones de livraison</p>
+                   <div className="flex flex-wrap gap-1">
+                     {deliveryZones.map((zone, i) => (
+                       <Badge key={i} variant="outline">{typeof zone === 'string' ? zone : `${(zone as any).city} (${(zone as any).cost} XOF)`}</Badge>
+                     ))}
+                   </div>
+                 </div>
+               )}
               {pickupPoints && pickupPoints.length > 0 && (
                 <div>
                   <p className="text-xs text-text-secondary mb-1.5 font-medium">Points de retrait</p>

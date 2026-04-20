@@ -548,7 +548,7 @@ export default function ProviderRegisterPage() {
               <Field label="Mode de service" required hint="Au moins un des deux est obligatoire.">
                 <div className="flex flex-col gap-3">
                   {[
-                    { value: acceptsDelivery, set: setAcceptsDelivery, label: 'Livraison à domicile', desc: 'Vous livrez vos clients à leur adresse', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> },
+                     { value: acceptsDelivery, set: setAcceptsDelivery, label: 'Livraison', desc: 'Vous livrez vos clients à leur adresse', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> },
                     { value: acceptsPickup, set: setAcceptsPickup, label: 'Retrait sur place', desc: 'Le client vient récupérer sa commande chez vous', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> },
                   ].map(({ value, set, label, desc, icon }) => (
                     <button key={label} type="button" onClick={() => set(!value)}
@@ -593,39 +593,20 @@ export default function ProviderRegisterPage() {
                       </div>
                     )}
 
-                    {/* Formulaire ajout zone */}
-                    <div className="flex flex-col gap-2 p-4 bg-surface-grey rounded-xl">
-                      <p className="text-xs font-medium text-text-secondary mb-1">Ajouter une zone</p>
-                      <div className="flex gap-2">
-                        <input type="text" value={zoneCity} onChange={e => setZoneCity(e.target.value)}
-                          placeholder="Ville (ex: Cotonou)" className={`${inputClass} flex-1`} />
-                        <select value={zoneCountry} onChange={e => setZoneCountry(e.target.value)}
-                          className={`${inputClass} w-24`}>
-                          <option value="">Pays</option>
-                          {countries.map(c => (
-                            <option key={c.code} value={c.code}>
-                              {c.translations?.fr ?? c.code}
-                            </option>
-                          ))}
-                          {countries.length === 0 && (
-                            <>
-                              <option value="BJ">Bénin</option>
-                              <option value="CI">Côte d'Ivoire</option>
-                              <option value="SN">Sénégal</option>
-                              <option value="TG">Togo</option>
-                            </>
-                          )}
-                        </select>
-                      </div>
-                      <div className="flex gap-2">
-                        <input type="number" value={zoneCost} onChange={e => setZoneCost(e.target.value)}
-                          placeholder="Coût livraison (XOF)" className={`${inputClass} flex-1`} min="0" />
-                        <button onClick={addDeliveryZone}
-                          className="h-11 px-4 bg-primary text-white rounded-xl text-sm font-medium hover:bg-primary-light transition-colors flex-shrink-0">
-                          Ajouter
-                        </button>
-                      </div>
-                    </div>
+                     {/* Formulaire ajout zone */}
+                     <div className="flex flex-col gap-2 p-4 bg-surface-grey rounded-xl">
+                       <p className="text-xs font-medium text-text-secondary mb-1">Ajouter une zone</p>
+                       <div className="flex gap-2">
+                         <input type="text" value={zoneCity} onChange={e => setZoneCity(e.target.value)}
+                           placeholder="Ville (ex: Cotonou)" className={`${inputClass} flex-1`} />
+                         <input type="number" value={zoneCost} onChange={e => setZoneCost(e.target.value)}
+                           placeholder="Coût livraison (XOF)" className={`${inputClass} flex-1`} min="0" />
+                       </div>
+                       <button onClick={addDeliveryZone}
+                         className="h-11 w-full bg-primary text-white rounded-xl text-sm font-medium hover:bg-primary-light transition-colors">
+                         Ajouter la zone
+                       </button>
+                     </div>
                   </div>
                 </Field>
               )}

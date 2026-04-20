@@ -35,7 +35,6 @@ export function Footer() {
 
         <div className="border-t border-divider mt-8 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs text-text-light">© {new Date().getFullYear()} JUNA. Tous droits réservés.</p>
-          <p className="text-xs text-text-light">Bénin & Côte d&apos;Ivoire</p>
         </div>
       </div>
     </footer>
