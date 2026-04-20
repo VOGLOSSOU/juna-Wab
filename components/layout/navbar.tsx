@@ -3,18 +3,27 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useAuthStore } from '@/lib/store/auth'
 import { useCityStore } from '@/lib/store/city'
+import { getUserProfile } from '@/lib/api/auth'
 import { Button } from '@/components/ui/button'
 import { cn, getInitials } from '@/lib/utils'
 
 export function Navbar() {
   const pathname = usePathname()
-  const { user, isAuthenticated, logout } = useAuthStore()
+  const { user, isAuthenticated, logout, updateUser } = useAuthStore()
   const { selectedCity } = useCityStore()
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const profileFetched = useRef(false)
+
+  useEffect(() => {
+    if (isAuthenticated && !profileFetched.current) {
+      profileFetched.current = true
+      getUserProfile().then(updateUser).catch(() => {})
+    }
+  }, [isAuthenticated, updateUser])
 
   const navLinks = isAuthenticated
     ? [
