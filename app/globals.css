@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary:          #1A5C2A;
+  --color-primary-light:    #2E7D40;
+  --color-primary-dark:     #0F3D1A;
+  --color-primary-surface:  #EEF5F0;
+  --color-accent:           #F4521E;
+  --color-background:       #F7F7F7;
+  --color-surface:          #FFFFFF;
+  --color-surface-grey:     #F0F0F0;
+  --color-text-primary:     #1A1A1A;
+  --color-text-secondary:   #6B6B6B;
+  --color-text-light:       #AAAAAA;
+  --color-border:           #E0E0E0;
+  --color-success:          #2E7D32;
+  --color-error:            #D32F2F;
+  --color-warning:          #F9A825;
+  --color-info:             #0277BD;
+  --max-content-width:      1280px;
+  --sidebar-width:          260px;
+  --navbar-height:          64px;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html, body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer utilities {
+  .text-display-large  { font-size: 32px; font-weight: 700; }
+  .text-display-medium { font-size: 28px; font-weight: 700; }
+  .text-headline-large { font-size: 24px; font-weight: 600; }
+  .text-headline-medium{ font-size: 20px; font-weight: 600; }
+  .text-title-large    { font-size: 18px; font-weight: 600; }
+  .text-title-medium   { font-size: 16px; font-weight: 500; }
+  .text-body-large     { font-size: 16px; font-weight: 400; }
+  .text-body-medium    { font-size: 14px; font-weight: 400; }
+  .text-body-small     { font-size: 12px; font-weight: 400; }
+  .text-label-large    { font-size: 14px; font-weight: 600; }
+  .text-label-small    { font-size: 11px; font-weight: 500; }
+}
+
+/* Scrollbar discrète */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-text-light); }
+
+/* Scroll horizontal sans scrollbar visible */
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.hide-scrollbar::-webkit-scrollbar { display: none; }
