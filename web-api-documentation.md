@@ -19,7 +19,7 @@ http://localhost:5000/api/v1
 
 ---
 
-maintenant bro, je veux que tu prennes bien le temps et ue lises correctement la documentation concernant le parcours provider, car c' est ce qu' on va démarrer mantenant, quand tu auras bien comris, dis moi , ou si tu as des questions, dis le ausi , 
+
 
 ## Conventions générales
 

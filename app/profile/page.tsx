@@ -10,6 +10,44 @@ import { getInitials, formatDate } from '@/lib/utils'
 import type { User, City, Country } from '@/types'
 import toast from 'react-hot-toast'
 
+function ProfileSkeleton() {
+  return (
+    <div className="max-w-xl mx-auto px-4 py-10 animate-pulse">
+      <div className="h-8 w-36 bg-surface-grey rounded-lg mb-6" />
+
+      <div className="bg-white rounded-xl border border-border shadow-sm overflow-hidden mb-4">
+        {/* Avatar header */}
+        <div className="bg-primary-surface px-6 py-8 flex flex-col items-center gap-3">
+          <div className="w-20 h-20 rounded-full bg-primary/20" />
+          <div className="flex flex-col items-center gap-2">
+            <div className="h-5 w-32 bg-primary/20 rounded-lg" />
+            <div className="h-3.5 w-20 bg-primary/10 rounded-lg" />
+          </div>
+        </div>
+        {/* Info rows */}
+        <div className="divide-y divide-divider">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="flex items-center gap-3 px-5 py-3.5">
+              <div className="w-4 h-4 rounded bg-surface-grey flex-shrink-0" />
+              <div className="flex flex-col gap-1.5 flex-1">
+                <div className="h-2.5 w-16 bg-surface-grey rounded" />
+                <div className="h-3.5 w-40 bg-border rounded" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Nav buttons */}
+      <div className="flex flex-col gap-2">
+        {[...Array(3)].map((_, i) => (
+          <div key={i} className="h-14 bg-white rounded-xl border border-border" />
+        ))}
+      </div>
+    </div>
+  )
+}
+
 function InfoRow({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
     <div className="flex items-center gap-3 px-5 py-3.5">
@@ -50,7 +88,7 @@ const inputClass = "w-full h-11 px-4 rounded-xl border border-border bg-white te
 
 export default function ProfilePage() {
   const { isAuthenticated, hydrated } = useAuthGuard()
-  const { updateUser, logout } = useAuthStore()
+  const { user: storeUser, updateUser, logout } = useAuthStore()
   const router = useRouter()
 
   function handleLogout() {
@@ -59,6 +97,7 @@ export default function ProfilePage() {
     toast.success('Vous êtes déconnecté')
   }
   const [profile, setProfile] = useState<User | null>(null)
+  const [loadingProfile, setLoadingProfile] = useState(true)
 
   // Edit mode
   const [editing, setEditing] = useState(false)
@@ -79,7 +118,10 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (!hydrated || !isAuthenticated) return
-    getUserProfile().then((data) => { setProfile(data); updateUser(data) }).catch(console.error)
+    getUserProfile()
+      .then((data) => { setProfile(data); updateUser(data) })
+      .catch(() => { /* token expiré — logout() appelé par l'intercepteur, useAuthGuard redirige */ })
+      .finally(() => setLoadingProfile(false))
   }, [hydrated, isAuthenticated])
 
   function startEdit() {
@@ -148,7 +190,11 @@ export default function ProfilePage() {
     setPickerSearch('')
   }
 
-  if (!hydrated || !isAuthenticated || !profile) return null
+  // Pas encore hydraté → skeleton immédiat
+  if (!hydrated || (hydrated && isAuthenticated && loadingProfile)) return <ProfileSkeleton />
+
+  // Non authentifié → useAuthGuard redirige, on ne rend rien
+  if (!isAuthenticated || !profile) return null
 
   const avatar = profile.avatarUrl ?? profile.profile?.avatar ?? null
   const city = profile.city ?? profile.profile?.city ?? null

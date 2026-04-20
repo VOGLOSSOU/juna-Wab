@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { useAuthStore } from '@/lib/store/auth'
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://juna-app.up.railway.app/api/v1'
 
@@ -64,11 +65,8 @@ apiClient.interceptors.response.use(
         return apiClient(originalRequest)
       } catch (refreshError) {
         processQueue(refreshError, null)
-        localStorage.removeItem('accessToken')
-        localStorage.removeItem('refreshToken')
-        if (typeof window !== 'undefined') {
-          window.location.href = '/auth/login'
-        }
+        // Appel direct au store Zustand (accessible hors composant via getState)
+        useAuthStore.getState().logout()
         return Promise.reject(refreshError)
       } finally {
         isRefreshing = false
