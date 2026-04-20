@@ -102,25 +102,15 @@ export function Hero() {
           </div>
           <button
             type="submit"
-            className="h-14 px-6 bg-primary text-white font-semibold text-sm hover:bg-primary-light transition-colors flex-shrink-0"
+            className="h-14 px-5 bg-primary text-white hover:bg-primary-light transition-colors flex-shrink-0 flex items-center justify-center"
           >
-            Rechercher
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
           </button>
         </form>
 
-        {/* Stats rapides */}
-        <div className="flex items-center gap-6 md:gap-10 mt-2">
-          {[
-            { label: 'Traiteurs', value: '50+' },
-            { label: 'Plats disponibles', value: '200+' },
-            { label: 'Clients satisfaits', value: '1 000+' },
-          ].map((stat) => (
-            <div key={stat.label} className="flex flex-col items-center gap-0.5">
-              <span className="text-white font-bold text-xl md:text-2xl drop-shadow">{stat.value}</span>
-              <span className="text-white/70 text-xs md:text-sm">{stat.label}</span>
-            </div>
-          ))}
-        </div>
       </div>
 
       {/* Indicators dots */}

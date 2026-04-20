@@ -14,6 +14,7 @@ export function Navbar() {
   const { user, isAuthenticated, logout } = useAuthStore()
   const { selectedCity } = useCityStore()
   const [userMenuOpen, setUserMenuOpen] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const navLinks = isAuthenticated
     ? [
@@ -26,9 +27,12 @@ export function Navbar() {
         { href: '/explorer', label: 'Explorer' },
       ]
 
+  const avatar = user?.avatarUrl ?? user?.profile?.avatar ?? null
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 h-16 bg-white shadow-sm border-b border-border">
       <div className="max-w-content mx-auto h-full px-6 flex items-center justify-between gap-6">
+
         {/* Logo */}
         <Link href="/" className="flex-shrink-0">
           <Image
@@ -41,7 +45,7 @@ export function Navbar() {
           />
         </Link>
 
-        {/* Nav links */}
+        {/* Nav links — desktop */}
         <div className="hidden md:flex items-center gap-1">
           {navLinks.map((link) => (
             <Link
@@ -61,7 +65,7 @@ export function Navbar() {
 
         {/* Right side */}
         <div className="flex items-center gap-3">
-          {/* City selector */}
+          {/* City selector — desktop */}
           {isAuthenticated && selectedCity && (
             <button className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-sm text-text-secondary hover:bg-surface-grey transition-colors">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -72,14 +76,16 @@ export function Navbar() {
             </button>
           )}
 
+          {/* Avatar / user menu */}
           {isAuthenticated ? (
             <div className="relative">
               <button
-                onClick={() => setUserMenuOpen(!userMenuOpen)}
-                className="w-9 h-9 rounded-full bg-primary-surface flex items-center justify-center text-primary font-semibold text-sm hover:bg-primary/10 transition-colors"
+                onClick={() => { setUserMenuOpen(!userMenuOpen); setMobileMenuOpen(false) }}
+                className="w-9 h-9 rounded-full bg-primary-surface flex items-center justify-center text-primary font-semibold text-sm hover:bg-primary/10 transition-colors overflow-hidden"
               >
-                {user?.avatarUrl ? (
-                  <Image src={user.avatarUrl} alt={user.name} width={36} height={36} className="rounded-full object-cover" />
+                {avatar ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={avatar} alt={user?.name ?? ''} className="w-full h-full object-cover" />
                 ) : (
                   getInitials(user?.name ?? 'U')
                 )}
@@ -107,7 +113,7 @@ export function Navbar() {
               )}
             </div>
           ) : (
-            <div className="flex items-center gap-2">
+            <div className="hidden md:flex items-center gap-2">
               <Link href="/auth/login">
                 <Button variant="ghost" size="sm">Se connecter</Button>
               </Link>
@@ -116,8 +122,75 @@ export function Navbar() {
               </Link>
             </div>
           )}
+
+          {/* Hamburger — mobile */}
+          <button
+            onClick={() => { setMobileMenuOpen(!mobileMenuOpen); setUserMenuOpen(false) }}
+            className="md:hidden flex items-center justify-center w-9 h-9 rounded-lg hover:bg-surface-grey transition-colors text-text-primary"
+            aria-label="Menu"
+          >
+            {mobileMenuOpen ? (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            ) : (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+              </svg>
+            )}
+          </button>
         </div>
       </div>
+
+      {/* Mobile menu */}
+      {mobileMenuOpen && (
+        <>
+          <div className="fixed inset-0 top-16 z-40 bg-black/20" onClick={() => setMobileMenuOpen(false)} />
+          <div className="absolute top-16 left-0 right-0 z-50 bg-white border-b border-border shadow-md">
+            <div className="flex flex-col py-2">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={cn(
+                    'px-6 py-3 text-sm font-medium transition-colors',
+                    pathname === link.href
+                      ? 'text-primary bg-primary-surface'
+                      : 'text-text-primary hover:bg-surface-grey'
+                  )}
+                >
+                  {link.label}
+                </Link>
+              ))}
+
+              {selectedCity && (
+                <div className="flex items-center gap-2 px-6 py-3 text-sm text-text-secondary border-t border-divider mt-1">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                  {selectedCity.name}
+                </div>
+              )}
+
+              {!isAuthenticated && (
+                <div className="flex flex-col gap-2 px-6 py-4 border-t border-divider mt-1">
+                  <Link href="/auth/login" onClick={() => setMobileMenuOpen(false)}>
+                    <Button variant="outline" className="w-full">Se connecter</Button>
+                  </Link>
+                  <Link href="/auth/register" onClick={() => setMobileMenuOpen(false)}>
+                    <Button variant="primary" className="w-full">S&apos;inscrire</Button>
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+        </>
+      )}
     </nav>
   )
 }

@@ -13,6 +13,7 @@ interface AuthState {
   isProvider: boolean
   setAuth: (user: User, accessToken: string, refreshToken: string) => void
   setProvider: (provider: Provider) => void
+  updateUser: (user: User) => void
   logout: () => void
 }
 
@@ -41,6 +42,8 @@ export const useAuthStore = create<AuthState>()(
       },
 
       setProvider: (provider) => set({ provider }),
+
+      updateUser: (user) => set({ user }),
 
       logout: () => {
         if (typeof window !== 'undefined') {
