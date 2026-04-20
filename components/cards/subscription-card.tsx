@@ -67,7 +67,13 @@ export function SubscriptionCard({ subscription, variant = 'compact' }: Subscrip
         <h3 className="font-semibold text-text-primary text-sm line-clamp-2 leading-snug">{name}</h3>
 
         {provider && (
-          <p className="text-xs text-text-secondary line-clamp-1">{provider.name}</p>
+          <p className="text-xs text-text-secondary line-clamp-1 flex items-center gap-1">
+            {provider.name}
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" className="flex-shrink-0">
+              <circle cx="12" cy="12" r="10" fill="#3B82F6"/>
+              <polyline points="8 12 11 15 16 9" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </p>
         )}
 
         <div className="flex flex-wrap gap-1">
@@ -75,7 +81,7 @@ export function SubscriptionCard({ subscription, variant = 'compact' }: Subscrip
           <Badge variant="grey" className="text-xs">{SUBSCRIPTION_DURATION_LABELS[duration]}</Badge>
         </div>
 
-        {rating !== undefined && reviewCount !== undefined && (
+        {rating !== undefined && reviewCount !== undefined && reviewCount > 0 && (
           <div className="flex items-center gap-1">
             <StarRating value={rating} size={14} readOnly />
             <span className="text-xs text-text-secondary">({reviewCount})</span>

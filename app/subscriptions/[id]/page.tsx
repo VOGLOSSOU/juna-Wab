@@ -106,7 +106,7 @@ export default function SubscriptionDetailPage() {
               <Badge variant="grey">{SUBSCRIPTION_CATEGORY_LABELS[category]}</Badge>
             </div>
 
-            {(rating !== undefined && reviewCount !== undefined) && (
+            {rating !== undefined && reviewCount !== undefined && reviewCount > 0 && (
               <div className="flex items-center gap-2">
                 <StarRating value={rating} size={18} readOnly />
                 <span className="text-text-secondary text-sm">({reviewCount} avis)</span>
@@ -140,7 +140,8 @@ export default function SubscriptionDetailPage() {
 
           {/* Avis */}
           <div>
-            <h2 className="text-title-large font-semibold mb-4">Avis ({reviewCount ?? 0})</h2>
+            {(reviewCount ?? 0) > 0 && <h2 className="text-title-large font-semibold mb-4">Avis ({reviewCount})</h2>}
+            {(reviewCount ?? 0) === 0 && <h2 className="text-title-large font-semibold mb-4">Avis</h2>}
             {reviews.length === 0 ? (
               <p className="text-text-secondary text-sm">Aucun avis pour le moment — soyez le premier !</p>
             ) : (
@@ -204,11 +205,17 @@ export default function SubscriptionDetailPage() {
                   )}
                 </div>
                 <div>
-                  <p className="font-medium text-sm">{provider.name}</p>
-                  {provider.rating !== undefined && (
+                  <p className="font-medium text-sm flex items-center gap-1">
+                    {provider.name}
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="flex-shrink-0">
+                      <circle cx="12" cy="12" r="10" fill="#3B82F6"/>
+                      <polyline points="8 12 11 15 16 9" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </p>
+                  {provider.rating !== undefined && (provider.reviewCount ?? 0) > 0 && (
                     <div className="flex items-center gap-1 mt-0.5">
                       <StarRating value={provider.rating} size={12} readOnly />
-                      <span className="text-xs text-text-secondary">({provider.reviewCount ?? 0})</span>
+                      <span className="text-xs text-text-secondary">({provider.reviewCount})</span>
                     </div>
                   )}
                 </div>

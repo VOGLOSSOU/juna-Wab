@@ -64,6 +64,7 @@ export async function createSubscription(data: {
   isPublic?: boolean
   isImmediate?: boolean
   preparationHours?: number
+  junaCommissionPercent?: number
 }) {
   const res = await apiClient.post<ApiResponse<Subscription>>('/subscriptions', data)
   return res.data.data

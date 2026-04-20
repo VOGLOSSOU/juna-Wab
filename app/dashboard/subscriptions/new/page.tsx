@@ -121,6 +121,8 @@ export default function NewSubscriptionPage() {
   const [duration, setDuration] = useState<SubscriptionDuration>('WORK_WEEK')
   const [category, setCategory] = useState<SubscriptionCategory>('AFRICAN')
   const [selectedMealIds, setSelectedMealIds] = useState<string[]>([])
+  const [commissionPercent, setCommissionPercent] = useState('10')
+  const [commissionMode, setCommissionMode] = useState<'deduct' | 'add'>('deduct')
   const [isPublic, setIsPublic] = useState(false)
   const [isImmediate, setIsImmediate] = useState(true)
   const [preparationHours, setPreparationHours] = useState('')
@@ -177,6 +179,30 @@ export default function NewSubscriptionPage() {
     return true
   }
 
+  function providerMode(mode: 'deduct' | 'add') {
+    const base = Number(price)
+    const commission = Number(commissionPercent)
+    if (!base || isNaN(base)) return 0
+    if (mode === 'deduct') return Math.round(base * (1 - commission / 100)).toLocaleString('fr-FR')
+    return Math.round(base / (1 - commission / 100)).toLocaleString('fr-FR')
+  }
+
+  function computedPrice() {
+    const base = Number(price)
+    const commission = Number(commissionPercent)
+    if (!base || isNaN(base)) return 0
+    if (commissionMode === 'deduct') return base
+    return Math.round(base / (1 - commission / 100))
+  }
+
+  function providerReceives() {
+    const base = Number(price)
+    const commission = Number(commissionPercent)
+    if (!base || isNaN(base)) return 0
+    if (commissionMode === 'deduct') return Math.round(base * (1 - commission / 100))
+    return base
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!canSubmit()) return
@@ -185,7 +211,7 @@ export default function NewSubscriptionPage() {
       await createSubscription({
         name: name.trim(),
         description: description.trim(),
-        price: Number(price),
+        price: computedPrice(),
         type,
         category,
         duration,
@@ -194,6 +220,7 @@ export default function NewSubscriptionPage() {
         isPublic,
         isImmediate,
         ...(!isImmediate && preparationHours ? { preparationHours: Number(preparationHours) } : {}),
+        junaCommissionPercent: Number(commissionPercent),
       })
       toast.success('Abonnement créé !')
       router.push('/dashboard/subscriptions')
@@ -303,7 +330,7 @@ export default function NewSubscriptionPage() {
             <p className="text-xs text-[var(--color-text-light)] text-right -mt-1">{description.length}/1000</p>
           </Field>
 
-          <Field label="Prix (XOF)" required hint="Minimum 100 XOF">
+          <Field label="Votre prix de référence (XOF)" required hint="Le montant que vous souhaitez pour cet abonnement. Minimum 100 XOF.">
             <div className="relative">
               <input
                 type="number"
@@ -318,6 +345,84 @@ export default function NewSubscriptionPage() {
               </span>
             </div>
           </Field>
+
+          {/* Commission */}
+          <div className="flex flex-col gap-3 p-4 rounded-xl bg-[var(--color-surface-grey)] border border-[var(--color-border)]">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-sm font-semibold text-[var(--color-text-primary)]">Commission JUNA</p>
+                <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">
+                  JUNA prélève un pourcentage sur chaque vente réalisée via la plateforme.
+                </p>
+              </div>
+              <div className="relative flex-shrink-0">
+                <input
+                  type="number"
+                  value={commissionPercent}
+                  onChange={(e) => setCommissionPercent(String(Math.min(100, Math.max(0, Number(e.target.value)))))}
+                  className="w-20 h-9 px-3 pr-7 rounded-lg border border-[var(--color-border)] bg-white text-sm text-center font-semibold focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/30 focus:border-[var(--color-primary)]"
+                  min={0}
+                  max={100}
+                />
+                <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-[var(--color-text-light)]">%</span>
+              </div>
+            </div>
+
+            {Number(price) >= 100 && (
+              <>
+                <div className="h-px bg-[var(--color-border)]" />
+                <p className="text-xs font-medium text-[var(--color-text-secondary)]">
+                  Qui supporte la commission ?
+                </p>
+                <div className="flex flex-col gap-2">
+                  {[
+                    {
+                      mode: 'deduct' as const,
+                      label: 'Je l\'accepte sur mon prix',
+                      detail: `Vous recevez ${providerMode('deduct')} XOF · Le client paie ${Number(price).toLocaleString('fr-FR')} XOF`,
+                    },
+                    {
+                      mode: 'add' as const,
+                      label: 'Je l\'ajoute par-dessus',
+                      detail: `Vous recevez ${Number(price).toLocaleString('fr-FR')} XOF · Le client paie ${providerMode('add')} XOF`,
+                    },
+                  ].map(({ mode, label, detail }) => (
+                    <button
+                      key={mode}
+                      type="button"
+                      onClick={() => setCommissionMode(mode)}
+                      className={`flex items-start gap-3 p-3 rounded-xl border-2 text-left transition-all ${
+                        commissionMode === mode
+                          ? 'border-[var(--color-primary)] bg-[var(--color-primary-surface)]'
+                          : 'border-[var(--color-border)] bg-white hover:bg-[var(--color-surface-grey)]'
+                      }`}
+                    >
+                      <div className={`w-4 h-4 rounded-full border-2 flex-shrink-0 mt-0.5 flex items-center justify-center ${commissionMode === mode ? 'border-[var(--color-primary)] bg-[var(--color-primary)]' : 'border-[var(--color-border)]'}`}>
+                        {commissionMode === mode && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                      </div>
+                      <div>
+                        <p className={`text-sm font-semibold ${commissionMode === mode ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-primary)]'}`}>{label}</p>
+                        <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">{detail}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+
+                {/* Récap final */}
+                <div className="flex items-center justify-between gap-2 mt-1 px-3 py-2.5 rounded-xl bg-white border border-[var(--color-border)]">
+                  <div className="text-center flex-1">
+                    <p className="text-xs text-[var(--color-text-light)]">Prix affiché aux clients</p>
+                    <p className="text-base font-bold text-[var(--color-text-primary)] mt-0.5">{computedPrice().toLocaleString('fr-FR')} XOF</p>
+                  </div>
+                  <div className="w-px h-8 bg-[var(--color-border)]" />
+                  <div className="text-center flex-1">
+                    <p className="text-xs text-[var(--color-text-light)]">Vous recevez</p>
+                    <p className="text-base font-bold text-[var(--color-primary)] mt-0.5">{providerReceives().toLocaleString('fr-FR')} XOF</p>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
         </div>
 
         {/* ── Section 2 : Caractéristiques ── */}
