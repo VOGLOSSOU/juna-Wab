@@ -35,15 +35,26 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </main>
         <Footer />
         <Toaster
-          position="top-right"
+          position="top-center"
           toastOptions={{
-            duration: 4000,
+            duration: 3500,
             style: {
               fontFamily: 'Plus Jakarta Sans, sans-serif',
               fontSize: '14px',
+              fontWeight: '500',
+              background: '#18181B',
+              color: '#FAFAFA',
+              borderRadius: '12px',
+              padding: '12px 18px',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
+              maxWidth: '360px',
             },
-            success: { style: { borderLeft: '4px solid #1A5C2A' } },
-            error:   { style: { borderLeft: '4px solid #D32F2F' } },
+            success: {
+              iconTheme: { primary: '#4ade80', secondary: '#18181B' },
+            },
+            error: {
+              iconTheme: { primary: '#f87171', secondary: '#18181B' },
+            },
           }}
         />
       </body>
