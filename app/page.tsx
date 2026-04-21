@@ -64,18 +64,18 @@ export default function HomePage() {
               <h2 className="text-headline-large font-semibold text-text-primary">
                 Les plus populaires{selectedCity ? ` à ${selectedCity.name}` : ''}
               </h2>
-              <Link href="/explorer" className="text-sm font-medium text-primary hover:underline flex-shrink-0">
-                Découvrir
+              <Link href="/explorer" className="text-xs font-medium text-primary flex items-center gap-0.5 hover:gap-1.5 transition-all flex-shrink-0">
+                Explorer <span aria-hidden>→</span>
               </Link>
             </div>
             {loading ? (
               <div className="flex gap-4 overflow-x-auto pb-2 -mx-6 px-6 hide-scrollbar">
-                {Array.from({ length: 4 }).map((_, i) => <div key={i} className="flex-shrink-0 w-64"><SkeletonCard /></div>)}
+                {Array.from({ length: 4 }).map((_, i) => <div key={i} className="flex-shrink-0 w-48 h-[268px]"><SkeletonCard /></div>)}
               </div>
             ) : data?.popular?.length ? (
               <div className="flex gap-4 overflow-x-auto pb-2 -mx-6 px-6 hide-scrollbar">
                 {data.popular.map((sub) => (
-                  <div key={sub.id} className="flex-shrink-0 w-52 h-full">
+                  <div key={sub.id} className="flex-shrink-0 w-48 h-[268px]">
                     <SubscriptionCard subscription={sub} variant="compact" />
                   </div>
                 ))}
@@ -93,18 +93,18 @@ export default function HomePage() {
           <section>
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-headline-large font-semibold text-text-primary">Nouveautés</h2>
-              <Link href="/explorer?sort=recent" className="text-sm font-medium text-primary hover:underline flex-shrink-0">
-                Découvrir
+              <Link href="/explorer?sort=recent" className="text-xs font-medium text-primary flex items-center gap-0.5 hover:gap-1.5 transition-all flex-shrink-0">
+                Explorer <span aria-hidden>→</span>
               </Link>
             </div>
             {loading ? (
               <div className="flex gap-4 overflow-x-auto pb-2 -mx-6 px-6 hide-scrollbar">
-                {Array.from({ length: 4 }).map((_, i) => <div key={i} className="flex-shrink-0 w-64"><SkeletonCard /></div>)}
+                {Array.from({ length: 4 }).map((_, i) => <div key={i} className="flex-shrink-0 w-48 h-[268px]"><SkeletonCard /></div>)}
               </div>
             ) : data?.recent?.length ? (
               <div className="flex gap-4 overflow-x-auto pb-2 -mx-6 px-6 hide-scrollbar">
                 {data.recent.map((sub) => (
-                  <div key={sub.id} className="flex-shrink-0 w-52 h-full">
+                  <div key={sub.id} className="flex-shrink-0 w-48 h-[268px]">
                     <SubscriptionCard subscription={sub} variant="compact" />
                   </div>
                 ))}
