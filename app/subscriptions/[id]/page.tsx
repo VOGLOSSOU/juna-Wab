@@ -4,15 +4,14 @@ import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { getSubscription } from '@/lib/api/subscriptions'
-import { getSubscriptionReviews } from '@/lib/api/reviews'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { StarRating } from '@/components/ui/star-rating'
 import { SubscriptionCard } from '@/components/cards/subscription-card'
 import { SkeletonCard } from '@/components/ui/skeleton'
 import { useAuthStore } from '@/lib/store/auth'
-import { formatPrice, SUBSCRIPTION_TYPE_LABELS, SUBSCRIPTION_DURATION_LABELS, SUBSCRIPTION_CATEGORY_LABELS, timeAgo, getInitials } from '@/lib/utils'
-import type { Subscription, Review } from '@/types'
+import { formatPrice, SUBSCRIPTION_TYPE_LABELS, SUBSCRIPTION_DURATION_LABELS, SUBSCRIPTION_CATEGORY_LABELS, getInitials } from '@/lib/utils'
+import type { Subscription } from '@/types'
 
 export default function SubscriptionDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -20,18 +19,13 @@ export default function SubscriptionDetailPage() {
   const { isAuthenticated } = useAuthStore()
 
   const [subscription, setSubscription] = useState<Subscription | null>(null)
-  const [reviews, setReviews] = useState<Review[]>([])
   const [loading, setLoading] = useState(true)
   const [currentImage, setCurrentImage] = useState(0)
 
   useEffect(() => {
-    Promise.all([
-      getSubscription(id),
-      getSubscriptionReviews(id),
-    ]).then(([sub, rev]) => {
-      setSubscription(sub)
-      setReviews(rev.items)
-    }).catch(() => router.push('/not-found'))
+    getSubscription(id)
+      .then(setSubscription)
+      .catch(() => router.push('/not-found'))
       .finally(() => setLoading(false))
   }, [id, router])
 
@@ -75,7 +69,7 @@ export default function SubscriptionDetailPage() {
 
           {/* Carousel images */}
           <div className="flex flex-col gap-3">
-            <div className="relative h-72 lg:h-96 rounded-xl overflow-hidden bg-surface-grey">
+            <div className="relative h-72 lg:h-96 rounded-2xl overflow-hidden bg-surface-grey">
               {images?.[currentImage] ? (
                 <Image src={images[currentImage]} alt={name} fill sizes="(max-width: 1024px) 100vw, 60vw" className="object-cover" />
               ) : (
@@ -90,7 +84,7 @@ export default function SubscriptionDetailPage() {
                   <button
                     key={i}
                     onClick={() => setCurrentImage(i)}
-                    className={`relative w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden border-2 transition-colors ${i === currentImage ? 'border-primary' : 'border-transparent'}`}
+                    className={`relative w-16 h-16 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-colors ${i === currentImage ? 'border-primary' : 'border-transparent'}`}
                   >
                     <Image src={img} alt="" fill sizes="64px" className="object-cover" />
                   </button>
@@ -136,7 +130,7 @@ export default function SubscriptionDetailPage() {
               <div className="flex gap-4 overflow-x-auto hide-scrollbar pb-2">
                 {meals.map((meal) => (
                   <div key={meal.id} className="flex-shrink-0 w-36 flex flex-col gap-2">
-                    <div className="relative h-24 rounded-lg overflow-hidden bg-surface-grey">
+                    <div className="relative h-24 rounded-xl overflow-hidden bg-surface-grey">
                       {meal.imageUrl ? (
                         <Image src={meal.imageUrl} alt={meal.name} fill sizes="144px" className="object-cover" />
                       ) : (
@@ -154,40 +148,6 @@ export default function SubscriptionDetailPage() {
               </div>
             </div>
           )}
-
-          {/* Avis */}
-          <div>
-            <h2 className="text-title-large font-semibold mb-4">
-              Avis{(reviewCount ?? 0) > 0 ? ` (${reviewCount})` : ''}
-            </h2>
-            {reviews.length === 0 ? (
-              <p className="text-text-secondary text-sm">Aucun avis pour le moment — soyez le premier !</p>
-            ) : (
-              <div className="flex flex-col gap-4">
-                {reviews.map((review) => (
-                  <div key={review.id} className="flex gap-3 p-4 bg-white rounded-lg border border-border">
-                    <div className="w-10 h-10 rounded-full bg-primary-surface flex items-center justify-center flex-shrink-0 text-primary font-semibold text-sm">
-                      {review.user?.avatar ? (
-                        <Image src={review.user.avatar} alt="" width={40} height={40} className="rounded-full object-cover" />
-                      ) : (
-                        getInitials(review.user?.name ?? 'U')
-                      )}
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium text-sm">{review.user?.name ?? 'Utilisateur'}</span>
-                        <span className="text-xs text-text-light">{timeAgo(review.createdAt)}</span>
-                      </div>
-                      <StarRating value={review.rating} size={14} readOnly />
-                      {review.comment && (
-                        <p className="text-sm text-text-secondary mt-1">{review.comment}</p>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
 
           {/* Autres abonnements du prestataire */}
           {providerSubscriptions && providerSubscriptions.length > 0 && (
@@ -210,7 +170,7 @@ export default function SubscriptionDetailPage() {
         <div className="lg:w-80 flex flex-col gap-4 lg:sticky lg:top-24 self-start">
 
           {/* Prix & CTA */}
-          <div className="bg-white rounded-xl border border-border p-5 flex flex-col gap-4 shadow-sm">
+          <div className="bg-white rounded-2xl border border-border p-5 flex flex-col gap-4 shadow-sm">
             <div>
               <span className="text-display-medium font-bold text-primary">{formatPrice(price, currency)}</span>
               <p className="text-sm text-text-secondary mt-1">{SUBSCRIPTION_DURATION_LABELS[duration]}</p>
@@ -227,82 +187,90 @@ export default function SubscriptionDetailPage() {
 
           {/* Provider */}
           {provider && (
-            <div className="bg-white rounded-xl border border-border p-4 flex flex-col gap-3 shadow-sm">
-              <h3 className="font-semibold text-sm">Prestataire</h3>
+            <div className="bg-white rounded-2xl border border-border overflow-hidden shadow-sm">
+              {/* Accent strip */}
+              <div className="h-1 bg-gradient-to-r from-primary to-primary/30" />
 
-              {/* Logo + nom + note */}
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-primary-surface flex items-center justify-center text-primary font-bold flex-shrink-0 overflow-hidden">
-                  {provider.logo ? (
-                    <Image src={provider.logo} alt={provider.name} width={48} height={48} className="rounded-full object-cover" />
-                  ) : (
-                    getInitials(provider.name)
-                  )}
-                </div>
-                <div className="min-w-0">
-                  <p className="font-medium text-sm flex items-center gap-1">
-                    <span className="truncate">{provider.name}</span>
-                    {provider.isVerified && (
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="flex-shrink-0">
-                        <circle cx="12" cy="12" r="10" fill="#3B82F6"/>
-                        <polyline points="8 12 11 15 16 9" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
+              <div className="p-5 flex flex-col gap-4">
+                <p className="text-[10px] font-bold text-text-light uppercase tracking-widest">Prestataire</p>
+
+                {/* Avatar + nom + rating */}
+                <div className="flex items-center gap-3">
+                  <div className="w-14 h-14 rounded-2xl bg-primary-surface flex items-center justify-center text-primary font-bold text-base flex-shrink-0 overflow-hidden">
+                    {provider.logo ? (
+                      <Image src={provider.logo} alt={provider.name} width={56} height={56} className="rounded-2xl object-cover" />
+                    ) : (
+                      getInitials(provider.name)
                     )}
-                  </p>
-                  {provider.rating !== undefined && (provider.reviewCount ?? 0) > 0 && (
-                    <div className="flex items-center gap-1 mt-0.5">
-                      <StarRating value={provider.rating} size={12} readOnly />
-                      <span className="text-xs text-text-secondary">({provider.reviewCount})</span>
+                  </div>
+
+                  <div className="flex flex-col gap-0.5 min-w-0">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="font-semibold text-text-primary text-sm leading-tight truncate">{provider.name}</span>
+                      {provider.isVerified && (
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="flex-shrink-0">
+                          <circle cx="12" cy="12" r="10" fill="#3B82F6"/>
+                          <polyline points="8 12 11 15 16 9" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      )}
                     </div>
-                  )}
+                    {provider.rating !== undefined && (provider.reviewCount ?? 0) > 0 && (
+                      <div className="flex items-center gap-1 mt-0.5">
+                        <StarRating value={provider.rating} size={12} readOnly />
+                        <span className="text-xs text-text-secondary">({provider.reviewCount})</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
+
+                {/* Description */}
+                {provider.description && (
+                  <p className="text-xs text-text-secondary leading-relaxed border-l-2 border-primary/20 pl-3 italic">
+                    {provider.description}
+                  </p>
+                )}
+
+                {/* Localisation */}
+                {(providerCity || provider.businessAddress) && (
+                  <div className="flex items-start gap-2 bg-surface-grey rounded-xl px-3 py-2.5">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 mt-0.5 text-primary">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+                    </svg>
+                    <span className="text-xs text-text-secondary">
+                      {[provider.businessAddress, providerCity].filter(Boolean).join(', ')}
+                    </span>
+                  </div>
+                )}
+
+                {/* Modes de réception */}
+                {(provider.acceptsDelivery || provider.acceptsPickup) && (
+                  <div className="flex flex-wrap gap-2">
+                    {provider.acceptsDelivery && (
+                      <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full bg-primary-surface text-primary border border-primary/20">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                          <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+                        </svg>
+                        Livraison
+                      </span>
+                    )}
+                    {provider.acceptsPickup && (
+                      <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full bg-primary-surface text-primary border border-primary/20">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                        </svg>
+                        Retrait sur place
+                      </span>
+                    )}
+                  </div>
+                )}
               </div>
-
-              {/* Description */}
-              {provider.description && (
-                <p className="text-xs text-text-secondary leading-relaxed">{provider.description}</p>
-              )}
-
-              {/* Localisation */}
-              {(providerCity || provider.businessAddress) && (
-                <div className="flex items-start gap-1.5 text-xs text-text-secondary">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 mt-0.5">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
-                  </svg>
-                  <span>
-                    {[provider.businessAddress, providerCity].filter(Boolean).join(', ')}
-                  </span>
-                </div>
-              )}
-
-              {/* Modes de réception */}
-              {(provider.acceptsDelivery || provider.acceptsPickup) && (
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  {provider.acceptsDelivery && (
-                    <span className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full bg-primary-surface text-primary">
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
-                        <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
-                      </svg>
-                      Livraison
-                    </span>
-                  )}
-                  {provider.acceptsPickup && (
-                    <span className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full bg-primary-surface text-primary">
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
-                      </svg>
-                      Retrait sur place
-                    </span>
-                  )}
-                </div>
-              )}
             </div>
           )}
 
           {/* Zones & points de retrait */}
           {((deliveryZones && deliveryZones.length > 0) || (pickupPoints && pickupPoints.length > 0)) && (
-            <div className="bg-white rounded-xl border border-border p-4 flex flex-col gap-3 shadow-sm">
+            <div className="bg-white rounded-2xl border border-border p-4 flex flex-col gap-3 shadow-sm">
               <h3 className="font-semibold text-sm">Détails de livraison</h3>
               {deliveryZones && deliveryZones.length > 0 && (
                 <div>
