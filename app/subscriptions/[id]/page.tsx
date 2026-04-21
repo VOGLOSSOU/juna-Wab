@@ -167,7 +167,7 @@ export default function SubscriptionDetailPage() {
         </div>
 
         {/* ── Colonne droite sticky ── */}
-        <div className="lg:w-80 flex flex-col gap-4 lg:sticky lg:top-24 self-start">
+        <div className="lg:w-80 flex flex-col gap-4 lg:sticky lg:top-24 self-start w-full max-w-sm mx-auto lg:mx-0 lg:max-w-none">
 
           {/* Prix & CTA */}
           <div className="bg-white rounded-2xl border border-border p-5 flex flex-col gap-4 shadow-sm">
@@ -187,11 +187,7 @@ export default function SubscriptionDetailPage() {
 
           {/* Provider */}
           {provider && (
-            <div className="bg-white rounded-2xl border border-border overflow-hidden shadow-sm">
-              {/* Accent strip */}
-              <div className="h-1 bg-gradient-to-r from-primary to-primary/30" />
-
-              <div className="p-5 flex flex-col gap-4">
+            <div className="bg-white rounded-2xl border border-border p-5 flex flex-col gap-4 shadow-sm">
                 <p className="text-[10px] font-bold text-text-light uppercase tracking-widest">Prestataire</p>
 
                 {/* Avatar + nom + rating */}
@@ -225,7 +221,7 @@ export default function SubscriptionDetailPage() {
 
                 {/* Description */}
                 {provider.description && (
-                  <p className="text-xs text-text-secondary leading-relaxed border-l-2 border-primary/20 pl-3 italic">
+                  <p className="text-xs text-text-secondary leading-relaxed">
                     {provider.description}
                   </p>
                 )}
@@ -264,7 +260,6 @@ export default function SubscriptionDetailPage() {
                     )}
                   </div>
                 )}
-              </div>
             </div>
           )}
 
