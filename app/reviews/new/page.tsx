@@ -1,13 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createReview } from '@/lib/api/reviews'
 import { Button } from '@/components/ui/button'
 import { StarRating } from '@/components/ui/star-rating'
 import toast from 'react-hot-toast'
 
-export default function NewReviewPage() {
+function NewReviewForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const orderId = searchParams.get('orderId') ?? ''
@@ -57,5 +57,13 @@ export default function NewReviewPage() {
         </Button>
       </div>
     </div>
+  )
+}
+
+export default function NewReviewPage() {
+  return (
+    <Suspense>
+      <NewReviewForm />
+    </Suspense>
   )
 }

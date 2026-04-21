@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { getOrder } from '@/lib/api/orders'
@@ -9,7 +9,7 @@ import { StatusBadge } from '@/components/ui/status-badge'
 import { formatPrice, formatDate } from '@/lib/utils'
 import type { Order } from '@/types'
 
-export default function CheckoutConfirmationPage() {
+function ConfirmationContent() {
   const searchParams = useSearchParams()
   const orderId = searchParams.get('orderId') ?? ''
   const [order, setOrder] = useState<Order | null>(null)
@@ -92,5 +92,13 @@ export default function CheckoutConfirmationPage() {
         </Link>
       </div>
     </div>
+  )
+}
+
+export default function CheckoutConfirmationPage() {
+  return (
+    <Suspense>
+      <ConfirmationContent />
+    </Suspense>
   )
 }

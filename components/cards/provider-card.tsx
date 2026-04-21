@@ -31,7 +31,7 @@ export function ProviderCard({ provider }: ProviderCardProps) {
           )}
         </div>
 
-        {city && <p className="text-xs text-text-secondary">{city}</p>}
+        {city && <p className="text-xs text-text-secondary">{typeof city === 'string' ? city : city.name}</p>}
 
         <div className="flex items-center gap-3 mt-1">
           {rating !== undefined && (reviewCount ?? 0) > 0 && (

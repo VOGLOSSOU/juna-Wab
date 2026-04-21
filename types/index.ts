@@ -123,8 +123,11 @@ export interface ProviderSummary {
   description?: string | null
   rating?: number
   reviewCount?: number
-  city?: string
+  city?: string | { id: string; name: string }
   subscriptionCount?: number
+  acceptsDelivery?: boolean
+  acceptsPickup?: boolean
+  businessAddress?: string
 }
 
 // Full provider profile (dashboard / GET /providers/me)
@@ -184,6 +187,7 @@ export interface Subscription {
   meals?: Meal[]
   deliveryZones?: string[]
   pickupPoints?: string[]
+  providerSubscriptions?: Subscription[]
   createdAt?: string
 }
 

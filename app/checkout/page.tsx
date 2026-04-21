@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import { useAuthGuard } from '@/lib/hooks/use-auth-guard'
@@ -21,7 +21,7 @@ const PAYMENT_METHODS: { value: PaymentMethod; label: string }[] = [
   { value: 'CASH', label: 'Espèces à la livraison' },
 ]
 
-export default function CheckoutPage() {
+function CheckoutForm() {
   const { isAuthenticated, hydrated } = useAuthGuard('/auth/login')
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -197,5 +197,13 @@ export default function CheckoutPage() {
         </Button>
       </div>
     </div>
+  )
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense>
+      <CheckoutForm />
+    </Suspense>
   )
 }
