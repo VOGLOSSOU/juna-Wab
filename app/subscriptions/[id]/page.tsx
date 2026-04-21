@@ -16,7 +16,8 @@ import type { Subscription } from '@/types'
 export default function SubscriptionDetailPage() {
   const { id } = useParams<{ id: string }>()
   const router = useRouter()
-  const { isAuthenticated } = useAuthStore()
+  const { isAuthenticated, user } = useAuthStore()
+  const isProvider = user?.role === 'PROVIDER'
 
   const [subscription, setSubscription] = useState<Subscription | null>(null)
   const [loading, setLoading] = useState(true)
@@ -175,10 +176,14 @@ export default function SubscriptionDetailPage() {
               <span className="text-display-medium font-bold text-primary">{formatPrice(price, currency)}</span>
               <p className="text-sm text-text-secondary mt-1">{SUBSCRIPTION_DURATION_LABELS[duration]}</p>
             </div>
-            <Button variant="primary" size="lg" className="w-full" disabled={!isActive} onClick={handleSubscribe}>
+            <Button variant="primary" size="lg" className="w-full" disabled={!isActive || isProvider} onClick={handleSubscribe}>
               {isActive ? "S'abonner" : 'Indisponible'}
             </Button>
-            {!isActive && (
+            {isProvider ? (
+              <p className="text-xs text-text-secondary text-center">
+                Les comptes prestataires ne peuvent pas souscrire à des abonnements.
+              </p>
+            ) : !isActive && (
               <p className="text-xs text-text-secondary text-center">
                 Cet abonnement n&apos;est pas disponible pour le moment.
               </p>

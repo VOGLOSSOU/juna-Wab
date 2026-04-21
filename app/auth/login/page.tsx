@@ -10,7 +10,7 @@ import { z } from 'zod'
 import toast from 'react-hot-toast'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { login } from '@/lib/api/auth'
+import { login, getUserProfile } from '@/lib/api/auth'
 import { useAuthStore } from '@/lib/store/auth'
 
 const schema = z.object({
@@ -24,7 +24,7 @@ function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const redirect = searchParams.get('redirect') || '/'
-  const { setAuth } = useAuthStore()
+  const { setAuth, updateUser } = useAuthStore()
   const [showPassword, setShowPassword] = useState(false)
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>({
@@ -35,6 +35,7 @@ function LoginForm() {
     try {
       const result = await login(data)
       setAuth(result.user, result.accessToken, result.refreshToken)
+      getUserProfile().then(updateUser).catch(() => {})
       toast.success('Connexion réussie !')
       router.push(redirect)
     } catch (err: unknown) {
