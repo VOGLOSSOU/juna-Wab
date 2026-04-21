@@ -22,7 +22,7 @@ export function SubscriptionCard({ subscription, variant = 'compact' }: Subscrip
       <Link href={`/subscriptions/${id}`} className="flex gap-4 bg-white rounded-lg p-3 shadow-sm border border-border hover:shadow-md transition-shadow">
         <div className="relative w-24 h-24 flex-shrink-0 rounded-md overflow-hidden bg-surface-grey">
           {imageUrl ? (
-            <Image src={imageUrl} alt={name} fill className="object-cover" />
+            <Image src={imageUrl} alt={name} fill sizes="96px" className="object-cover" />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-text-light"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg></div>
           )}
@@ -41,7 +41,7 @@ export function SubscriptionCard({ subscription, variant = 'compact' }: Subscrip
   return (
     <Link
       href={`/subscriptions/${id}`}
-      className={`group flex flex-col bg-white rounded-lg overflow-hidden shadow-sm border border-border hover:shadow-md transition-all duration-200 ${
+      className={`group flex flex-col h-full bg-white rounded-lg overflow-hidden shadow-sm border border-border hover:shadow-md transition-all duration-200 ${
         variant === 'featured' ? 'min-w-[280px]' : ''
       }`}
     >
@@ -51,6 +51,7 @@ export function SubscriptionCard({ subscription, variant = 'compact' }: Subscrip
             src={imageUrl}
             alt={name}
             fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
             className="object-cover group-hover:scale-105 transition-transform duration-300"
           />
         ) : (
@@ -63,7 +64,7 @@ export function SubscriptionCard({ subscription, variant = 'compact' }: Subscrip
         )}
       </div>
 
-      <div className="flex flex-col gap-2 p-3">
+      <div className="flex flex-col gap-2 p-3 flex-1">
         <h3 className="font-semibold text-text-primary text-sm line-clamp-2 leading-snug">{name}</h3>
 
         {provider && (
@@ -88,7 +89,7 @@ export function SubscriptionCard({ subscription, variant = 'compact' }: Subscrip
           </div>
         )}
 
-        <div className="flex items-center justify-between mt-1">
+        <div className="flex items-center justify-between mt-auto pt-1">
           <span className="font-bold text-primary">{formatPrice(price, currency)}</span>
         </div>
       </div>

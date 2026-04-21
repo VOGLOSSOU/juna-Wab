@@ -59,7 +59,10 @@ export default function ExplorerPage() {
           setSubscriptions(data.items)
           setPage(2)
         } else {
-          setSubscriptions((prev) => [...prev, ...data.items])
+          setSubscriptions((prev) => {
+            const existingIds = new Set(prev.map(s => s.id))
+            return [...prev, ...data.items.filter(s => !existingIds.has(s.id))]
+          })
           setPage((p) => p + 1)
         }
         setHasMore(data.hasMore)

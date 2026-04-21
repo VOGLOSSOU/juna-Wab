@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
-import Link from 'next/link'
 import { getSubscription } from '@/lib/api/subscriptions'
 import { getSubscriptionReviews } from '@/lib/api/reviews'
 import { Button } from '@/components/ui/button'
@@ -220,9 +219,6 @@ export default function SubscriptionDetailPage() {
                   )}
                 </div>
               </div>
-              <Link href={`/providers/${provider.id}`}>
-                <Button variant="outline" size="sm" className="w-full">Voir le profil</Button>
-              </Link>
             </div>
           )}
 

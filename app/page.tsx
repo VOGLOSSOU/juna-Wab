@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { GeoModal } from '@/components/modals/geo-modal'
 import { Hero } from '@/components/layout/hero'
 import { SubscriptionCard } from '@/components/cards/subscription-card'
@@ -59,17 +60,24 @@ export default function HomePage() {
         {/* Populaires */}
         {hasChosen && (
           <section>
-            <h2 className="text-headline-large font-semibold text-text-primary mb-6">
-              Les plus populaires{selectedCity ? ` à ${selectedCity.name}` : ''}
-            </h2>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-headline-large font-semibold text-text-primary">
+                Les plus populaires{selectedCity ? ` à ${selectedCity.name}` : ''}
+              </h2>
+              <Link href="/explorer" className="text-sm font-medium text-primary hover:underline flex-shrink-0">
+                Découvrir
+              </Link>
+            </div>
             {loading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={i} />)}
+              <div className="flex gap-4 overflow-x-auto pb-2 -mx-6 px-6 hide-scrollbar">
+                {Array.from({ length: 4 }).map((_, i) => <div key={i} className="flex-shrink-0 w-64"><SkeletonCard /></div>)}
               </div>
             ) : data?.popular?.length ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="flex gap-4 overflow-x-auto pb-2 -mx-6 px-6 hide-scrollbar">
                 {data.popular.map((sub) => (
-                  <SubscriptionCard key={sub.id} subscription={sub} />
+                  <div key={sub.id} className="flex-shrink-0 w-52 h-full">
+                    <SubscriptionCard subscription={sub} variant="compact" />
+                  </div>
                 ))}
               </div>
             ) : !loading && !error && (
@@ -83,15 +91,22 @@ export default function HomePage() {
         {/* Récents */}
         {hasChosen && (
           <section>
-            <h2 className="text-headline-large font-semibold text-text-primary mb-6">Nouveautés</h2>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-headline-large font-semibold text-text-primary">Nouveautés</h2>
+              <Link href="/explorer?sort=recent" className="text-sm font-medium text-primary hover:underline flex-shrink-0">
+                Découvrir
+              </Link>
+            </div>
             {loading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={i} />)}
+              <div className="flex gap-4 overflow-x-auto pb-2 -mx-6 px-6 hide-scrollbar">
+                {Array.from({ length: 4 }).map((_, i) => <div key={i} className="flex-shrink-0 w-64"><SkeletonCard /></div>)}
               </div>
             ) : data?.recent?.length ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="flex gap-4 overflow-x-auto pb-2 -mx-6 px-6 hide-scrollbar">
                 {data.recent.map((sub) => (
-                  <SubscriptionCard key={sub.id} subscription={sub} />
+                  <div key={sub.id} className="flex-shrink-0 w-52 h-full">
+                    <SubscriptionCard subscription={sub} variant="compact" />
+                  </div>
                 ))}
               </div>
             ) : !loading && !error && (
