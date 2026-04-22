@@ -26,10 +26,12 @@ export function Navbar() {
         { href: '/', label: 'Accueil' },
         { href: '/explorer', label: 'Explorer' },
         { href: '/profile/orders', label: 'Mes commandes' },
+        { href: '/about', label: 'À propos' },
       ]
     : [
         { href: '/', label: 'Accueil' },
         { href: '/explorer', label: 'Explorer' },
+        { href: '/about', label: 'À propos' },
       ]
 
   const avatar = user?.avatarUrl ?? user?.profile?.avatar ?? null
