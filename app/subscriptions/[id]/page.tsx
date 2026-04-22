@@ -10,7 +10,7 @@ import { StarRating } from '@/components/ui/star-rating'
 import { SubscriptionCard } from '@/components/cards/subscription-card'
 import { SkeletonCard } from '@/components/ui/skeleton'
 import { useAuthStore } from '@/lib/store/auth'
-import { formatPrice, SUBSCRIPTION_TYPE_LABELS, SUBSCRIPTION_DURATION_LABELS, SUBSCRIPTION_CATEGORY_LABELS, getInitials } from '@/lib/utils'
+import { formatPrice, SUBSCRIPTION_TYPE_LABELS, SUBSCRIPTION_DURATION_LABELS, SUBSCRIPTION_CATEGORY_LABELS, SUBSCRIPTION_TYPE_DESCRIPTIONS, SUBSCRIPTION_DURATION_DESCRIPTIONS, SUBSCRIPTION_CATEGORY_DESCRIPTIONS, getInitials } from '@/lib/utils'
 import type { Subscription } from '@/types'
 
 export default function SubscriptionDetailPage() {
@@ -109,18 +109,21 @@ export default function SubscriptionDetailPage() {
         )}
 
         {/* Détails explicités */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div className="bg-surface-grey rounded-xl p-4">
-            <p className="text-xs text-text-light mb-1.5">Type</p>
+        <div className="flex flex-col gap-3">
+          <div className="bg-surface-grey rounded-xl p-4 flex flex-col gap-1.5">
+            <p className="text-[10px] font-bold text-text-light uppercase tracking-widest">Type</p>
             <p className="text-sm font-semibold text-text-primary">{SUBSCRIPTION_TYPE_LABELS[type]}</p>
+            <p className="text-xs text-text-secondary leading-relaxed">{SUBSCRIPTION_TYPE_DESCRIPTIONS[type]}</p>
           </div>
-          <div className="bg-surface-grey rounded-xl p-4">
-            <p className="text-xs text-text-light mb-1.5">Durée</p>
+          <div className="bg-surface-grey rounded-xl p-4 flex flex-col gap-1.5">
+            <p className="text-[10px] font-bold text-text-light uppercase tracking-widest">Durée</p>
             <p className="text-sm font-semibold text-text-primary">{SUBSCRIPTION_DURATION_LABELS[duration]}</p>
+            <p className="text-xs text-text-secondary leading-relaxed">{SUBSCRIPTION_DURATION_DESCRIPTIONS[duration]}</p>
           </div>
-          <div className="bg-surface-grey rounded-xl p-4">
-            <p className="text-xs text-text-light mb-1.5">Catégorie</p>
+          <div className="bg-surface-grey rounded-xl p-4 flex flex-col gap-1.5">
+            <p className="text-[10px] font-bold text-text-light uppercase tracking-widest">Catégorie</p>
             <p className="text-sm font-semibold text-text-primary">{SUBSCRIPTION_CATEGORY_LABELS[category]}</p>
+            <p className="text-xs text-text-secondary leading-relaxed">{SUBSCRIPTION_CATEGORY_DESCRIPTIONS[category]}</p>
           </div>
         </div>
       </div>
