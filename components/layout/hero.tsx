@@ -80,12 +80,11 @@ export function Hero() {
         {/* Titre principal */}
         <div className="flex flex-col gap-3">
           <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight tracking-tight drop-shadow-lg">
-            Vos repas livrés,{' '}
-            <span className="text-accent">chaque jour.</span>
+            Fini le <span className="text-accent">&ldquo;qu&apos;est-ce que<br className="hidden md:block" /> je mange aujourd&apos;hui ?&rdquo;</span>
           </h1>
           <p className="text-white/85 text-lg md:text-xl max-w-2xl leading-relaxed drop-shadow">
             Abonnez-vous aux meilleurs cuisiniers et traiteurs autour de vous.
-            Des repas faits maison, livrés directement chez vous.
+            Livraison à domicile ou retrait sur place, vous choisissez.
           </p>
         </div>
 

@@ -9,7 +9,7 @@ export function Footer() {
           <div className="flex flex-col gap-4">
             <Image src="/logo_green_orange.png" alt="JUNA" width={80} height={32} className="object-contain" />
             <p className="text-sm text-text-secondary">
-              JUNA : Vos repas, livrés par abonnement
+              Mange mieux. Sans y penser.
             </p>
           </div>
 
