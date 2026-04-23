@@ -14,6 +14,8 @@ import { formatPrice, SUBSCRIPTION_TYPE_LABELS, SUBSCRIPTION_DURATION_LABELS } f
 import toast from 'react-hot-toast'
 import type { Subscription, DeliveryMethod, PaymentMethod } from '@/types'
 
+
+
 type Step = 'form' | 'payment' | 'processing' | 'failed'
 
 type DeliveryZone = { city: string; country?: string; cost: number }
@@ -127,7 +129,7 @@ function CheckoutForm() {
   const fullPhoneNumber = country.prefix + localNumber.replace(/\s/g, '')
 
   const deliveryZones = subscription?.deliveryZones ? parseZones(subscription.deliveryZones as unknown[]) : []
-  const deliveryCost = deliveryMethod === 'DELIVERY' ? (selectedZone?.cost ?? 0) : 0
+  const deliveryCost = 0 // Selon la doc : frais négociés séparément avec le prestataire
   const total = (subscription?.price ?? 0) + deliveryCost
 
   const handleSubmit = async () => {
@@ -141,6 +143,13 @@ function CheckoutForm() {
         return
       }
     }
+    // Créer directement la commande pour tous les cas
+    await createOrderAndProceed()
+  }
+
+
+
+  const createOrderAndProceed = async () => {
     setSubmitting(true)
     try {
       const order = await createOrder({
@@ -270,11 +279,13 @@ function CheckoutForm() {
           </Button>
           <Button variant="outline" size="lg" className="w-full" onClick={() => router.push('/profile/orders')}>
             Voir mes commandes
-          </Button>
-        </div>
+        </Button>
       </div>
-    )
-  }
+
+
+    </div>
+  )
+}
 
   /* ── Phone number step ── */
   if (step === 'payment') {
@@ -306,22 +317,17 @@ function CheckoutForm() {
           {/* Country selector */}
           <div className="flex flex-col gap-2">
             <p className="text-sm font-medium text-text-primary">Pays *</p>
-            <div className="flex gap-2">
+            <select
+              value={countryCode}
+              onChange={(e) => setCountryCode(e.target.value)}
+              className="w-full py-2.5 px-3 rounded-lg border-2 border-border bg-white text-sm font-medium text-text-primary focus:border-primary focus:outline-none transition-colors"
+            >
               {COUNTRIES.map(c => (
-                <button
-                  key={c.code}
-                  onClick={() => setCountryCode(c.code)}
-                  className={`flex-1 py-2 px-3 rounded-lg border-2 text-xs font-medium transition-colors ${
-                    countryCode === c.code
-                      ? 'border-primary bg-primary-surface text-primary'
-                      : 'border-border text-text-secondary hover:border-primary/40'
-                  }`}
-                >
-                  +{c.prefix}<br />
-                  <span className="font-normal">{c.label}</span>
-                </button>
+                <option key={c.code} value={c.code}>
+                  {c.label} (+{c.prefix})
+                </option>
               ))}
-            </div>
+            </select>
           </div>
 
           {/* Phone number */}
@@ -444,6 +450,29 @@ function CheckoutForm() {
         )}
       </div>
 
+      {/* Message informatif livraison */}
+      {deliveryMethod === 'DELIVERY' && (
+        <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex gap-3">
+          <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1A5C2A" strokeWidth="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-green-900 mb-1">
+              Information importante sur la livraison
+            </p>
+            <p className="text-sm text-green-800">
+              Si vous souhaitez être livré durant toute la période de votre abonnement,
+              cela sera discuté directement avec le fournisseur de repas qui vous communiquera
+              les frais et modalités.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Date de début */}
       <div className="bg-white rounded-xl border border-border p-5 flex flex-col gap-3">
         <h2 className="font-semibold">Date de début</h2>
@@ -494,13 +523,13 @@ function CheckoutForm() {
         {deliveryMethod === 'DELIVERY' && selectedZone && (
           <div className="flex items-center justify-between">
             <span className="text-text-secondary text-sm">Frais de livraison ({selectedZone.city})</span>
-            <span className="font-medium">
-              {selectedZone.cost === 0 ? 'Gratuit' : formatPrice(selectedZone.cost, subscription.currency)}
+            <span className="font-medium text-accent">
+              Négociés avec le prestataire
             </span>
           </div>
         )}
         <div className="flex items-center justify-between pt-3 border-t border-border">
-          <span className="font-semibold">Total</span>
+          <span className="font-semibold">Total à payer maintenant</span>
           <span className="font-bold text-primary text-xl">{formatPrice(total, subscription.currency)}</span>
         </div>
         <Button variant="primary" size="lg" className="w-full" onClick={handleSubmit} loading={submitting}>
