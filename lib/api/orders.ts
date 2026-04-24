@@ -31,13 +31,8 @@ export async function getProviderOrders(): Promise<Order[]> {
   return res.data.data
 }
 
-export async function confirmOrder(id: string) {
-  const res = await apiClient.put<ApiResponse<Order>>(`/orders/${id}/confirm`)
-  return res.data.data
-}
-
-export async function markOrderReady(id: string) {
-  const res = await apiClient.put<ApiResponse<Order>>(`/orders/${id}/ready`)
+export async function activateOrder(id: string) {
+  const res = await apiClient.put<ApiResponse<Order>>(`/orders/${id}/activate`)
   return res.data.data
 }
 

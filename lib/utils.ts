@@ -12,12 +12,18 @@ export function formatPrice(amount: number, currency = 'XOF'): string {
   return `${amount.toLocaleString('fr-FR')} ${currency}`
 }
 
-export function timeAgo(date: string): string {
-  return formatDistanceToNow(new Date(date), { addSuffix: true, locale: fr })
+export function timeAgo(date: string | null | undefined): string {
+  if (!date) return '—'
+  const d = new Date(date)
+  if (isNaN(d.getTime())) return '—'
+  return formatDistanceToNow(d, { addSuffix: true, locale: fr })
 }
 
-export function formatDate(date: string): string {
-  return format(new Date(date), 'd MMMM yyyy', { locale: fr })
+export function formatDate(date: string | null | undefined): string {
+  if (!date) return '—'
+  const d = new Date(date)
+  if (isNaN(d.getTime())) return '—'
+  return format(d, 'd MMMM yyyy', { locale: fr })
 }
 
 export const SUBSCRIPTION_TYPE_LABELS: Record<SubscriptionType, string> = {
@@ -99,10 +105,7 @@ export const SUBSCRIPTION_CATEGORY_DESCRIPTIONS: Record<SubscriptionCategory, st
 export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
   PENDING:    'En attente',
   CONFIRMED:  'Confirmée',
-  PREPARING:  'En préparation',
-  READY:      'Prêt',
-  DELIVERING: 'En livraison',
-  DELIVERED:  'Livré',
+  ACTIVE:     'Active',
   COMPLETED:  'Terminée',
   CANCELLED:  'Annulée',
 }
@@ -110,10 +113,7 @@ export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
 export const ORDER_STATUS_COLORS: Record<OrderStatus, string> = {
   PENDING:    '#9E9E9E',
   CONFIRMED:  '#1565C0',
-  PREPARING:  '#F57C00',
-  READY:      '#388E3C',
-  DELIVERING: '#F57C00',
-  DELIVERED:  '#1A5C2A',
+  ACTIVE:     '#388E3C',
   COMPLETED:  '#1A5C2A',
   CANCELLED:  '#D32F2F',
 }

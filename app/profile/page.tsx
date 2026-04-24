@@ -509,6 +509,11 @@ export default function ProfilePage() {
             onClick={() => router.push('/profile/orders')}
             icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>}
           />
+          <NavItem
+            label="Mes abonnements actifs"
+            onClick={() => router.push('/profile/subscriptions')}
+            icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>}
+          />
           {storeUser?.role === 'PROVIDER' && (
             <button
               onClick={() => router.push('/dashboard')}

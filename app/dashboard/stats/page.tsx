@@ -8,7 +8,7 @@ import { getMyMeals } from '@/lib/api/meals'
 import { formatPrice } from '@/lib/utils'
 import type { Order, Subscription, Meal, OrderStatus } from '@/types'
 
-const COMPLETED_STATUSES: OrderStatus[] = ['COMPLETED', 'DELIVERED']
+const COMPLETED_STATUSES: OrderStatus[] = ['COMPLETED']
 
 function Skeleton() {
   return (

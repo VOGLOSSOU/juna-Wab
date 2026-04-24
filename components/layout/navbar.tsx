@@ -21,11 +21,14 @@ export function Navbar() {
     getUserProfile().then(updateUser).catch(() => {})
   }, [isAuthenticated])
 
+  const isProvider = user?.role === 'PROVIDER'
+
   const navLinks = isAuthenticated
     ? [
         { href: '/', label: 'Accueil' },
         { href: '/explorer', label: 'Explorer' },
         { href: '/profile/orders', label: 'Mes commandes' },
+        ...(!isProvider ? [{ href: '/profile/subscriptions', label: 'Mes abonnements' }] : []),
         { href: '/about', label: 'À propos' },
       ]
     : [

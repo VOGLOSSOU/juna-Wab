@@ -40,10 +40,7 @@ export type SubscriptionCategory =
 export type OrderStatus =
   | 'PENDING'
   | 'CONFIRMED'
-  | 'PREPARING'
-  | 'READY'
-  | 'DELIVERING'
-  | 'DELIVERED'
+  | 'ACTIVE'
   | 'COMPLETED'
   | 'CANCELLED'
 
@@ -231,6 +228,35 @@ export interface Review {
   rating: number
   comment?: string | null
   createdAt: string
+}
+
+export interface ActiveSubscription {
+  id: string
+  userId: string
+  orderId: string
+  subscriptionId: string
+  startedAt: string
+  endsAt: string
+  duration: SubscriptionDuration
+  subscription: {
+    id: string
+    name: string
+    category: SubscriptionCategory
+    type: SubscriptionType
+    provider: {
+      id: string
+      businessName: string
+    }
+  }
+  user?: Pick<User, 'id' | 'name' | 'email' | 'phone'>
+  order?: {
+    id: string
+    orderNumber: string
+    scheduledFor: string
+    deliveryMethod: DeliveryMethod
+    deliveryAddress?: string
+    deliveryCity?: string
+  }
 }
 
 export interface Notification {

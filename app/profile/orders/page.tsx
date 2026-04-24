@@ -4,9 +4,11 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useAuthGuard } from '@/lib/hooks/use-auth-guard'
 import { useAuthStore } from '@/lib/store/auth'
-import { getMyOrders } from '@/lib/api/orders'
+import { getMyOrders, activateOrder } from '@/lib/api/orders'
 import { StatusBadge } from '@/components/ui/status-badge'
+import { Button } from '@/components/ui/button'
 import { formatPrice, formatDate } from '@/lib/utils'
+import toast from 'react-hot-toast'
 import type { Order } from '@/types'
 
 function OrderSkeleton() {
@@ -30,6 +32,7 @@ export default function OrdersPage() {
   const { user } = useAuthStore()
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
+  const [activatingOrderId, setActivatingOrderId] = useState<string | null>(null)
 
   const isProvider = user?.role === 'PROVIDER'
 
@@ -37,6 +40,19 @@ export default function OrdersPage() {
     if (!hydrated || !isAuthenticated || isProvider) return
     getMyOrders().then(setOrders).catch(console.error).finally(() => setLoading(false))
   }, [hydrated, isAuthenticated, isProvider])
+
+  const handleActivateOrder = async (orderId: string) => {
+    setActivatingOrderId(orderId)
+    try {
+      const updatedOrder = await activateOrder(orderId)
+      setOrders(prev => prev.map(o => o.id === orderId ? updatedOrder : o))
+      toast.success('Commande activée avec succès !')
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || 'Erreur lors de l\'activation')
+    } finally {
+      setActivatingOrderId(null)
+    }
+  }
 
   if (isProvider) {
     return (
@@ -126,9 +142,8 @@ export default function OrdersPage() {
       {!loading && orders.length > 0 && (
         <div className="flex flex-col gap-3">
           {orders.map((order) => (
-            <Link
+            <div
               key={order.id}
-              href={`/profile/orders/${order.id}`}
               className="bg-white rounded-xl border border-border p-4 flex items-center gap-4 hover:shadow-sm hover:border-primary/20 transition-all"
             >
               {/* Icone */}
@@ -158,7 +173,33 @@ export default function OrdersPage() {
                   {formatPrice(order.amount ?? order.totalAmount ?? 0, order.currency)}
                 </span>
               </div>
-            </Link>
+
+              {/* Bouton ACTIVER ou lien vers détail */}
+              {order.status === 'CONFIRMED' ? (
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    handleActivateOrder(order.id)
+                  }}
+                  loading={activatingOrderId === order.id}
+                  className="flex-shrink-0"
+                >
+                  Activer
+                </Button>
+              ) : (
+                <Link
+                  href={`/profile/orders/${order.id}`}
+                  className="flex-shrink-0 text-primary hover:text-primary-dark transition-colors"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                </Link>
+              )}
+            </div>
           ))}
         </div>
       )}

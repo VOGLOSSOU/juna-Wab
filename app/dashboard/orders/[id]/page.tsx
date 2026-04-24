@@ -4,14 +4,14 @@ import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAuthGuard } from '@/lib/hooks/use-auth-guard'
-import { getOrder, confirmOrder, markOrderReady } from '@/lib/api/orders'
+import { getOrder } from '@/lib/api/orders'
 import { StatusBadge } from '@/components/ui/status-badge'
 import { Button } from '@/components/ui/button'
 import { formatPrice, formatDate, ORDER_STATUS_LABELS } from '@/lib/utils'
 import toast from 'react-hot-toast'
 import type { Order } from '@/types'
 
-const STATUS_STEPS = ['PENDING', 'CONFIRMED', 'PREPARING', 'READY', 'DELIVERING', 'DELIVERED', 'COMPLETED'] as const
+const STATUS_STEPS = ['PENDING', 'CONFIRMED', 'ACTIVE', 'COMPLETED'] as const
 
 function Skeleton() {
   return (
@@ -29,7 +29,6 @@ export default function DashboardOrderDetailPage() {
   const { isAuthenticated, hydrated } = useAuthGuard('/auth/login')
   const [order, setOrder] = useState<Order | null>(null)
   const [loading, setLoading] = useState(true)
-  const [actionLoading, setActionLoading] = useState(false)
 
   useEffect(() => {
     if (!hydrated || !isAuthenticated) return
@@ -39,31 +38,7 @@ export default function DashboardOrderDetailPage() {
       .finally(() => setLoading(false))
   }, [id, hydrated, isAuthenticated, router])
 
-  const handleConfirm = async () => {
-    setActionLoading(true)
-    try {
-      const updated = await confirmOrder(id)
-      setOrder(prev => prev ? { ...prev, status: updated.status } : prev)
-      toast.success('Commande confirmée')
-    } catch {
-      toast.error('Erreur lors de la confirmation')
-    } finally {
-      setActionLoading(false)
-    }
-  }
 
-  const handleReady = async () => {
-    setActionLoading(true)
-    try {
-      const updated = await markOrderReady(id)
-      setOrder(prev => prev ? { ...prev, status: updated.status } : prev)
-      toast.success('Commande marquée comme prête')
-    } catch {
-      toast.error('Erreur')
-    } finally {
-      setActionLoading(false)
-    }
-  }
 
   if (!hydrated || loading) return <Skeleton />
   if (!order) return null
@@ -170,21 +145,7 @@ export default function DashboardOrderDetailPage() {
         </div>
       )}
 
-      {/* Actions */}
-      {(order.status === 'PENDING' || order.status === 'CONFIRMED') && (
-        <div className="flex gap-3">
-          {order.status === 'PENDING' && (
-            <Button variant="primary" className="flex-1" loading={actionLoading} onClick={handleConfirm}>
-              Confirmer la commande
-            </Button>
-          )}
-          {order.status === 'CONFIRMED' && (
-            <Button variant="outline" className="flex-1" loading={actionLoading} onClick={handleReady}>
-              Marquer comme prête
-            </Button>
-          )}
-        </div>
-      )}
+
     </div>
   )
 }

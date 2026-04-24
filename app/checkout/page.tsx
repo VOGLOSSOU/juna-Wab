@@ -157,6 +157,7 @@ function CheckoutForm() {
         deliveryMethod,
         deliveryAddress: deliveryMethod === 'DELIVERY' ? deliveryAddress.trim() : undefined,
         deliveryCity: deliveryMethod === 'DELIVERY' ? selectedZone!.city : undefined,
+        pickupLocation: deliveryMethod === 'PICKUP' ? subscription!.provider?.businessAddress : undefined,
         startAsap,
       })
 
