@@ -195,7 +195,7 @@ export default function SubscriptionDetailPage() {
 
           {deliveryZones && deliveryZones.length > 0 && (
             <div>
-              <p className="text-xs font-medium text-text-secondary mb-2">Zones desservies</p>
+              <p className="text-xs font-medium text-text-secondary mb-2">Zones de livraison couvertes</p>
               <div className="flex flex-wrap gap-1.5">
                 {deliveryZones.map((zone, i) => (
                   <Badge key={i} variant="outline">

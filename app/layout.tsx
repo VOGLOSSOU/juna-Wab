@@ -6,7 +6,7 @@ import { Footer } from '@/components/layout/footer'
 
 export const metadata: Metadata = {
   title: {
-    default: 'Mange mieux. Sans y penser. , JUNA',
+    default: 'Mangez bien sans y penser - Juna',
     template: '%s — JUNA',
   },
   description: 'Découvrez et abonnez-vous aux meilleurs plans repas en Afrique de l\'Ouest. Traiteurs locaux, livraison à domicile ou retrait sur place.',
