@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import { useAuthGuard } from '@/lib/hooks/use-auth-guard'
 import { getSubscription } from '@/lib/api/subscriptions'
-import { createOrder } from '@/lib/api/orders'
+import { createOrder, getOrder } from '@/lib/api/orders'
 import { initiatePayment, getPaymentStatus } from '@/lib/api/payments'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -60,6 +60,7 @@ function CheckoutForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const subscriptionId = searchParams.get('subscriptionId') ?? ''
+  const existingOrderId = searchParams.get('orderId') ?? ''
 
   const [subscription, setSubscription] = useState<Subscription | null>(null)
   const [loading, setLoading] = useState(true)
@@ -82,12 +83,24 @@ function CheckoutForm() {
   const pollStartRef = useRef<number>(0)
 
   useEffect(() => {
-    if (!hydrated || !isAuthenticated || !subscriptionId) return
-    getSubscription(subscriptionId)
-      .then(setSubscription)
-      .catch(() => router.push('/explorer'))
-      .finally(() => setLoading(false))
-  }, [hydrated, isAuthenticated, subscriptionId, router])
+    if (!hydrated || !isAuthenticated) return
+    if (existingOrderId) {
+      getOrder(existingOrderId)
+        .then(async (order) => {
+          setOrderId(order.id)
+          const sub = await getSubscription(order.subscriptionId!)
+          setSubscription(sub)
+          setStep('payment')
+        })
+        .catch(() => router.push('/profile/orders'))
+        .finally(() => setLoading(false))
+    } else if (subscriptionId) {
+      getSubscription(subscriptionId)
+        .then(setSubscription)
+        .catch(() => router.push('/explorer'))
+        .finally(() => setLoading(false))
+    }
+  }, [hydrated, isAuthenticated, subscriptionId, existingOrderId, router])
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })

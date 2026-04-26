@@ -174,8 +174,16 @@ export default function OrdersPage() {
                 </span>
               </div>
 
-              {/* Bouton ACTIVER ou lien vers détail */}
-              {order.status === 'CONFIRMED' ? (
+              {/* Bouton PAYER / ACTIVER ou lien vers détail */}
+              {order.status === 'PENDING' ? (
+                <Link
+                  href={`/checkout?orderId=${order.id}`}
+                  className="flex-shrink-0"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <Button variant="primary" size="sm">Payer</Button>
+                </Link>
+              ) : order.status === 'CONFIRMED' ? (
                 <Button
                   variant="primary"
                   size="sm"

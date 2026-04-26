@@ -125,6 +125,13 @@ export default function OrderDetailPage() {
         </div>
       )}
 
+      {/* Bouton PAYER pour commandes PENDING */}
+      {order.status === 'PENDING' && (
+        <Button variant="primary" onClick={() => router.push(`/checkout?orderId=${order.id}`)}>
+          Payer maintenant
+        </Button>
+      )}
+
       {/* Bouton ACTIVER pour commandes CONFIRMED */}
       {order.status === 'CONFIRMED' && (
         <Button variant="primary" onClick={handleActivateOrder} loading={activating}>
