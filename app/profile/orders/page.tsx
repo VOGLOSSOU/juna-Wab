@@ -174,39 +174,32 @@ export default function OrdersPage() {
                 </span>
               </div>
 
-              {/* Bouton PAYER / ACTIVER ou lien vers détail */}
-              {order.status === 'PENDING' ? (
-                <Link
-                  href={`/checkout?orderId=${order.id}`}
-                  className="flex-shrink-0"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <Button variant="primary" size="sm">Payer</Button>
-                </Link>
-              ) : order.status === 'CONFIRMED' ? (
-                <Button
-                  variant="primary"
-                  size="sm"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handleActivateOrder(order.id)
-                  }}
-                  loading={activatingOrderId === order.id}
-                  className="flex-shrink-0"
-                >
-                  Activer
-                </Button>
-              ) : (
+              {/* Actions + lien vers détail */}
+              <div className="flex items-center gap-2 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
+                {order.status === 'PENDING' && (
+                  <Link href={`/checkout?orderId=${order.id}`}>
+                    <Button variant="primary" size="sm">Payer</Button>
+                  </Link>
+                )}
+                {order.status === 'CONFIRMED' && (
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={() => handleActivateOrder(order.id)}
+                    loading={activatingOrderId === order.id}
+                  >
+                    Activer
+                  </Button>
+                )}
                 <Link
                   href={`/profile/orders/${order.id}`}
-                  className="flex-shrink-0 text-primary hover:text-primary-dark transition-colors"
-                  onClick={(e) => e.stopPropagation()}
+                  className="text-primary hover:text-primary-dark transition-colors"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <polyline points="9 18 15 12 9 6" />
                   </svg>
                 </Link>
-              )}
+              </div>
             </div>
           ))}
         </div>

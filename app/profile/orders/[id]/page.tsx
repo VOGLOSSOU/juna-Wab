@@ -140,18 +140,7 @@ export default function OrderDetailPage() {
       )}
 
 
-      {/* QR Code seulement quand ACTIVE */}
-      {order.status === 'ACTIVE' && order.qrCode && (
-        <div className="bg-white rounded-xl border border-border p-5 text-center">
-          <h3 className="font-semibold mb-3">Code QR de retrait</h3>
-          <p className="font-mono font-bold text-primary text-lg tracking-wider">{order.qrCode}</p>
-          <p className="text-sm text-text-secondary mt-2">
-            Présentez ce code au prestataire pour récupérer votre commande.
-          </p>
-        </div>
-      )}
-
-      {order.status === 'COMPLETED' && (
+{order.status === 'COMPLETED' && (
         <Button variant="primary" onClick={() => router.push(`/reviews/new?orderId=${order.id}&subscriptionId=${order.subscription?.id ?? order.subscriptionId}`)}>
           Laisser un avis
         </Button>
