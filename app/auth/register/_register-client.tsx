@@ -108,6 +108,16 @@ export default function RegisterClient() {
             Se connecter
           </Link>
         </p>
+
+        <p className="text-center text-xs text-text-light leading-relaxed">
+          En créant un compte, vous reconnaissez avoir pris connaissance de nos{' '}
+          <Link href="/privacy" className="underline hover:text-text-secondary">politique de confidentialité</Link>
+          {', '}
+          <Link href="/terms" className="underline hover:text-text-secondary">{"conditions d'utilisation"}</Link>
+          {' et '}
+          <Link href="/sales-terms" className="underline hover:text-text-secondary">conditions de vente</Link>
+          .
+        </p>
       </div>
     </div>
   )

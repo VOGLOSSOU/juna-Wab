@@ -28,8 +28,10 @@ export function Footer() {
             <h4 className="font-semibold text-sm text-text-primary">Informations</h4>
             <Link href="/about" className="text-sm text-text-secondary hover:text-primary transition-colors">À propos</Link>
             <Link href="/contact" className="text-sm text-text-secondary hover:text-primary transition-colors">Contact</Link>
-            <Link href="/legal" className="text-sm text-text-secondary hover:text-primary transition-colors">Mentions légales</Link>
             <Link href="/privacy" className="text-sm text-text-secondary hover:text-primary transition-colors">Confidentialité</Link>
+            <Link href="/terms" className="text-sm text-text-secondary hover:text-primary transition-colors">{"Conditions d'utilisation"}</Link>
+            <Link href="/sales-terms" className="text-sm text-text-secondary hover:text-primary transition-colors">Conditions de vente</Link>
+            <Link href="/legal" className="text-sm text-text-secondary hover:text-primary transition-colors">Mentions légales</Link>
           </div>
         </div>
 
