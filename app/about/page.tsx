@@ -2,7 +2,17 @@ import Link from 'next/link'
 import Image from 'next/image'
 import type { Metadata } from 'next'
 
-export const metadata: Metadata = { title: 'À propos' }
+export const metadata: Metadata = {
+  title: 'Juna - Abonnez-vous à votre resto, simplifiez votre quotidien',
+  description: 'Juna vous connecte à vos restos préférés via des abonnements repas. Fini le stress du "qu\'est-ce que je mange ?". Maîtrisez votre budget, gagnez du temps, mangez bien.',
+  keywords: 'abonnement repas, nourriture locale, livraison repas, traiteur, fournisseur local, plan alimentaire, Juna, Juna App, Junaeats, Juna Eats, Uber Eats, livraison de repas, plat livré, resto, restaurant, commander à manger, repas à domicile, food delivery, manger en ligne, budget repas, gain de temps, clientèle fidèle, à propos Juna, mission Juna',
+  openGraph: {
+    title: 'Juna - Abonnez-vous à votre resto, simplifiez votre quotidien',
+    description: 'Juna vous connecte à vos restos préférés via des abonnements repas. Fini le stress du "qu\'est-ce que je mange ?". Maîtrisez votre budget, gagnez du temps, mangez bien.',
+    images: [{ url: 'https://junaeats.com/logo_green_orange.png', width: 800, height: 400, alt: 'Juna' }],
+    type: 'website',
+  },
+}
 
 function SectionLabel({ children, center }: { children: React.ReactNode; center?: boolean }) {
   return (
