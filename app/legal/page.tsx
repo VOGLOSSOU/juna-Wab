@@ -26,7 +26,7 @@ export default function LegalPage() {
         <div className="bg-surface-grey rounded-xl p-5 flex flex-col gap-2 text-sm">
           <Row label="Marque / Produit" value="Juna (junaeats.com)" />
           <Row label="Société éditrice" value="ExternaLux6" />
-          <Row label="Forme juridique" value="Entreprise Individuelle" />
+          <Row label="Forme juridique" value="Etablissement" />
           <Row label="N° RCCM" value="RB/COT/23 A 91500" />
           <Row label="N° IFU" value="0202233129461" />
           <Row label="Lieu d'immatriculation" value="Cotonou, Bénin" />

@@ -25,7 +25,7 @@ export default function PrivacyPage() {
       <Section title="1. Introduction">
         <p>
           Juna est une plateforme de mise en relation entre abonnés et prestataires de repas,
-          éditée par <strong>ExternaLux6</strong>, entreprise individuelle immatriculée à Cotonou, Bénin
+          éditée par <strong>ExternaLux6</strong>, établissement immatriculé à Cotonou, Bénin
           (N° RCCM : RB/COT/23 A 91500 — N° IFU : 0202233129461).
         </p>
         <p>
@@ -172,7 +172,7 @@ export default function PrivacyPage() {
         <p>Pour toute question relative à cette politique ou au traitement de vos données personnelles :</p>
         <div className="bg-surface-grey rounded-xl p-4 flex flex-col gap-1.5 text-sm">
           <p><strong>ExternaLux6</strong> — éditeur de Juna</p>
-          <p>Forme juridique : Entreprise Individuelle</p>
+          <p>Forme juridique : Etablissement</p>
           <p>N° RCCM : RB/COT/23 A 91500</p>
           <p>N° IFU : 0202233129461</p>
           <p>Immatriculée à Cotonou, Bénin</p>

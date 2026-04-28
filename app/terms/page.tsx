@@ -26,7 +26,7 @@ export default function TermsPage() {
         <p>
           Les présentes Conditions Générales d'Utilisation (CGU) régissent l'accès et l'utilisation
           de la plateforme <strong>Juna</strong> (site web et application mobile), éditée par{' '}
-          <strong>ExternaLux6</strong>, entreprise individuelle immatriculée à Cotonou, Bénin
+          <strong>ExternaLux6</strong>, établissement immatriculé à Cotonou, Bénin
           (N° RCCM : RB/COT/23 A 91500 — N° IFU : 0202233129461).
         </p>
         <p>

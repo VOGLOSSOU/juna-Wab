@@ -26,7 +26,7 @@ export default function SalesTermsPage() {
         <p>
           Les présentes Conditions Générales de Vente (CGV) encadrent les transactions réalisées
           entre les utilisateurs et les prestataires de repas via la plateforme <strong>Juna</strong>,
-          éditée par <strong>ExternaLux6</strong>, entreprise individuelle immatriculée à Cotonou, Bénin
+          éditée par <strong>ExternaLux6</strong>, établissement immatriculé à Cotonou, Bénin
           (N° RCCM : RB/COT/23 A 91500 — N° IFU : 0202233129461).
         </p>
         <p>
