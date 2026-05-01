@@ -182,7 +182,12 @@ function CheckoutForm() {
       setOrderId(order.id)
       setStep('payment')
     } catch (err: unknown) {
-      const msg = (err as { response?: { data?: { message?: string | string[] } } })?.response?.data?.message
+      const errData = (err as { response?: { data?: { error?: { code?: string }; message?: string | string[] } } })?.response?.data
+      if (errData?.error?.code === 'EMAIL_NOT_VERIFIED') {
+        router.push('/auth/verify-email')
+        return
+      }
+      const msg = errData?.message
       const text = Array.isArray(msg) ? msg[0] : msg
       toast.error(typeof text === 'string' ? text : 'Erreur lors de la commande')
     } finally {

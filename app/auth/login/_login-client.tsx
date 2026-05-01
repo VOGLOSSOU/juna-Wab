@@ -36,6 +36,10 @@ function LoginForm() {
   const onSubmit = async (data: FormData) => {
     try {
       const result = await login(data)
+      if (!result.user.isVerified) {
+        router.push(`/auth/verify-email?email=${encodeURIComponent(data.email)}`)
+        return
+      }
       setAuth(result.user, result.accessToken, result.refreshToken)
       const profileCity = result.user.profile?.city
       if (profileCity && profileCity.country) {

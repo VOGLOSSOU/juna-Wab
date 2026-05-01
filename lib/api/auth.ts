@@ -22,7 +22,17 @@ export async function login(data: { email: string; password: string }) {
   }
 }
 
-export async function register(data: { name: string; email: string; phone?: string; password: string }) {
+export async function sendVerificationCode(email: string) {
+  const res = await apiClient.post<ApiResponse<{ message: string }>>('/auth/send-verification-code', { email })
+  return res.data
+}
+
+export async function verifyCode(email: string, code: string) {
+  const res = await apiClient.post<ApiResponse<{ verified: boolean; verifiedToken: string; userExists: boolean }>>('/auth/verify-code', { email, code })
+  return res.data.data
+}
+
+export async function register(data: { name: string; email: string; verifiedToken: string; phone?: string; password: string }) {
   const res = await apiClient.post<ApiResponse<AuthResponse>>('/auth/register', data)
   return {
     user: res.data.data.user,

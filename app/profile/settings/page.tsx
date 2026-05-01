@@ -16,7 +16,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 export default function SettingsPage() {
   const { isAuthenticated, hydrated } = useAuthGuard()
-  const { isProvider } = useAuthStore()
+  const { isProvider, user } = useAuthStore()
 
   if (!hydrated || !isAuthenticated) return null
 
@@ -36,6 +36,7 @@ export default function SettingsPage() {
       <div className="flex flex-col gap-8">
 
         {/* ── Espace prestataire ── */}
+        {(isProvider || user?.isVerified) && (
         <Section title="Espace prestataire">
           {isProvider ? (
             <Link href="/dashboard"
@@ -110,6 +111,7 @@ export default function SettingsPage() {
             </div>
           )}
         </Section>
+        )}
 
       </div>
     </div>
