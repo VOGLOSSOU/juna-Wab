@@ -47,11 +47,15 @@ apiClient.interceptors.response.use(
           .catch((err) => Promise.reject(err))
       }
 
+      const refreshToken = localStorage.getItem('refreshToken')
+      if (!refreshToken) {
+        return Promise.reject(error)
+      }
+
       originalRequest._retry = true
       isRefreshing = true
 
       try {
-        const refreshToken = localStorage.getItem('refreshToken')
         const { data } = await axios.post(`${BASE_URL}/auth/refresh`, { refreshToken })
         const newAccessToken = data.data.accessToken
 
