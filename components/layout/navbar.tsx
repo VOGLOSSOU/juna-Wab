@@ -46,10 +46,10 @@ export function Navbar() {
         {/* Logo */}
         <Link href="/" className="flex-shrink-0">
           <Image
-            src="/logo_green_orange.png"
+            src="/juna-logo.png"
             alt="JUNA"
-            width={80}
-            height={32}
+            width={40}
+            height={40}
             className="object-contain"
             priority
           />

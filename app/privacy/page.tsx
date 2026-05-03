@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Juna - Politique de confidentialité',
     description: 'Découvrez comment Juna collecte, utilise et protège vos données personnelles.',
-    images: [{ url: 'https://junaeats.com/logo_green_orange.png', width: 800, height: 400, alt: 'Juna' }],
+    images: [{ url: 'https://junaeats.com/juna-logo.png', width: 800, height: 400, alt: 'Juna' }],
     type: 'website',
   },
 }

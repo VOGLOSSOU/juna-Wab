@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Juna - Abonne-toi à ton resto préféré',
     description: 'Souscrivez à des abonnements repas chez des fournisseurs locaux près de chez vous. Petit-déjeuner, déjeuner, dîner — livraison ou retrait. Paiement Mobile Money.',
-    images: [{ url: 'https://junaeats.com/logo_green_orange.png', width: 800, height: 400, alt: 'Juna' }],
+    images: [{ url: 'https://junaeats.com/juna-logo.png', width: 800, height: 400, alt: 'Juna' }],
     type: 'website',
   },
 }

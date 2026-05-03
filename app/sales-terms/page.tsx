@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Juna - Conditions Générales de Vente',
     description: 'Consultez les conditions générales de vente de Juna : commande, paiement, activation.',
-    images: [{ url: 'https://junaeats.com/logo_green_orange.png', width: 800, height: 400, alt: 'Juna' }],
+    images: [{ url: 'https://junaeats.com/juna-logo.png', width: 800, height: 400, alt: 'Juna' }],
     type: 'website',
   },
 }

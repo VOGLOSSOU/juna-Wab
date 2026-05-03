@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     const sub = json.data
     const title = `${sub.name} - Juna`
     const description = (sub.description ?? `Abonnez-vous chez ${sub.provider?.name} sur Juna.`).slice(0, 160)
-    const image = sub.images?.[0] ?? 'https://junaeats.com/logo_green_orange.png'
+    const image = sub.images?.[0] ?? 'https://junaeats.com/juna-logo.png'
     return {
       title,
       description,
@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
       title: 'Abonnement repas - Juna',
       description: 'Découvrez cet abonnement repas sur Juna et abonnez-vous en quelques clics.',
       openGraph: {
-        images: [{ url: 'https://junaeats.com/logo_green_orange.png', width: 800, height: 400, alt: 'Juna' }],
+        images: [{ url: 'https://junaeats.com/juna-logo.png', width: 800, height: 400, alt: 'Juna' }],
       },
     }
   }

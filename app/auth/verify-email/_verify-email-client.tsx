@@ -219,7 +219,7 @@ export default function VerifyEmailClient() {
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md bg-white rounded-xl shadow-md p-8 flex flex-col gap-6">
         <div className="flex justify-center">
-          <Image src="/logo_green_orange.png" alt="JUNA" width={80} height={32} className="object-contain" />
+          <Image src="/juna-logo.png" alt="JUNA" width={64} height={64} className="object-contain" />
         </div>
         <div className="text-center">
           <h1 className="text-headline-large font-semibold text-text-primary">Vérifiez votre email</h1>

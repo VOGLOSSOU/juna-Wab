@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Juna - Découvrez les abonnements repas proche de vous',
     description: 'Parcourez tous les abonnements repas disponibles près de chez vous. Filtrez par type, durée, catégorie. Petit-déjeuner, déjeuner, dîner — trouvez ce qui vous convient.',
-    images: [{ url: 'https://junaeats.com/logo_green_orange.png', width: 800, height: 400, alt: 'Juna' }],
+    images: [{ url: 'https://junaeats.com/juna-logo.png', width: 800, height: 400, alt: 'Juna' }],
     type: 'website',
   },
 }

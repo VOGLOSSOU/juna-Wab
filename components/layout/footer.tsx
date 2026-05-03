@@ -7,7 +7,7 @@ export function Footer() {
       <div className="max-w-content mx-auto px-6 py-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="flex flex-col gap-4">
-            <Image src="/logo_green_orange.png" alt="JUNA" width={80} height={32} className="object-contain" />
+            <Image src="/juna-logo.png" alt="JUNA" width={48} height={48} className="object-contain" />
             <p className="text-sm text-text-secondary">
               Mangez bien sans y penser - Juna
             </p>

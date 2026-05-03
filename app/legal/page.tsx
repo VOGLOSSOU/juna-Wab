@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Juna - Mentions légales',
     description: 'Mentions légales de la plateforme Juna.',
-    images: [{ url: 'https://junaeats.com/logo_green_orange.png', width: 800, height: 400, alt: 'Juna' }],
+    images: [{ url: 'https://junaeats.com/juna-logo.png', width: 800, height: 400, alt: 'Juna' }],
     type: 'website',
   },
 }

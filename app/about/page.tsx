@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Juna - Abonnez-vous à votre resto, simplifiez votre quotidien',
     description: 'Juna vous connecte à vos restos préférés via des abonnements repas. Fini le stress du "qu\'est-ce que je mange ?". Maîtrisez votre budget, gagnez du temps, mangez bien.',
-    images: [{ url: 'https://junaeats.com/logo_green_orange.png', width: 800, height: 400, alt: 'Juna' }],
+    images: [{ url: 'https://junaeats.com/juna-logo.png', width: 800, height: 400, alt: 'Juna' }],
     type: 'website',
   },
 }
