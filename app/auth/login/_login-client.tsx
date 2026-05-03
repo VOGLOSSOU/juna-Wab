@@ -97,7 +97,7 @@ function LoginForm() {
           />
 
           <div className="flex justify-end">
-            <Link href="#" className="text-sm text-primary hover:underline">Mot de passe oublié ?</Link>
+            <Link href="/auth/forgot-password" className="text-sm text-primary hover:underline">Mot de passe oublié ?</Link>
           </div>
 
           <Button type="submit" variant="primary" size="lg" loading={isSubmitting} className="w-full">

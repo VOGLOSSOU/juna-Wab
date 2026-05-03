@@ -74,6 +74,16 @@ export async function updatePreferences(data: {
   return res.data.data
 }
 
+export async function forgotPassword(email: string) {
+  const res = await apiClient.post<ApiResponse<{ message: string }>>('/auth/forgot-password', { email })
+  return res.data
+}
+
+export async function resetPassword(token: string, newPassword: string) {
+  const res = await apiClient.post<ApiResponse<{ message: string }>>('/auth/reset-password', { token, newPassword })
+  return res.data
+}
+
 export async function changePassword(currentPassword: string, newPassword: string) {
   const res = await apiClient.post<ApiResponse<void>>('/auth/change-password', { currentPassword, newPassword })
   return res.data
