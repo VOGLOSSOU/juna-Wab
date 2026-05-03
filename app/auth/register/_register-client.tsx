@@ -58,6 +58,7 @@ export default function RegisterClient() {
 
   // Step 3
   const [showPassword, setShowPassword] = useState(false)
+  const [setupLoading, setSetupLoading] = useState(false)
 
   // City step state
   const [geoStep, setGeoStep] = useState<'country' | 'city'>('country')
@@ -236,11 +237,12 @@ export default function RegisterClient() {
         ...(data.phone ? { phone: data.phone } : {}),
       })
       setAuth(result.user, result.accessToken, result.refreshToken)
+      toast.success('Bienvenue !')
       const cityToSave = useCityStore.getState().selectedCity
       if (cityToSave) {
-        updateLocation(cityToSave.id).catch(() => {})
+        setSetupLoading(true)
+        await updateLocation(cityToSave.id).catch(() => {})
       }
-      toast.success('Compte créé avec succès !')
       router.push('/')
     } catch (err: unknown) {
       const code = (err as { response?: { data?: { error?: { code?: string } } } })?.response?.data?.error?.code
@@ -275,6 +277,19 @@ export default function RegisterClient() {
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
+      {setupLoading && (
+        <div className="absolute inset-0 z-50 bg-white flex flex-col items-center justify-center gap-4">
+          <style>{`
+            @keyframes juna-pulse {
+              0%, 100% { transform: scale(1); opacity: 1; }
+              50% { transform: scale(0.85); opacity: 0.7; }
+            }
+            .animate-juna-pulse { animation: juna-pulse 700ms ease-in-out infinite; }
+          `}</style>
+          <Image src="/juna-logo.png" alt="JUNA" width={72} height={72} className="object-contain animate-juna-pulse" />
+          <p className="text-sm text-text-secondary">Configuration en cours…</p>
+        </div>
+      )}
       <div className="w-full max-w-md bg-white rounded-xl shadow-md p-8 flex flex-col gap-6">
 
         <div className="flex flex-col items-center gap-3">
