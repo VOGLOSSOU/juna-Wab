@@ -10,10 +10,13 @@ import { z } from 'zod'
 import toast from 'react-hot-toast'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { sendVerificationCode, verifyCode, register as registerUser } from '@/lib/api/auth'
+import { sendVerificationCode, verifyCode, register as registerUser, updateLocation } from '@/lib/api/auth'
 import { useAuthStore } from '@/lib/store/auth'
+import { useCityStore } from '@/lib/store/city'
+import { getCountries, getCities } from '@/lib/api/geo'
+import type { Country, City } from '@/types'
 
-type Step = 'email' | 'otp' | 'form'
+type Step = 'city' | 'email' | 'otp' | 'form'
 
 const formSchema = z.object({
   name: z.string().min(2, 'Nom trop court'),
@@ -21,6 +24,10 @@ const formSchema = z.object({
   password: z.string().min(6, 'Minimum 6 caractères'),
 })
 type FormData = z.infer<typeof formSchema>
+
+function countryName(c: Country): string {
+  return c.translations?.fr ?? c.translations?.en ?? c.code
+}
 
 function formatCountdown(seconds: number) {
   const m = Math.floor(seconds / 60).toString().padStart(2, '0')
@@ -31,8 +38,10 @@ function formatCountdown(seconds: number) {
 export default function RegisterClient() {
   const router = useRouter()
   const { setAuth } = useAuthStore()
+  const { selectedCity, setCity } = useCityStore()
 
   const [step, setStep] = useState<Step>('email')
+  const [needsCityStep, setNeedsCityStep] = useState(false)
   const [email, setEmail] = useState('')
   const [verifiedToken, setVerifiedToken] = useState('')
 
@@ -50,9 +59,26 @@ export default function RegisterClient() {
   // Step 3
   const [showPassword, setShowPassword] = useState(false)
 
+  // City step state
+  const [geoStep, setGeoStep] = useState<'country' | 'city'>('country')
+  const [countries, setCountries] = useState<Country[]>([])
+  const [cities, setCities] = useState<City[]>([])
+  const [selectedCountry, setSelectedCountry] = useState<Country | null>(null)
+  const [geoLoading, setGeoLoading] = useState(false)
+  const [geoSearch, setGeoSearch] = useState('')
+
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>({
     resolver: zodResolver(formSchema),
   })
+
+  // On mount: if no city cached, show city picker first
+  useEffect(() => {
+    if (!selectedCity) {
+      setStep('city')
+      setNeedsCityStep(true)
+      getCountries().then(setCountries).catch(console.error)
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Countdown 10 min OTP
   useEffect(() => {
@@ -71,6 +97,36 @@ export default function RegisterClient() {
     }, 1000)
     return () => clearInterval(interval)
   }, [resendCooldown])
+
+  // ── City step ──
+  const handleSelectCountry = async (country: Country) => {
+    setSelectedCountry(country)
+    setGeoLoading(true)
+    setGeoSearch('')
+    try {
+      const data = await getCities(country.code)
+      setCities(data)
+      setGeoStep('city')
+    } catch {
+      toast.error('Erreur lors du chargement des villes')
+    } finally {
+      setGeoLoading(false)
+    }
+  }
+
+  const handleSelectCity = (city: City) => {
+    if (selectedCountry) {
+      setCity(city, selectedCountry)
+      setStep('email')
+    }
+  }
+
+  const filteredCountries = countries.filter(c =>
+    countryName(c).toLowerCase().includes(geoSearch.toLowerCase())
+  )
+  const filteredCities = cities.filter(c =>
+    c.name.toLowerCase().includes(geoSearch.toLowerCase())
+  )
 
   // ── Étape 1 : envoi du code ──
   const handleSendCode = async () => {
@@ -180,6 +236,10 @@ export default function RegisterClient() {
         ...(data.phone ? { phone: data.phone } : {}),
       })
       setAuth(result.user, result.accessToken, result.refreshToken)
+      const cityToSave = useCityStore.getState().selectedCity
+      if (cityToSave) {
+        updateLocation(cityToSave.id).catch(() => {})
+      }
       toast.success('Compte créé avec succès !')
       router.push('/')
     } catch (err: unknown) {
@@ -197,9 +257,21 @@ export default function RegisterClient() {
     }
   }
 
-  // ── Indicateur d'étapes ──
-  const steps = ['Email', 'Vérification', 'Compte']
-  const stepIndex = step === 'email' ? 0 : step === 'otp' ? 1 : 2
+  // ── Stepper ──
+  const allSteps = needsCityStep
+    ? ['Ville', 'Email', 'Vérification', 'Compte']
+    : ['Email', 'Vérification', 'Compte']
+
+  const stepIndex = needsCityStep
+    ? (step === 'city' ? 0 : step === 'email' ? 1 : step === 'otp' ? 2 : 3)
+    : (step === 'email' ? 0 : step === 'otp' ? 1 : 2)
+
+  const stepTitle: Record<Step, string> = {
+    city: 'Votre ville',
+    email: 'Créer un compte',
+    otp: 'Vérification email',
+    form: 'Finaliser le compte',
+  }
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
@@ -207,16 +279,12 @@ export default function RegisterClient() {
 
         <div className="flex flex-col items-center gap-3">
           <Image src="/juna-logo.png" alt="JUNA" width={64} height={64} className="object-contain" />
-          <h1 className="text-headline-large font-semibold text-text-primary">
-            {step === 'email' && 'Créer un compte'}
-            {step === 'otp' && 'Vérification email'}
-            {step === 'form' && 'Finaliser le compte'}
-          </h1>
+          <h1 className="text-headline-large font-semibold text-text-primary">{stepTitle[step]}</h1>
         </div>
 
         {/* Stepper */}
         <div className="flex items-center gap-0">
-          {steps.map((label, i) => (
+          {allSteps.map((label, i) => (
             <div key={i} className="flex items-center flex-1">
               <div className="flex flex-col items-center gap-1 flex-1">
                 <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
@@ -232,12 +300,107 @@ export default function RegisterClient() {
                 </div>
                 <span className={`text-[10px] font-medium ${i === stepIndex ? 'text-primary' : 'text-text-light'}`}>{label}</span>
               </div>
-              {i < steps.length - 1 && (
+              {i < allSteps.length - 1 && (
                 <div className={`h-0.5 w-full mb-5 transition-colors ${i < stepIndex ? 'bg-primary' : 'bg-border'}`} />
               )}
             </div>
           ))}
         </div>
+
+        {/* ── ÉTAPE 0 : Ville ── */}
+        {step === 'city' && (
+          <div className="flex flex-col gap-4">
+            <p className="text-sm text-text-secondary text-center">
+              {geoStep === 'country'
+                ? 'Choisissez votre pays pour voir les prestataires disponibles près de chez vous.'
+                : `Quelle ville en ${selectedCountry ? countryName(selectedCountry) : ''} ?`}
+            </p>
+
+            {geoStep === 'city' && (
+              <button
+                onClick={() => { setGeoStep('country'); setGeoSearch('') }}
+                className="flex items-center gap-1.5 text-sm text-text-secondary hover:text-primary transition-colors"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <polyline points="15 18 9 12 15 6"/>
+                </svg>
+                Changer de pays
+              </button>
+            )}
+
+            <div className="relative">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#AAAAAA" strokeWidth="2" className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <input
+                type="search"
+                placeholder={geoStep === 'country' ? 'Rechercher un pays...' : 'Rechercher une ville...'}
+                value={geoSearch}
+                onChange={e => setGeoSearch(e.target.value)}
+                className="w-full h-11 pl-10 pr-4 rounded-xl border border-border bg-surface-grey text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
+              />
+            </div>
+
+            {geoLoading ? (
+              <div className="flex flex-col gap-2">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="h-12 bg-surface-grey rounded-xl animate-pulse" />
+                ))}
+              </div>
+            ) : geoStep === 'country' ? (
+              filteredCountries.length === 0 ? (
+                <p className="text-center text-text-secondary text-sm py-4">Aucun pays trouvé</p>
+              ) : (
+                <ul className="max-h-56 overflow-y-auto flex flex-col gap-1 pr-1">
+                  {filteredCountries.map(country => (
+                    <li key={country.id}>
+                      <button
+                        onClick={() => handleSelectCountry(country)}
+                        className="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-primary-surface text-left transition-colors group"
+                      >
+                        <span className="text-sm font-medium text-text-primary group-hover:text-primary transition-colors">
+                          {country.flag && <span className="mr-2">{country.flag}</span>}
+                          {countryName(country)}
+                        </span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#AAAAAA" strokeWidth="2" className="group-hover:stroke-primary transition-colors">
+                          <polyline points="9 18 15 12 9 6"/>
+                        </svg>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )
+            ) : (
+              filteredCities.length === 0 ? (
+                <p className="text-center text-text-secondary text-sm py-4">Aucune ville trouvée</p>
+              ) : (
+                <ul className="max-h-56 overflow-y-auto flex flex-col gap-1 pr-1">
+                  {filteredCities.map(city => (
+                    <li key={city.id}>
+                      <button
+                        onClick={() => handleSelectCity(city)}
+                        className="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-primary-surface text-left transition-colors group"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-7 h-7 rounded-full bg-surface-grey flex items-center justify-center flex-shrink-0 group-hover:bg-primary/10 transition-colors">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#AAAAAA" strokeWidth="2" className="group-hover:stroke-primary transition-colors">
+                              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+                              <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                          </div>
+                          <span className="text-sm font-medium text-text-primary group-hover:text-primary transition-colors">{city.name}</span>
+                        </div>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#AAAAAA" strokeWidth="2" className="group-hover:stroke-primary transition-colors">
+                          <polyline points="9 18 15 12 9 6"/>
+                        </svg>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )
+            )}
+          </div>
+        )}
 
         {/* ── ÉTAPE 1 : Email ── */}
         {step === 'email' && (
@@ -330,7 +493,6 @@ export default function RegisterClient() {
         {/* ── ÉTAPE 3 : Formulaire ── */}
         {step === 'form' && (
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-            {/* Email verrouillé */}
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-medium text-text-primary">Adresse email</label>
               <div className="h-11 px-4 rounded-xl border border-border bg-surface-grey flex items-center gap-2 text-sm text-text-secondary">
