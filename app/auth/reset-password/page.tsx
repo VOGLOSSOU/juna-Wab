@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import toast from 'react-hot-toast'
+import { showApiError } from '@/lib/utils/api-error'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { resetPassword } from '@/lib/api/auth'
@@ -33,8 +34,8 @@ function ResetPasswordForm() {
   }
 
   const handleSubmit = async () => {
-    if (password.length < 6) {
-      toast.error('Le mot de passe doit contenir au moins 6 caractères')
+    if (password.length < 8 || !/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
+      toast.error('Le mot de passe doit contenir au moins 8 caractères, une majuscule et un chiffre')
       return
     }
     if (password !== confirm) {
@@ -47,13 +48,7 @@ function ResetPasswordForm() {
       setDone(true)
     } catch (err: unknown) {
       const code = (err as { response?: { data?: { error?: { code?: string } } } })?.response?.data?.error?.code
-      if (code === 'TOKEN_EXPIRED') {
-        toast.error('Ce lien a expiré. Refaites une demande.')
-      } else if (code === 'INVALID_TOKEN') {
-        toast.error('Lien invalide. Refaites une demande.')
-      } else {
-        toast.error('Une erreur est survenue. Réessayez.')
-      }
+      showApiError(err)
     } finally {
       setLoading(false)
     }

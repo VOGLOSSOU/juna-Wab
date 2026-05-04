@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge'
 import { StarRating } from '@/components/ui/star-rating'
 import { formatPrice, SUBSCRIPTION_TYPE_LABELS, SUBSCRIPTION_DURATION_LABELS } from '@/lib/utils'
 import toast from 'react-hot-toast'
+import { showApiError } from '@/lib/utils/api-error'
 import type { Subscription } from '@/types'
 
 // ─── Kebab menu ──────────────────────────────────────────────
@@ -98,8 +99,8 @@ export default function DashboardSubscriptionsPage() {
       const result = await toggleSubscriptionActive(id)
       setSubscriptions(prev => prev.map(s => s.id === id ? { ...s, isActive: result.isActive } : s))
       toast.success(result.isActive ? 'Abonnement activé' : 'Abonnement désactivé')
-    } catch {
-      toast.error('Erreur')
+    } catch (err: unknown) {
+      showApiError(err)
     } finally {
       setActionLoading(null)
     }
@@ -111,8 +112,8 @@ export default function DashboardSubscriptionsPage() {
       const result = await toggleSubscriptionPublic(id)
       setSubscriptions(prev => prev.map(s => s.id === id ? { ...s, isPublic: result.isPublic } : s))
       toast.success(result.isPublic ? 'Abonnement publié' : 'Abonnement dépublié')
-    } catch {
-      toast.error('Erreur')
+    } catch (err: unknown) {
+      showApiError(err)
     } finally {
       setActionLoading(null)
     }
@@ -125,8 +126,7 @@ export default function DashboardSubscriptionsPage() {
       setSubscriptions(prev => prev.filter(s => s.id !== id))
       toast.success('Abonnement supprimé')
     } catch (err: unknown) {
-      const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message
-      toast.error(typeof msg === 'string' ? msg : 'Impossible de supprimer cet abonnement')
+      showApiError(err)
     }
   }
 

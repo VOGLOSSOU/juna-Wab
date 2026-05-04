@@ -6,6 +6,7 @@ import { createReview } from '@/lib/api/reviews'
 import { Button } from '@/components/ui/button'
 import { StarRating } from '@/components/ui/star-rating'
 import toast from 'react-hot-toast'
+import { showApiError } from '@/lib/utils/api-error'
 
 function NewReviewForm() {
   const router = useRouter()
@@ -24,8 +25,8 @@ function NewReviewForm() {
       await createReview({ orderId, subscriptionId, rating, comment: comment || undefined })
       toast.success('Avis publié !')
       router.push('/profile/orders')
-    } catch {
-      toast.error('Erreur lors de la publication.')
+    } catch (err: unknown) {
+      showApiError(err)
     } finally {
       setLoading(false)
     }

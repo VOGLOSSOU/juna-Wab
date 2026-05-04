@@ -10,6 +10,7 @@ import { getCountries, getCities, getLandmarks } from '@/lib/api/geo'
 import { uploadImage } from '@/lib/api/upload'
 import type { Country, City, Landmark } from '@/types'
 import toast from 'react-hot-toast'
+import { showApiError } from '@/lib/utils/api-error'
 
 // ─── Types locaux ────────────────────────────────────────────
 interface DeliveryZone { city: string; country: string; cost: number }
@@ -117,8 +118,8 @@ export default function ProviderRegisterPage() {
       const url = await uploadImage('providers', file)
       setLogoUrl(url)
       toast.success('Logo uploadé')
-    } catch {
-      toast.error('Erreur lors de l\'upload du logo')
+    } catch (err: unknown) {
+      showApiError(err)
       setLogoFile(null); setLogoPreview(null)
     } finally {
       setLogoUploading(false)
@@ -189,8 +190,8 @@ export default function ProviderRegisterPage() {
       const url = await uploadImage('documents', file)
       setDocUrl(url)
       toast.success('Document uploadé')
-    } catch {
-      toast.error('Erreur lors de l\'upload du document')
+    } catch (err: unknown) {
+      showApiError(err)
       setDocFile(null)
     } finally {
       setDocUploading(false)
@@ -229,8 +230,7 @@ export default function ProviderRegisterPage() {
       })
       setSubmitted(true)
     } catch (err: unknown) {
-      const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message
-      toast.error(typeof msg === 'string' ? msg : 'Erreur lors de l\'inscription')
+      showApiError(err)
     } finally {
       setSubmitting(false)
     }
@@ -248,8 +248,8 @@ export default function ProviderRegisterPage() {
       } else {
         toast('Toujours en attente de validation.', { icon: '⏳' })
       }
-    } catch {
-      toast.error('Impossible de vérifier le statut')
+    } catch (err: unknown) {
+      showApiError(err)
     } finally {
       setCheckingStatus(false)
     }

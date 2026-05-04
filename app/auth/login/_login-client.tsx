@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import toast from 'react-hot-toast'
+import { showApiError } from '@/lib/utils/api-error'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { login, getUserProfile } from '@/lib/api/auth'
@@ -49,13 +50,7 @@ function LoginForm() {
       toast.success('Connexion réussie !')
       router.push(redirect)
     } catch (err: unknown) {
-      const error = err as { response?: { data?: { error?: { code?: string } } } }
-      const code = error?.response?.data?.error?.code
-      if (code === 'INVALID_CREDENTIALS') {
-        toast.error('Email ou mot de passe incorrect')
-      } else {
-        toast.error('Une erreur est survenue. Réessayez.')
-      }
+      showApiError(err)
     }
   }
 

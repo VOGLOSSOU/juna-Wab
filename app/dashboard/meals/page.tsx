@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { formatPrice } from '@/lib/utils'
 import toast from 'react-hot-toast'
+import { showApiError } from '@/lib/utils/api-error'
 import type { Meal, MealType } from '@/types'
 
 const MEAL_TYPE_LABELS: Record<MealType, string> = {
@@ -114,8 +115,8 @@ export default function DashboardMealsPage() {
     try {
       const url = await uploadImage('meals', file)
       setForm(f => ({ ...f, imageUrl: url }))
-    } catch {
-      toast.error("Erreur lors de l'upload")
+    } catch (err: unknown) {
+      showApiError(err)
     } finally {
       setUploading(false)
     }
@@ -145,8 +146,8 @@ export default function DashboardMealsPage() {
       setShowForm(false)
       setEditingId(null)
       setForm(DEFAULT_FORM)
-    } catch {
-      toast.error('Erreur lors de la sauvegarde')
+    } catch (err: unknown) {
+      showApiError(err)
     } finally {
       setSubmitting(false)
     }
@@ -169,8 +170,8 @@ export default function DashboardMealsPage() {
       const result = await toggleMeal(id)
       setMeals(prev => prev.map(m => m.id === id ? { ...m, isActive: result.isActive } : m))
       toast.success(result.isActive ? 'Plat activé' : 'Plat désactivé')
-    } catch {
-      toast.error('Erreur')
+    } catch (err: unknown) {
+      showApiError(err)
     }
   }
 
@@ -180,8 +181,8 @@ export default function DashboardMealsPage() {
       await deleteMeal(id)
       setMeals(prev => prev.filter(m => m.id !== id))
       toast.success('Plat supprimé')
-    } catch {
-      toast.error('Erreur lors de la suppression')
+    } catch (err: unknown) {
+      showApiError(err)
     }
   }
 

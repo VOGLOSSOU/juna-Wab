@@ -11,6 +11,7 @@ import toast from 'react-hot-toast'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { sendVerificationCode, verifyCode, register as registerUser, updateLocation } from '@/lib/api/auth'
+import { getApiErrorCode, showApiError } from '@/lib/utils/api-error'
 import { useAuthStore } from '@/lib/store/auth'
 import { useCityStore } from '@/lib/store/city'
 import { getCountries, getCities } from '@/lib/api/geo'
@@ -21,7 +22,10 @@ type Step = 'city' | 'email' | 'otp' | 'form'
 const formSchema = z.object({
   name: z.string().min(2, 'Nom trop court'),
   phone: z.string().optional(),
-  password: z.string().min(6, 'Minimum 6 caractères'),
+  password: z.string()
+    .min(8, 'Minimum 8 caractères')
+    .regex(/[A-Z]/, 'Au moins une lettre majuscule')
+    .regex(/[0-9]/, 'Au moins un chiffre'),
 })
 type FormData = z.infer<typeof formSchema>
 
@@ -68,9 +72,10 @@ export default function RegisterClient() {
   const [geoLoading, setGeoLoading] = useState(false)
   const [geoSearch, setGeoSearch] = useState('')
 
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>({
+  const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm<FormData>({
     resolver: zodResolver(formSchema),
   })
+  const passwordValue = watch('password') ?? ''
 
   // On mount: if no city cached, show city picker first
   useEffect(() => {
@@ -145,12 +150,7 @@ export default function RegisterClient() {
       setStep('otp')
       setTimeout(() => otpRefs.current[0]?.focus(), 100)
     } catch (err: unknown) {
-      const code = (err as { response?: { data?: { error?: { code?: string } } } })?.response?.data?.error?.code
-      if (code === 'RATE_LIMIT') {
-        toast.error('Trop de demandes. Attendez avant de réessayer.')
-      } else {
-        toast.error("Impossible d'envoyer le code. Réessayez.")
-      }
+      showApiError(err)
     } finally {
       setSending(false)
     }
@@ -192,18 +192,12 @@ export default function RegisterClient() {
       setVerifiedToken(result.verifiedToken)
       setStep('form')
     } catch (err: unknown) {
-      const errorCode = (err as { response?: { data?: { error?: { code?: string } } } })?.response?.data?.error?.code
-      if (errorCode === 'TOKEN_EXPIRED') {
-        toast.error('Code expiré. Renvoyez un nouveau code.')
-      } else if (errorCode === 'INVALID_TOKEN') {
-        toast.error('Code incorrect. Vérifiez et réessayez.')
+      const errorCode = getApiErrorCode(err)
+      if (errorCode === 'INVALID_TOKEN') {
         setOtp(['', '', '', '', '', ''])
         otpRefs.current[0]?.focus()
-      } else if (errorCode === 'RATE_LIMIT') {
-        toast.error('Trop de tentatives. Réessayez plus tard.')
-      } else {
-        toast.error('Erreur de vérification. Réessayez.')
       }
+      showApiError(err)
     } finally {
       setVerifying(false)
     }
@@ -219,8 +213,8 @@ export default function RegisterClient() {
       setResendCooldown(60)
       toast.success('Nouveau code envoyé !')
       otpRefs.current[0]?.focus()
-    } catch {
-      toast.error("Impossible d'envoyer le code. Réessayez.")
+    } catch (err: unknown) {
+      showApiError(err)
     } finally {
       setSending(false)
     }
@@ -245,17 +239,8 @@ export default function RegisterClient() {
       }
       router.push('/')
     } catch (err: unknown) {
-      const code = (err as { response?: { data?: { error?: { code?: string } } } })?.response?.data?.error?.code
-      if (code === 'EMAIL_ALREADY_EXISTS') {
-        toast.error('Cet email est déjà utilisé. Connectez-vous.')
-      } else if (code === 'PHONE_ALREADY_EXISTS') {
-        toast.error('Ce numéro de téléphone est déjà utilisé.')
-      } else if (code === 'TOKEN_EXPIRED') {
-        toast.error('Session expirée. Recommencez depuis le début.')
-        setStep('email')
-      } else {
-        toast.error('Une erreur est survenue. Réessayez.')
-      }
+      if (getApiErrorCode(err) === 'TOKEN_EXPIRED') setStep('email')
+      showApiError(err)
     }
   }
 
@@ -532,28 +517,48 @@ export default function RegisterClient() {
               label="Téléphone"
               type="tel"
               placeholder="+229 61 00 00 00"
-              hint="Optionnel"
               error={errors.phone?.message}
               {...register('phone')}
             />
 
-            <Input
-              label="Mot de passe"
-              type={showPassword ? 'text' : 'password'}
-              placeholder="Minimum 6 caractères"
-              error={errors.password?.message}
-              required
-              rightIcon={
-                <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-text-light hover:text-text-secondary">
-                  {showPassword ? (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-                  ) : (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                  )}
-                </button>
-              }
-              {...register('password')}
-            />
+            <div className="flex flex-col gap-1.5">
+              <Input
+                label="Mot de passe"
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Minimum 8 caractères"
+                error={errors.password?.message}
+                required
+                rightIcon={
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-text-light hover:text-text-secondary">
+                    {showPassword ? (
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                    ) : (
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    )}
+                  </button>
+                }
+                {...register('password')}
+              />
+              {passwordValue.length > 0 && (
+                <div className="flex flex-col gap-1 pl-1">
+                  {[
+                    { label: 'Au moins 8 caractères', met: passwordValue.length >= 8 },
+                    { label: 'Au moins une majuscule', met: /[A-Z]/.test(passwordValue) },
+                    { label: 'Au moins un chiffre', met: /[0-9]/.test(passwordValue) },
+                  ].map(({ label, met }) => (
+                    <div key={label} className="flex items-center gap-1.5">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={met ? '#1A5C2A' : '#AAAAAA'} strokeWidth="3">
+                        {met
+                          ? <polyline points="20 6 9 17 4 12"/>
+                          : <><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></>
+                        }
+                      </svg>
+                      <span className={`text-xs transition-colors ${met ? 'text-primary font-medium' : 'text-text-light'}`}>{label}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
 
             <Button type="submit" variant="primary" size="lg" loading={isSubmitting} className="w-full mt-2">
               {"Créer mon compte"}

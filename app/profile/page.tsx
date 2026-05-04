@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation'
 import { getInitials, formatDate } from '@/lib/utils'
 import type { User, City, Country } from '@/types'
 import toast from 'react-hot-toast'
+import { showApiError } from '@/lib/utils/api-error'
 
 function ProfileSkeleton() {
   return (
@@ -161,8 +162,8 @@ export default function ProfilePage() {
       setEditing(false)
       setPickerOpen(false)
       toast.success('Profil mis à jour')
-    } catch {
-      toast.error('Erreur lors de la mise à jour')
+    } catch (err: unknown) {
+      showApiError(err)
     } finally {
       setSaving(false)
     }

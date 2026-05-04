@@ -7,6 +7,7 @@ import { createSubscription } from '@/lib/api/subscriptions'
 import { getMyMeals } from '@/lib/api/meals'
 import { uploadImage } from '@/lib/api/upload'
 import toast from 'react-hot-toast'
+import { showApiError } from '@/lib/utils/api-error'
 import type { Meal, SubscriptionType, SubscriptionDuration, SubscriptionCategory } from '@/types'
 
 // ─── Labels ────────────────────────────────────────────────
@@ -154,8 +155,8 @@ export default function NewSubscriptionPage() {
       const url = await uploadImage('subscriptions', file)
       setImageUrl(url)
       toast.success('Image uploadée')
-    } catch {
-      toast.error("Erreur lors de l'upload")
+    } catch (err: unknown) {
+      showApiError(err)
       setImagePreview(null)
     } finally {
       setImageUploading(false)
@@ -225,8 +226,7 @@ export default function NewSubscriptionPage() {
       toast.success('Abonnement créé !')
       router.push('/dashboard/subscriptions')
     } catch (err: unknown) {
-      const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message
-      toast.error(typeof msg === 'string' ? msg : 'Erreur lors de la création')
+      showApiError(err)
     } finally {
       setSubmitting(false)
     }

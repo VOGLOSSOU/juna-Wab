@@ -7,6 +7,7 @@ import { getSubscription, updateSubscription } from '@/lib/api/subscriptions'
 import { getMyMeals } from '@/lib/api/meals'
 import { uploadImage } from '@/lib/api/upload'
 import toast from 'react-hot-toast'
+import { showApiError } from '@/lib/utils/api-error'
 import type { Meal, Subscription, SubscriptionType, SubscriptionDuration, SubscriptionCategory } from '@/types'
 
 const TYPE_LABELS: Record<SubscriptionType, string> = {
@@ -150,8 +151,8 @@ export default function EditSubscriptionPage() {
       const url = await uploadImage('subscriptions', file)
       setImageUrl(url)
       toast.success('Image mise à jour')
-    } catch {
-      toast.error("Erreur lors de l'upload")
+    } catch (err: unknown) {
+      showApiError(err)
       setImagePreview(subscription?.imageUrl ?? null)
     } finally {
       setImageUploading(false)
@@ -189,8 +190,7 @@ export default function EditSubscriptionPage() {
       toast.success('Abonnement mis à jour !')
       router.push('/dashboard/subscriptions')
     } catch (err: unknown) {
-      const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message
-      toast.error(typeof msg === 'string' ? msg : 'Erreur lors de la mise à jour')
+      showApiError(err)
     } finally {
       setSubmitting(false)
     }

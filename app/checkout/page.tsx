@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { formatPrice, SUBSCRIPTION_TYPE_LABELS, SUBSCRIPTION_DURATION_LABELS } from '@/lib/utils'
 import toast from 'react-hot-toast'
+import { getApiErrorCode, showApiError } from '@/lib/utils/api-error'
 import type { Subscription, DeliveryMethod, PaymentMethod } from '@/types'
 
 
@@ -182,14 +183,11 @@ function CheckoutForm() {
       setOrderId(order.id)
       setStep('payment')
     } catch (err: unknown) {
-      const errData = (err as { response?: { data?: { error?: { code?: string }; message?: string | string[] } } })?.response?.data
-      if (errData?.error?.code === 'EMAIL_NOT_VERIFIED') {
+      if (getApiErrorCode(err) === 'EMAIL_NOT_VERIFIED') {
         router.push('/auth/verify-email')
         return
       }
-      const msg = errData?.message
-      const text = Array.isArray(msg) ? msg[0] : msg
-      toast.error(typeof text === 'string' ? text : 'Erreur lors de la commande')
+      showApiError(err)
     } finally {
       setSubmitting(false)
     }
@@ -207,9 +205,7 @@ function CheckoutForm() {
       setPaymentId(result.paymentId)
       setStep('processing')
     } catch (err: unknown) {
-      const msg = (err as { response?: { data?: { message?: string | string[] } } })?.response?.data?.message
-      const text = Array.isArray(msg) ? msg[0] : msg
-      toast.error(typeof text === 'string' ? text : "Erreur lors de l'initiation du paiement")
+      showApiError(err)
     } finally {
       setSubmitting(false)
     }
@@ -227,9 +223,7 @@ function CheckoutForm() {
       setPaymentId(result.paymentId)
       setStep('processing')
     } catch (err: unknown) {
-      const msg = (err as { response?: { data?: { message?: string | string[] } } })?.response?.data?.message
-      const text = Array.isArray(msg) ? msg[0] : msg
-      toast.error(typeof text === 'string' ? text : 'Erreur lors du paiement')
+      showApiError(err)
     } finally {
       setSubmitting(false)
     }

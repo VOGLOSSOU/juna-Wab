@@ -9,6 +9,7 @@ import { StatusBadge } from '@/components/ui/status-badge'
 import { Button } from '@/components/ui/button'
 import { formatPrice, formatDate } from '@/lib/utils'
 import toast from 'react-hot-toast'
+import { showApiError } from '@/lib/utils/api-error'
 import type { Order } from '@/types'
 
 function OrderSkeleton() {
@@ -47,8 +48,8 @@ export default function OrdersPage() {
       const updatedOrder = await activateOrder(orderId)
       setOrders(prev => prev.map(o => o.id === orderId ? updatedOrder : o))
       toast.success('Commande activée avec succès !')
-    } catch (err: any) {
-      toast.error(err?.response?.data?.message || 'Erreur lors de l\'activation')
+    } catch (err: unknown) {
+      showApiError(err)
     } finally {
       setActivatingOrderId(null)
     }

@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { useAuthGuard } from '@/lib/hooks/use-auth-guard'
 import { formatPrice, formatDate, ORDER_STATUS_LABELS } from '@/lib/utils'
 import toast from 'react-hot-toast'
+import { showApiError } from '@/lib/utils/api-error'
 import type { Order } from '@/types'
 
 export default function OrderDetailPage() {
@@ -30,8 +31,8 @@ export default function OrderDetailPage() {
       const updatedOrder = await activateOrder(order.id)
       setOrder(updatedOrder)
       toast.success('Commande activée avec succès ! Le paiement a été versé au prestataire.')
-    } catch (err: any) {
-      toast.error(err?.response?.data?.message || 'Erreur lors de l\'activation')
+    } catch (err: unknown) {
+      showApiError(err)
     } finally {
       setActivating(false)
     }

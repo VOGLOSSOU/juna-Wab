@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import toast from 'react-hot-toast'
+import { getApiErrorCode, showApiError } from '@/lib/utils/api-error'
 import { Button } from '@/components/ui/button'
 import { sendVerificationCode, verifyCode } from '@/lib/api/auth'
 
@@ -84,16 +85,11 @@ function VerifyEmailContent() {
       await verifyCode(email, code)
       setScreen('success')
     } catch (err: unknown) {
-      const errorCode = (err as { response?: { data?: { error?: { code?: string } } } })?.response?.data?.error?.code
-      if (errorCode === 'TOKEN_EXPIRED') {
-        toast.error('Code expiré. Renvoyez un nouveau code.')
-      } else if (errorCode === 'INVALID_TOKEN') {
-        toast.error('Code incorrect. Vérifiez et réessayez.')
+      if (getApiErrorCode(err) === 'INVALID_TOKEN') {
         setOtp(['', '', '', '', '', ''])
         otpRefs.current[0]?.focus()
-      } else {
-        toast.error('Erreur de vérification. Réessayez.')
       }
+      showApiError(err)
     } finally {
       setVerifying(false)
     }
@@ -109,8 +105,8 @@ function VerifyEmailContent() {
       setResendCooldown(60)
       toast.success('Nouveau code envoyé !')
       otpRefs.current[0]?.focus()
-    } catch {
-      toast.error("Impossible d'envoyer le code.")
+    } catch (err: unknown) {
+      showApiError(err)
     } finally {
       setSending(false)
     }
