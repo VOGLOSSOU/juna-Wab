@@ -26,6 +26,10 @@ const formSchema = z.object({
     .min(8, 'Minimum 8 caractères')
     .regex(/[A-Z]/, 'Au moins une lettre majuscule')
     .regex(/[0-9]/, 'Au moins un chiffre'),
+  confirmPassword: z.string(),
+}).refine(data => data.password === data.confirmPassword, {
+  message: 'Les mots de passe ne correspondent pas',
+  path: ['confirmPassword'],
 })
 type FormData = z.infer<typeof formSchema>
 
@@ -62,6 +66,7 @@ export default function RegisterClient() {
 
   // Step 3
   const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [setupLoading, setSetupLoading] = useState(false)
 
   // City step state
@@ -572,6 +577,24 @@ export default function RegisterClient() {
                 </div>
               )}
             </div>
+
+            <Input
+              label="Confirmer le mot de passe"
+              type={showConfirmPassword ? 'text' : 'password'}
+              placeholder="Répétez votre mot de passe"
+              error={errors.confirmPassword?.message}
+              required
+              rightIcon={
+                <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="text-text-light hover:text-text-secondary">
+                  {showConfirmPassword ? (
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                  ) : (
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  )}
+                </button>
+              }
+              {...register('confirmPassword')}
+            />
 
             <Button type="submit" variant="primary" size="lg" loading={isSubmitting} className="w-full mt-2">
               {"Créer mon compte"}
