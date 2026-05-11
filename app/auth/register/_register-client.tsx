@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { useEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -283,11 +283,12 @@ export default function RegisterClient() {
         </div>
 
         {/* Stepper */}
-        <div className="flex items-center gap-0">
-          {allSteps.map((label, i) => (
-            <div key={i} className="flex items-center flex-1">
-              <div className="flex flex-col items-center gap-1 flex-1">
-                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
+        <div className="flex flex-col gap-1">
+          {/* Rangée cercles + lignes */}
+          <div className="flex items-center">
+            {allSteps.map((label, i) => (
+              <Fragment key={i}>
+                <div className={`w-7 h-7 rounded-full shrink-0 flex items-center justify-center text-xs font-bold transition-colors ${
                   i < stepIndex ? 'bg-primary text-white' :
                   i === stepIndex ? 'bg-primary text-white ring-4 ring-primary/20' :
                   'bg-surface-grey text-text-light'
@@ -298,13 +299,25 @@ export default function RegisterClient() {
                     </svg>
                   ) : i + 1}
                 </div>
-                <span className={`text-[10px] font-medium ${i === stepIndex ? 'text-primary' : 'text-text-light'}`}>{label}</span>
-              </div>
-              {i < allSteps.length - 1 && (
-                <div className={`h-0.5 w-full mb-5 transition-colors ${i < stepIndex ? 'bg-primary' : 'bg-border'}`} />
-              )}
-            </div>
-          ))}
+                {i < allSteps.length - 1 && (
+                  <div className={`flex-1 h-0.5 transition-colors ${i < stepIndex ? 'bg-primary' : 'bg-border'}`} />
+                )}
+              </Fragment>
+            ))}
+          </div>
+          {/* Rangée labels */}
+          <div className="flex">
+            {allSteps.map((label, i) => (
+              <Fragment key={i}>
+                <div className="w-7 shrink-0 flex justify-center overflow-visible">
+                  <span className={`text-[10px] font-medium text-center whitespace-nowrap ${i === stepIndex ? 'text-primary' : 'text-text-light'}`}>
+                    {label}
+                  </span>
+                </div>
+                {i < allSteps.length - 1 && <div className="flex-1" />}
+              </Fragment>
+            ))}
+          </div>
         </div>
 
         {/* ── ÉTAPE 0 : Ville ── */}
