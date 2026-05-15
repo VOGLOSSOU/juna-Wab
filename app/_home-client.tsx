@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { GeoModal } from '@/components/modals/geo-modal'
 import { Hero } from '@/components/layout/hero'
@@ -8,14 +8,20 @@ import { SubscriptionCard } from '@/components/cards/subscription-card'
 import { ProviderCard } from '@/components/cards/provider-card'
 import { SkeletonCard } from '@/components/ui/skeleton'
 import { useCityStore } from '@/lib/store/city'
-import { getHome } from '@/lib/api/subscriptions'
-import type { HomeResponse } from '@/types'
+import { getHome, getSubscriptions } from '@/lib/api/subscriptions'
+import type { HomeResponse, Subscription } from '@/types'
 
 export default function HomeClient() {
   const { selectedCity, hasChosen } = useCityStore()
   const [data, setData] = useState<HomeResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
+
+  const [search, setSearch] = useState('')
+  const [searchResults, setSearchResults] = useState<Subscription[]>([])
+  const [searchLoading, setSearchLoading] = useState(false)
+  const searchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const resultsRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     if (!selectedCity) return
@@ -27,13 +33,60 @@ export default function HomeClient() {
       .finally(() => setLoading(false))
   }, [selectedCity])
 
+  useEffect(() => {
+    if (searchTimeout.current) clearTimeout(searchTimeout.current)
+    if (!search.trim() || !selectedCity) { setSearchResults([]); return }
+    setSearchLoading(true)
+    searchTimeout.current = setTimeout(async () => {
+      try {
+        const res = await getSubscriptions({ search, cityId: selectedCity.id, limit: 20 })
+        setSearchResults(res.items)
+        setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50)
+      } catch { /* silent */ } finally {
+        setSearchLoading(false)
+      }
+    }, 350)
+    return () => { if (searchTimeout.current) clearTimeout(searchTimeout.current) }
+  }, [search, selectedCity])
+
   return (
     <>
       <GeoModal />
 
-      <Hero />
+      <Hero searchValue={search} onSearchChange={setSearch} />
 
       <div className="max-w-content mx-auto px-6 py-10 flex flex-col gap-12">
+
+        {/* Résultats de recherche */}
+        {search.trim() && (
+          <section ref={resultsRef}>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-headline-large font-semibold text-text-primary">
+                Résultats pour <span className="text-primary">&ldquo;{search}&rdquo;</span>
+              </h2>
+              <button
+                onClick={() => setSearch('')}
+                className="text-xs font-medium text-text-secondary hover:text-text-primary flex items-center gap-1 transition-colors"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                Effacer
+              </button>
+            </div>
+            {searchLoading ? (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)}
+              </div>
+            ) : searchResults.length ? (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {searchResults.map((sub) => <SubscriptionCard key={sub.id} subscription={sub} />)}
+              </div>
+            ) : (
+              <p className="text-text-secondary text-sm py-8 text-center">
+                Aucun résultat pour &ldquo;{search}&rdquo;.
+              </p>
+            )}
+          </section>
+        )}
 
         {error && (
           <div className="flex flex-col items-center gap-4 py-16 text-text-secondary">
@@ -56,7 +109,7 @@ export default function HomeClient() {
           </div>
         )}
 
-        {hasChosen && (
+        {hasChosen && !search.trim() && (
           <section>
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-headline-large font-semibold text-text-primary">
@@ -86,7 +139,7 @@ export default function HomeClient() {
           </section>
         )}
 
-        {hasChosen && (
+        {hasChosen && !search.trim() && (
           <section>
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-headline-large font-semibold text-text-primary">Nouveautés</h2>
@@ -114,7 +167,7 @@ export default function HomeClient() {
           </section>
         )}
 
-        {hasChosen && data?.providers?.length ? (
+        {hasChosen && !search.trim() && data?.providers?.length ? (
           <section>
             <h2 className="text-headline-large font-semibold text-text-primary mb-6">Nos prestataires</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">

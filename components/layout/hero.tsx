@@ -11,11 +11,20 @@ const SLIDES = [
   { src: '/plat-3.png', alt: 'Repas africain 3' },
 ]
 
-export function Hero() {
+interface HeroProps {
+  searchValue?: string
+  onSearchChange?: (value: string) => void
+}
+
+export function Hero({ searchValue, onSearchChange }: HeroProps = {}) {
   const [current, setCurrent] = useState(0)
-  const [search, setSearch] = useState('')
+  const [internalSearch, setInternalSearch] = useState('')
   const router = useRouter()
   const { selectedCity } = useCityStore()
+
+  const isControlled = onSearchChange !== undefined
+  const search = isControlled ? (searchValue ?? '') : internalSearch
+  const setSearch = isControlled ? onSearchChange : setInternalSearch
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -26,10 +35,9 @@ export function Hero() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    if (search.trim()) {
-      router.push(`/explorer?search=${encodeURIComponent(search.trim())}`)
-    } else {
-      router.push('/explorer')
+    if (!isControlled) {
+      if (search.trim()) router.push(`/explorer?search=${encodeURIComponent(search.trim())}`)
+      else router.push('/explorer')
     }
   }
 
