@@ -122,6 +122,18 @@ export default function TermsPage() {
       </Section>
 
       <Section title="7. Suspension et résiliation">
+        <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 flex gap-3">
+          <svg className="flex-shrink-0 mt-0.5 text-amber-500" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+          <p className="text-sm text-amber-800 leading-relaxed">
+            <strong>La suppression de compte en libre-service n'est pas encore disponible sur Juna.</strong>{' '}
+            Cette fonctionnalité est en cours de développement et sera prochainement accessible depuis les paramètres de votre profil.
+            En attendant, toute demande de suppression doit être adressée par email à{' '}
+            <strong>externalux6@gmail.com</strong>.
+          </p>
+        </div>
         <ul>
           <li>
             <strong>Par Juna</strong> — Juna se réserve le droit de suspendre ou de supprimer tout compte
@@ -129,12 +141,31 @@ export default function TermsPage() {
             ou à ses utilisateurs, sans préavis et sans indemnité.
           </li>
           <li>
-            <strong>Par l'utilisateur</strong> — l'utilisateur peut supprimer son compte à tout moment
-            depuis les paramètres de son profil ou en envoyant une demande à{' '}
-            <strong>externalux6@gmail.com</strong>. La suppression entraîne la perte de l'accès
-            à l'historique des commandes et abonnements en cours.
+            <strong>Par l'utilisateur</strong> — l'utilisateur peut demander la suppression de son compte
+            à tout moment en envoyant une demande à <strong>externalux6@gmail.com</strong>.
+            La suppression entraîne la perte de l'accès à l'historique des commandes et abonnements en cours.
+            La fonctionnalité de suppression directement depuis l'application est prévue et sera disponible prochainement.
           </li>
         </ul>
+      </Section>
+
+      <Section title="7bis. Annulation de commande">
+        <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 flex gap-3">
+          <svg className="flex-shrink-0 mt-0.5 text-amber-500" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+          <p className="text-sm text-amber-800 leading-relaxed">
+            <strong>L'annulation de commande n'est pas encore disponible sur Juna.</strong>{' '}
+            Cette fonctionnalité est en cours de développement et sera prochainement accessible depuis votre espace commandes.
+            En attendant, nous vous invitons à vérifier attentivement les détails de l'abonnement avant de finaliser votre paiement.
+          </p>
+        </div>
+        <p>
+          En cas de <strong>non-livraison avérée</strong> ou de manquement grave du prestataire,
+          vous pouvez nous contacter à <strong>externalux6@gmail.com</strong>. Chaque situation sera examinée
+          individuellement et un remboursement pourra être envisagé au cas par cas.
+        </p>
       </Section>
 
       <Section title="8. Modifications des CGU">

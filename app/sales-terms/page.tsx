@@ -85,7 +85,8 @@ export default function SalesTermsPage() {
           </svg>
           <p className="text-sm text-amber-800 leading-relaxed">
             <strong>L'annulation de commande n'est pas encore disponible sur Juna.</strong>{' '}
-            Nous vous invitons à vérifier attentivement les détails de l'abonnement (prestataire, durée,
+            Cette fonctionnalité est en cours de développement et sera prochainement accessible depuis votre espace commandes.
+            En attendant, nous vous invitons à vérifier attentivement les détails de l'abonnement (prestataire, durée,
             type de repas, mode de réception) avant de finaliser votre paiement. Une fois la commande
             passée et le paiement validé, elle ne peut pas être annulée pour le moment.
           </p>
