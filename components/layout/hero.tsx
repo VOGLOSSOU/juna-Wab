@@ -98,7 +98,7 @@ export function Hero() {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Rechercher un plat, un traiteur..."
+              placeholder="Rechercher un abonnement, un plat..."
               className="flex-1 h-14 text-text-primary text-sm bg-transparent outline-none placeholder:text-text-light"
             />
           </div>

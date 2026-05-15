@@ -132,7 +132,7 @@ export default function ExplorerClient() {
           </svg>
           <input
             type="search"
-            placeholder="Rechercher un abonnement, un traiteur..."
+            placeholder="Rechercher un abonnement, un plat..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full h-11 pl-10 pr-4 rounded-xl border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary bg-white transition-colors"
