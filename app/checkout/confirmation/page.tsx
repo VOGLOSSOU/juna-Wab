@@ -73,14 +73,8 @@ function ConfirmationContent() {
         </div>
         <div className="flex items-center justify-between">
           <span className="text-text-secondary text-sm">Date</span>
-          <span className="text-sm">{formatDate(order.createdAt)}</span>
+          <span className="text-sm">{formatDate(order.createdAt, true)}</span>
         </div>
-        {order.qrCode && (
-          <div className="pt-3 border-t border-border">
-            <p className="text-xs text-text-secondary mb-2">Code QR de retrait</p>
-            <p className="font-mono font-bold text-center text-primary text-lg tracking-wider">{order.qrCode}</p>
-          </div>
-        )}
       </div>
 
       <div className="flex flex-col w-full gap-3">

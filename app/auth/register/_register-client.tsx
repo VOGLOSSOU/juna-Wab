@@ -220,6 +220,7 @@ export default function RegisterClient() {
       otpRefs.current[0]?.focus()
     } catch (err: unknown) {
       showApiError(err)
+      if (getApiErrorCode(err) === 'TOO_MANY_REQUESTS') setResendCooldown(600)
     } finally {
       setSending(false)
     }
@@ -491,7 +492,7 @@ export default function RegisterClient() {
                 disabled={resendCooldown > 0 || sending}
                 className="text-primary font-medium hover:underline disabled:text-text-light disabled:no-underline transition-colors"
               >
-                {resendCooldown > 0 ? `Renvoyer (${resendCooldown}s)` : 'Renvoyer le code'}
+                {resendCooldown > 0 ? `Renvoyer (${resendCooldown > 60 ? formatCountdown(resendCooldown) : `${resendCooldown}s`})` : 'Renvoyer le code'}
               </button>
             </div>
 

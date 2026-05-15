@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { getOrder, activateOrder } from '@/lib/api/orders'
+import { getSubscription } from '@/lib/api/subscriptions'
 import { StatusBadge } from '@/components/ui/status-badge'
 import { Button } from '@/components/ui/button'
 import { useAuthGuard } from '@/lib/hooks/use-auth-guard'
@@ -21,15 +22,38 @@ export default function OrderDetailPage() {
 
   useEffect(() => {
     if (!hydrated || !isAuthenticated) return
-    getOrder(id).then(setOrder).finally(() => setLoading(false))
+    setLoading(true)
+    getOrder(id)
+      .then(async (fetched) => {
+        if (!fetched.subscription && fetched.subscriptionId) {
+          try {
+            const sub = await getSubscription(fetched.subscriptionId)
+            setOrder({
+              ...fetched,
+              subscription: {
+                id: sub.id,
+                name: sub.name,
+                provider: sub.provider ? { id: sub.provider.id, name: sub.provider.name } : undefined,
+              },
+            })
+          } catch {
+            setOrder(fetched)
+          }
+        } else {
+          setOrder(fetched)
+        }
+      })
+      .catch((err) => showApiError(err))
+      .finally(() => setLoading(false))
   }, [id, hydrated, isAuthenticated])
 
   const handleActivateOrder = async () => {
     if (!order) return
     setActivating(true)
     try {
-      const updatedOrder = await activateOrder(order.id)
-      setOrder(updatedOrder)
+      await activateOrder(order.id)
+      const refreshed = await getOrder(order.id)
+      setOrder(refreshed)
       toast.success('Commande activée avec succès ! Le paiement a été versé au prestataire.')
     } catch (err: unknown) {
       showApiError(err)
@@ -140,8 +164,7 @@ export default function OrderDetailPage() {
         </Button>
       )}
 
-
-{order.status === 'COMPLETED' && (
+      {order.status === 'COMPLETED' && (
         <Button variant="primary" onClick={() => router.push(`/reviews/new?orderId=${order.id}&subscriptionId=${order.subscription?.id ?? order.subscriptionId}`)}>
           Laisser un avis
         </Button>

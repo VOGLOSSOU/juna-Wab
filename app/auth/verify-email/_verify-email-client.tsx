@@ -107,6 +107,7 @@ function VerifyEmailContent() {
       otpRefs.current[0]?.focus()
     } catch (err: unknown) {
       showApiError(err)
+      if (getApiErrorCode(err) === 'TOO_MANY_REQUESTS') setResendCooldown(600)
     } finally {
       setSending(false)
     }
@@ -185,7 +186,7 @@ function VerifyEmailContent() {
           disabled={resendCooldown > 0 || sending}
           className="text-primary font-medium hover:underline disabled:text-text-light disabled:no-underline"
         >
-          {resendCooldown > 0 ? `Renvoyer (${resendCooldown}s)` : 'Renvoyer le code'}
+          {resendCooldown > 0 ? `Renvoyer (${resendCooldown > 60 ? formatCountdown(resendCooldown) : `${resendCooldown}s`})` : 'Renvoyer le code'}
         </button>
       </div>
 

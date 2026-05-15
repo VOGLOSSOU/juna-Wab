@@ -19,11 +19,11 @@ export function timeAgo(date: string | null | undefined): string {
   return formatDistanceToNow(d, { addSuffix: true, locale: fr })
 }
 
-export function formatDate(date: string | null | undefined): string {
+export function formatDate(date: string | null | undefined, withTime = false): string {
   if (!date) return '—'
   const d = new Date(date)
   if (isNaN(d.getTime())) return '—'
-  return format(d, 'd MMMM yyyy', { locale: fr })
+  return format(d, withTime ? "d MMMM yyyy 'à' HH'h'mm" : 'd MMMM yyyy', { locale: fr })
 }
 
 export const SUBSCRIPTION_TYPE_LABELS: Record<SubscriptionType, string> = {
