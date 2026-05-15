@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import ExplorerClient from './_explorer-client'
 
@@ -14,5 +15,9 @@ export const metadata: Metadata = {
 }
 
 export default function ExplorerPage() {
-  return <ExplorerClient />
+  return (
+    <Suspense>
+      <ExplorerClient />
+    </Suspense>
+  )
 }

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback, useRef } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { SubscriptionCard } from '@/components/cards/subscription-card'
 import { SkeletonCard } from '@/components/ui/skeleton'
 import { useCityStore } from '@/lib/store/city'
@@ -22,6 +23,7 @@ const SORT_OPTIONS: { label: string; value: SortOption }[] = [
 
 export default function ExplorerClient() {
   const { selectedCity, hasChosen } = useCityStore()
+  const searchParams = useSearchParams()
 
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([])
   const [loading, setLoading] = useState(false)
@@ -29,8 +31,8 @@ export default function ExplorerClient() {
   const [hasMore, setHasMore] = useState(true)
   const [total, setTotal] = useState(0)
 
-  const [search, setSearch] = useState('')
-  const [sort, setSort] = useState<SortOption>('popular')
+  const [search, setSearch] = useState(searchParams.get('search') ?? '')
+  const [sort, setSort] = useState<SortOption>((searchParams.get('sort') as SortOption) ?? 'popular')
   const [category, setCategory] = useState<SubscriptionCategory | ''>('')
   const [type, setType] = useState<SubscriptionType | ''>('')
   const [duration, setDuration] = useState<SubscriptionDuration | ''>('')
