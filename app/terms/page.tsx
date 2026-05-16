@@ -1,5 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 import type { Metadata } from 'next'
+import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: "Juna - Conditions Générales d'Utilisation",
@@ -130,8 +131,10 @@ export default function TermsPage() {
           <p className="text-sm text-amber-800 leading-relaxed">
             <strong>La suppression de compte en libre-service n'est pas encore disponible sur Juna.</strong>{' '}
             Cette fonctionnalité est en cours de développement et sera prochainement accessible depuis les paramètres de votre profil.
-            En attendant, toute demande de suppression doit être adressée par email à{' '}
-            <strong>externalux6@gmail.com</strong>.
+            En attendant, consultez la procédure à suivre sur notre page dédiée :{' '}
+            <Link href="/suppression-compte" className="underline font-semibold">
+              Suppression de compte et de données
+            </Link>.
           </p>
         </div>
         <ul>
@@ -142,7 +145,10 @@ export default function TermsPage() {
           </li>
           <li>
             <strong>Par l'utilisateur</strong> — l'utilisateur peut demander la suppression de son compte
-            à tout moment en envoyant une demande à <strong>externalux6@gmail.com</strong>.
+            à tout moment en suivant la procédure décrite sur la page{' '}
+            <Link href="/suppression-compte" className="text-primary underline">
+              Suppression de compte et de données
+            </Link>.
             La suppression entraîne la perte de l'accès à l'historique des commandes et abonnements en cours.
             La fonctionnalité de suppression directement depuis l'application est prévue et sera disponible prochainement.
           </li>
