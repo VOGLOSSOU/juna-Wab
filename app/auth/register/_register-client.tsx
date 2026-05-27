@@ -24,6 +24,7 @@ const formSchema = z.object({
   phone: z.string().optional(),
   password: z.string()
     .min(8, 'Minimum 8 caractères')
+    .max(128, 'Maximum 128 caractères')
     .regex(/[A-Z]/, 'Au moins une lettre majuscule')
     .regex(/[0-9]/, 'Au moins un chiffre'),
   confirmPassword: z.string(),
@@ -292,7 +293,7 @@ export default function RegisterClient() {
         <div className="flex flex-col gap-1">
           {/* Rangée cercles + lignes */}
           <div className="flex items-center">
-            {allSteps.map((label, i) => (
+            {allSteps.map((_label, i) => (
               <Fragment key={i}>
                 <div className={`w-7 h-7 rounded-full shrink-0 flex items-center justify-center text-xs font-bold transition-colors ${
                   i < stepIndex ? 'bg-primary text-white' :

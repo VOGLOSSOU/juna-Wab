@@ -33,9 +33,17 @@ function ResetPasswordForm() {
     )
   }
 
+  const criteria = [
+    { label: 'Au moins 8 caractères', met: password.length >= 8 },
+    { label: 'Maximum 128 caractères', met: password.length <= 128 && password.length > 0 },
+    { label: 'Au moins une majuscule', met: /[A-Z]/.test(password) },
+    { label: 'Au moins un chiffre',   met: /[0-9]/.test(password) },
+  ]
+  const passwordValid = criteria.every(c => c.met)
+
   const handleSubmit = async () => {
-    if (password.length < 8 || !/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
-      toast.error('Le mot de passe doit contenir au moins 8 caractères, une majuscule et un chiffre')
+    if (!passwordValid) {
+      toast.error('Le mot de passe ne respecte pas les critères requis')
       return
     }
     if (password !== confirm) {
@@ -47,7 +55,6 @@ function ResetPasswordForm() {
       await resetPassword(token, password)
       setDone(true)
     } catch (err: unknown) {
-      const code = (err as { response?: { data?: { error?: { code?: string } } } })?.response?.data?.error?.code
       showApiError(err)
     } finally {
       setLoading(false)
@@ -93,7 +100,7 @@ function ResetPasswordForm() {
       <Input
         label="Nouveau mot de passe"
         type={showPassword ? 'text' : 'password'}
-        placeholder="Minimum 6 caractères"
+        placeholder="Minimum 8 caractères"
         value={password}
         onChange={e => setPassword(e.target.value)}
         required
@@ -103,6 +110,23 @@ function ResetPasswordForm() {
           </button>
         }
       />
+
+      {/* Indicateur de force temps réel */}
+      {password.length > 0 && (
+        <div className="flex flex-col gap-1.5 -mt-1">
+          {criteria.map((c) => (
+            <div key={c.label} className="flex items-center gap-2">
+              <span className={`text-xs font-bold ${c.met ? 'text-success' : 'text-error'}`}>
+                {c.met ? '✓' : '✗'}
+              </span>
+              <span className={`text-xs ${c.met ? 'text-success' : 'text-text-secondary'}`}>
+                {c.label}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+
       <Input
         label="Confirmer le mot de passe"
         type={showConfirm ? 'text' : 'password'}
