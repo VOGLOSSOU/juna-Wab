@@ -77,19 +77,20 @@ export default function RegisterClient() {
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null)
   const [geoLoading, setGeoLoading] = useState(false)
   const [geoSearch, setGeoSearch] = useState('')
+  // Si ville en cache → confirmation d'abord, sinon picker direct
+  const [showCityPicker, setShowCityPicker] = useState(!selectedCity)
+  const [pendingCity, setPendingCity] = useState<City | null>(null)
 
   const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm<FormData>({
     resolver: zodResolver(formSchema),
   })
   const passwordValue = watch('password') ?? ''
 
-  // On mount: if no city cached, show city picker first
+  // Toujours démarrer sur le step city (confirmation ou picker)
   useEffect(() => {
-    if (!selectedCity) {
-      setStep('city')
-      setNeedsCityStep(true)
-      getCountries().then(setCountries).catch(console.error)
-    }
+    setStep('city')
+    setNeedsCityStep(true)
+    getCountries().then(setCountries).catch(console.error)
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Countdown 10 min OTP
@@ -127,8 +128,12 @@ export default function RegisterClient() {
   }
 
   const handleSelectCity = (city: City) => {
-    if (selectedCountry) {
-      setCity(city, selectedCountry)
+    setPendingCity(city)
+  }
+
+  const handleConfirmCity = () => {
+    if (pendingCity && selectedCountry) {
+      setCity(pendingCity, selectedCountry)
       setStep('email')
     }
   }
@@ -229,6 +234,12 @@ export default function RegisterClient() {
 
   // ── Étape 3 : inscription ──
   const onSubmit = async (data: FormData) => {
+    const cityToSave = useCityStore.getState().selectedCity
+    if (!cityToSave) {
+      toast.error('Veuillez sélectionner votre ville avant de continuer.')
+      setStep('city')
+      return
+    }
     try {
       const result = await registerUser({
         email,
@@ -239,10 +250,11 @@ export default function RegisterClient() {
       })
       setAuth(result.user, result.accessToken, result.refreshToken)
       toast.success('Bienvenue !')
-      const cityToSave = useCityStore.getState().selectedCity
-      if (cityToSave) {
-        setSetupLoading(true)
-        await updateLocation(cityToSave.id).catch(() => {})
+      setSetupLoading(true)
+      try {
+        await updateLocation(cityToSave.id)
+      } catch {
+        toast.error('Votre ville n\'a pas pu être enregistrée. Vous pourrez la définir depuis votre profil.')
       }
       router.push('/')
     } catch (err: unknown) {
@@ -330,6 +342,57 @@ export default function RegisterClient() {
         {/* ── ÉTAPE 0 : Ville ── */}
         {step === 'city' && (
           <div className="flex flex-col gap-4">
+
+            {/* Confirmation ville en cache */}
+            {!showCityPicker && selectedCity ? (
+              <div className="flex flex-col gap-4">
+                <p className="text-sm text-text-secondary text-center">
+                  Vous vous inscrivez depuis cette ville :
+                </p>
+                <div className="flex items-center gap-3 bg-primary-surface border border-primary/20 rounded-xl px-4 py-3">
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-primary">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+                      <circle cx="12" cy="10" r="3"/>
+                    </svg>
+                  </div>
+                  <span className="font-semibold text-text-primary">{selectedCity.name}</span>
+                </div>
+                <Button variant="primary" className="w-full" onClick={() => setStep('email')}>
+                  Continuer avec {selectedCity.name}
+                </Button>
+                <button
+                  onClick={() => setShowCityPicker(true)}
+                  className="text-sm text-text-secondary hover:text-primary text-center transition-colors"
+                >
+                  Choisir une autre ville
+                </button>
+              </div>
+            ) : pendingCity ? (
+              /* Confirmation après sélection dans le picker */
+              <div className="flex flex-col gap-4">
+                <p className="text-sm text-text-secondary text-center">Vous avez sélectionné :</p>
+                <div className="flex items-center gap-3 bg-primary-surface border border-primary/20 rounded-xl px-4 py-3">
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-primary">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+                      <circle cx="12" cy="10" r="3"/>
+                    </svg>
+                  </div>
+                  <span className="font-semibold text-text-primary">{pendingCity.name}</span>
+                </div>
+                <Button variant="primary" className="w-full" onClick={handleConfirmCity}>
+                  Confirmer {pendingCity.name}
+                </Button>
+                <button
+                  onClick={() => setPendingCity(null)}
+                  className="text-sm text-text-secondary hover:text-primary text-center transition-colors"
+                >
+                  Choisir une autre ville
+                </button>
+              </div>
+            ) : (
+              <>
             <p className="text-sm text-text-secondary text-center">
               {geoStep === 'country'
                 ? 'Choisissez votre pays pour voir les prestataires disponibles près de chez vous.'
@@ -418,6 +481,8 @@ export default function RegisterClient() {
                   ))}
                 </ul>
               )
+            )}
+              </>
             )}
           </div>
         )}

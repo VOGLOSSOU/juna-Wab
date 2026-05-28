@@ -69,8 +69,12 @@ apiClient.interceptors.response.use(
         return apiClient(originalRequest)
       } catch (refreshError) {
         processQueue(refreshError, null)
-        // Appel direct au store Zustand (accessible hors composant via getState)
-        useAuthStore.getState().logout()
+        // Ne déconnecter que si le serveur répond explicitement (401/403)
+        // Une erreur réseau/timeout n'a pas de `response` — on garde les tokens
+        const hasServerResponse = (refreshError as { response?: unknown })?.response
+        if (hasServerResponse) {
+          useAuthStore.getState().logout()
+        }
         return Promise.reject(refreshError)
       } finally {
         isRefreshing = false
