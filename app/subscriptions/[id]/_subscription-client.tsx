@@ -239,9 +239,9 @@ export default function SubscriptionDetailClient() {
               <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
             </svg>
             <span>
-              {isImmediate
+              {!preparationHours
                 ? 'Premier repas disponible immédiatement'
-                : (preparationHours ?? 0) < 24
+                : preparationHours < 24
                   ? `Premier repas prêt dans ${preparationHours}h après activation`
                   : 'Premier repas disponible à partir du lendemain'
               }
