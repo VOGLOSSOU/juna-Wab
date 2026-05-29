@@ -174,6 +174,8 @@ export interface Subscription {
   imageUrl?: string
   isActive: boolean
   isPublic?: boolean
+  isImmediate?: boolean
+  preparationHours?: number
   rating?: number
   reviewCount?: number
   totalReviews?: number

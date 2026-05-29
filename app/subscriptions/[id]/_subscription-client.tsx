@@ -52,6 +52,7 @@ export default function SubscriptionDetailClient() {
   const {
     name, images, price, currency, type, duration, category,
     description, rating, reviewCount, provider, isActive,
+    isImmediate, preparationHours,
     meals, deliveryZones, pickupPoints, providerSubscriptions,
   } = subscription
 
@@ -231,6 +232,22 @@ export default function SubscriptionDetailClient() {
           <span className="text-display-medium font-bold text-primary">{formatPrice(price, currency)}</span>
           <p className="text-sm text-text-secondary mt-1">{SUBSCRIPTION_DURATION_LABELS[duration]}</p>
         </div>
+        {/* Délai de préparation */}
+        {isActive && (
+          <div className="flex items-center gap-2 text-sm text-text-secondary">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 text-text-light">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+            <span>
+              {isImmediate
+                ? 'Premier repas disponible immédiatement'
+                : (preparationHours ?? 0) < 24
+                  ? `Premier repas prêt dans ${preparationHours}h après activation`
+                  : 'Premier repas disponible à partir du lendemain'
+              }
+            </span>
+          </div>
+        )}
         <Button variant="primary" size="lg" className="w-full" disabled={!isActive || isProvider} onClick={handleSubscribe}>
           {isActive ? "S'abonner" : 'Indisponible'}
         </Button>
