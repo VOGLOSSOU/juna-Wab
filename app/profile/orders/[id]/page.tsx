@@ -73,7 +73,16 @@ export default function OrderDetailPage() {
   return (
     <div className="max-w-2xl mx-auto px-6 py-10 flex flex-col gap-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-headline-large font-semibold">Commande</h1>
+        <div className="flex items-center gap-3">
+          <Link href="/profile/orders" className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-grey transition-colors text-text-secondary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <polyline points="15 18 9 12 15 6"/>
+            </svg>
+          </Link>
+          <h1 className="text-headline-large font-semibold">
+            {order.subscription?.name ?? 'Ma commande'}
+          </h1>
+        </div>
         <StatusBadge status={order.status} />
       </div>
 
