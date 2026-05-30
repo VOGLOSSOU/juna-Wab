@@ -3,15 +3,25 @@ import Image from 'next/image'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Juna - Abonnez-vous à votre resto, simplifiez votre quotidien',
-  description: 'Juna vous connecte à vos restos préférés via des abonnements repas. Fini le stress du "qu\'est-ce que je mange ?". Maîtrisez votre budget, gagnez du temps, mangez bien.',
-  keywords: 'abonnement repas, nourriture locale, livraison repas, traiteur, fournisseur local, plan alimentaire, Juna, Juna App, Junaeats, Juna Eats, Uber Eats, livraison de repas, plat livré, resto, restaurant, commander à manger, repas à domicile, food delivery, manger en ligne, budget repas, gain de temps, clientèle fidèle, à propos Juna, mission Juna',
+  title: 'À propos - Juna',
+  description: 'Juna connecte les Africains de l\'Ouest à des traiteurs locaux via des abonnements repas. Fini le stress du "qu\'est-ce que je mange ?". Mangez bien, sans y penser.',
+  keywords: 'à propos Juna, mission Juna, abonnement repas, traiteur local, Junaeats, Bénin, Côte d\'Ivoire, food delivery, budget repas, gain de temps',
   openGraph: {
-    title: 'Juna - Abonnez-vous à votre resto, simplifiez votre quotidien',
-    description: 'Juna vous connecte à vos restos préférés via des abonnements repas. Fini le stress du "qu\'est-ce que je mange ?". Maîtrisez votre budget, gagnez du temps, mangez bien.',
-    images: [{ url: 'https://junaeats.com/juna-logo.png', width: 800, height: 400, alt: 'Juna' }],
+    title: 'À propos de Juna — Mangez bien, sans y penser',
+    description: 'Juna connecte les Africains de l\'Ouest à des traiteurs locaux via des abonnements repas.',
+    url: 'https://junaeats.com/about',
+    siteName: 'Juna',
+    locale: 'fr_FR',
+    images: [{ url: '/juna-logo.png', width: 800, height: 400, alt: 'Juna' }],
     type: 'website',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'À propos de Juna',
+    description: 'Abonnements repas chez des traiteurs locaux en Afrique de l\'Ouest.',
+    images: ['/juna-logo.png'],
+  },
+  alternates: { canonical: 'https://junaeats.com/about' },
 }
 
 function SectionLabel({ children, center }: { children: React.ReactNode; center?: boolean }) {

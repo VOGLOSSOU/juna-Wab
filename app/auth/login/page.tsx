@@ -2,15 +2,9 @@ import type { Metadata } from 'next'
 import LoginClient from './_login-client'
 
 export const metadata: Metadata = {
-  title: 'Juna - Connectez-vous à votre compte',
-  description: 'Accédez à vos abonnements repas, suivez vos commandes et gérez votre profil sur Juna.',
-  keywords: 'connexion Juna, se connecter, compte Juna, abonnement repas, accès compte',
-  openGraph: {
-    title: 'Juna - Connectez-vous à votre compte',
-    description: 'Accédez à vos abonnements repas, suivez vos commandes et gérez votre profil sur Juna.',
-    images: [{ url: 'https://junaeats.com/juna-logo.png', width: 800, height: 400, alt: 'Juna' }],
-    type: 'website',
-  },
+  title: 'Connexion - Juna',
+  description: 'Connectez-vous à votre compte Juna pour accéder à vos abonnements repas et suivre vos commandes.',
+  robots: { index: false, follow: false },
 }
 
 export default function LoginPage() {

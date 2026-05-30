@@ -4,13 +4,23 @@ import HomeClient from './_home-client'
 export const metadata: Metadata = {
   title: 'Juna - Abonne-toi à ton resto préféré',
   description: 'Souscrivez à des abonnements repas chez des fournisseurs locaux près de chez vous. Petit-déjeuner, déjeuner, dîner — livraison ou retrait. Paiement Mobile Money.',
-  keywords: 'abonnement repas, nourriture locale, livraison repas, traiteur, fournisseur local, plan alimentaire, manger local, Juna, Juna App, Junaeats, Juna Eats, Uber Eats, livraison de repas, plat livré, resto, restaurant, commander à manger, repas à domicile, food delivery, cuisiner, manger en ligne, traiteur local, repas du jour',
+  keywords: 'abonnement repas, nourriture locale, livraison repas, traiteur, fournisseur local, plan alimentaire, manger local, Juna, Juna App, Junaeats, livraison de repas, plat livré, resto, restaurant, repas à domicile, food delivery, traiteur local, repas du jour, Bénin, Côte d\'Ivoire',
   openGraph: {
     title: 'Juna - Abonne-toi à ton resto préféré',
     description: 'Souscrivez à des abonnements repas chez des fournisseurs locaux près de chez vous. Petit-déjeuner, déjeuner, dîner — livraison ou retrait. Paiement Mobile Money.',
-    images: [{ url: 'https://junaeats.com/juna-logo.png', width: 800, height: 400, alt: 'Juna' }],
+    url: 'https://junaeats.com',
+    siteName: 'Juna',
+    locale: 'fr_FR',
+    images: [{ url: '/juna-logo.png', width: 800, height: 400, alt: 'Juna' }],
     type: 'website',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Juna - Abonne-toi à ton resto préféré',
+    description: 'Abonnements repas chez des traiteurs locaux. Livraison ou retrait. Paiement Mobile Money.',
+    images: ['/juna-logo.png'],
+  },
+  alternates: { canonical: 'https://junaeats.com' },
 }
 
 export default function HomePage() {

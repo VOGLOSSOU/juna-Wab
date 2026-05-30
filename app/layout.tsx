@@ -5,12 +5,28 @@ import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://junaeats.com'),
   title: {
     default: 'Mangez bien sans y penser - Juna',
-    template: '%s — JUNA',
+    template: '%s — Juna',
   },
-  description: 'Découvrez et abonnez-vous aux meilleurs plans repas en Afrique de l\'Ouest. Traiteurs locaux, livraison à domicile ou retrait sur place.',
-  keywords: 'abonnement repas, nourriture, Bénin, Côte d\'Ivoire, livraison, traiteur, JUNA',
+  description: 'Découvrez et abonnez-vous aux meilleurs plans repas en Afrique de l\'Ouest. Traiteurs locaux, livraison à domicile ou retrait sur place. Paiement Mobile Money.',
+  keywords: 'abonnement repas, nourriture locale, livraison repas, traiteur, Bénin, Côte d\'Ivoire, Juna, Junaeats, food delivery, repas à domicile, petit-déjeuner, déjeuner, dîner, plan alimentaire',
+  openGraph: {
+    siteName: 'Juna',
+    locale: 'fr_FR',
+    type: 'website',
+    images: [{ url: '/juna-logo.png', width: 800, height: 400, alt: 'Juna' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@junaeats',
+    images: ['/juna-logo.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
   icons: {
     icon: [
       { url: '/favicon.ico',   sizes: 'any' },

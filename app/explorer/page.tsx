@@ -3,15 +3,25 @@ import type { Metadata } from 'next'
 import ExplorerClient from './_explorer-client'
 
 export const metadata: Metadata = {
-  title: 'Juna - Découvrez les abonnements repas proche de vous',
+  title: 'Explorer les abonnements repas - Juna',
   description: 'Parcourez tous les abonnements repas disponibles près de chez vous. Filtrez par type, durée, catégorie. Petit-déjeuner, déjeuner, dîner — trouvez ce qui vous convient.',
-  keywords: 'abonnement repas, nourriture locale, livraison repas, traiteur, fournisseur local, plan alimentaire, manger local, Juna, Juna App, Junaeats, Juna Eats, Uber Eats, livraison de repas, plat livré, resto, restaurant, commander à manger, repas à domicile, food delivery, cuisiner, manger en ligne, traiteur local, repas du jour, explorer abonnements, trouver repas, filtrer abonnements',
+  keywords: 'abonnement repas, nourriture locale, livraison repas, traiteur, Juna, Junaeats, repas à domicile, food delivery, traiteur local, repas du jour, explorer abonnements, filtrer abonnements, petit-déjeuner, déjeuner, dîner',
   openGraph: {
-    title: 'Juna - Découvrez les abonnements repas proche de vous',
-    description: 'Parcourez tous les abonnements repas disponibles près de chez vous. Filtrez par type, durée, catégorie. Petit-déjeuner, déjeuner, dîner — trouvez ce qui vous convient.',
-    images: [{ url: 'https://junaeats.com/juna-logo.png', width: 800, height: 400, alt: 'Juna' }],
+    title: 'Explorer les abonnements repas - Juna',
+    description: 'Parcourez tous les abonnements repas disponibles près de chez vous. Filtrez par type, durée, catégorie.',
+    url: 'https://junaeats.com/explorer',
+    siteName: 'Juna',
+    locale: 'fr_FR',
+    images: [{ url: '/juna-logo.png', width: 800, height: 400, alt: 'Juna' }],
     type: 'website',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Explorer les abonnements repas - Juna',
+    description: 'Parcourez les abonnements repas disponibles près de chez vous.',
+    images: ['/juna-logo.png'],
+  },
+  alternates: { canonical: 'https://junaeats.com/explorer' },
 }
 
 export default function ExplorerPage() {
