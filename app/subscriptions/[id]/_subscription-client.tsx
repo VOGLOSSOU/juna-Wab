@@ -199,7 +199,7 @@ export default function SubscriptionDetailClient() {
                         )
                       })}
                     </div>
-                    <p className="text-xs text-text-light italic mt-0.5">Prix indicatifs — frais négociés directement avec le prestataire</p>
+                    <p className="text-xs text-text-light italic mt-0.5">Prix indicatifs — frais de livraison à régler directement avec le prestataire</p>
                   </div>
                 ) : (
                   <p className="text-xs text-text-secondary">Le prestataire livre directement chez vous.</p>

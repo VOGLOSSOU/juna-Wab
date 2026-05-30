@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { getOrder, activateOrder } from '@/lib/api/orders'
 import { getSubscription } from '@/lib/api/subscriptions'
 import { StatusBadge } from '@/components/ui/status-badge'
@@ -76,10 +77,17 @@ export default function OrderDetailPage() {
       </div>
 
       <div className="bg-white rounded-xl border border-border p-5 flex flex-col gap-4">
-        <div>
-          <p className="text-sm font-medium text-text-secondary">Abonnement</p>
-          <p className="font-semibold">{order.subscription?.name ?? '—'}</p>
-          <p className="text-sm text-text-secondary">{order.subscription?.provider?.businessName ?? order.subscription?.provider?.name}</p>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-sm font-medium text-text-secondary">Abonnement</p>
+            <p className="font-semibold">{order.subscription?.name ?? '—'}</p>
+            <p className="text-sm text-text-secondary">{order.subscription?.provider?.businessName ?? order.subscription?.provider?.name}</p>
+          </div>
+          {(order.subscription?.id ?? order.subscriptionId) && (
+            <Link href={`/subscriptions/${order.subscription?.id ?? order.subscriptionId}`} className="flex-shrink-0">
+              <Button variant="outline" size="sm">Voir l'abonnement</Button>
+            </Link>
+          )}
         </div>
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
