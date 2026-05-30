@@ -175,7 +175,7 @@ export default function OrderDetailPage() {
             C'est à ce moment précis que le paiement est transféré au prestataire — pas avant.
             Cela ne signifie pas que vous avez reçu tous vos repas, mais simplement que votre abonnement est lancé et que le prestataire peut commencer à préparer vos repas.
           </div>
-          <Button variant="primary" onClick={handleActivateOrder} loading={activating}>
+          <Button variant="primary" size="lg" className="w-full" onClick={handleActivateOrder} loading={activating}>
             Démarrer mon abonnement
           </Button>
         </div>
