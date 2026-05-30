@@ -52,7 +52,7 @@ export default function SubscriptionDetailClient() {
   const {
     name, images, price, currency, type, duration, category,
     description, rating, reviewCount, provider, isActive,
-    isImmediate, preparationHours,
+    preparationHours,
     meals, deliveryZones, pickupPoints, providerSubscriptions,
   } = subscription
 
@@ -159,69 +159,84 @@ export default function SubscriptionDetailClient() {
       )}
 
       {/* ── 4. Modes de réception ── */}
-      {(provider?.acceptsDelivery || provider?.acceptsPickup || (deliveryZones && deliveryZones.length > 0) || (pickupPoints && pickupPoints.length > 0)) && (
+      {(provider?.acceptsDelivery || provider?.acceptsPickup) && (
         <div className="flex flex-col gap-4">
           <h2 className="text-title-large font-semibold">Modes de réception</h2>
-
           <div className="flex flex-col sm:flex-row gap-3">
+
+            {/* Livraison à domicile */}
             {provider?.acceptsDelivery && (
-              <div className="flex items-start gap-3 bg-surface-grey rounded-xl p-4 flex-1">
-                <div className="w-9 h-9 rounded-lg bg-white flex items-center justify-center flex-shrink-0">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                    <rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
-                    <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-text-primary">Livraison à domicile</p>
-                  <p className="text-xs text-text-secondary mt-0.5">Le prestataire livre directement chez vous</p>
-                </div>
-              </div>
-            )}
-            {provider?.acceptsPickup && (
-              <div className="flex items-start gap-3 bg-surface-grey rounded-xl p-4 flex-1">
-                <div className="w-9 h-9 rounded-lg bg-white flex items-center justify-center flex-shrink-0">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
-                    <polyline points="9 22 9 12 15 12 15 22"/>
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-text-primary">Retrait sur place</p>
-                  <p className="text-xs text-text-secondary mt-0.5">Récupérez votre repas directement chez le prestataire</p>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {deliveryZones && deliveryZones.length > 0 && (
-            <div>
-              <p className="text-xs font-medium text-text-secondary mb-2">Zones de livraison couvertes</p>
-              <div className="flex flex-wrap gap-1.5">
-                {deliveryZones.map((zone, i) => (
-                  <Badge key={i} variant="outline">
-                    {typeof zone === 'string' ? zone : `${(zone as any).city} (${(zone as any).cost} XOF)`}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {pickupPoints && pickupPoints.length > 0 && (
-            <div>
-              <p className="text-xs font-medium text-text-secondary mb-2">Points de retrait</p>
-              <ul className="flex flex-col gap-1.5">
-                {pickupPoints.map((point, i) => (
-                  <li key={i} className="text-xs text-text-primary flex items-start gap-1.5">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 mt-0.5 text-primary">
-                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+              <div className="flex flex-col gap-3 bg-surface-grey rounded-xl p-4 flex-1">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-white flex items-center justify-center flex-shrink-0">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                      <rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                      <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
                     </svg>
-                    {point}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+                  </div>
+                  <p className="text-sm font-semibold text-text-primary">Livraison à domicile</p>
+                </div>
+                {deliveryZones && deliveryZones.length > 0 ? (
+                  <div className="flex flex-col gap-1.5">
+                    <p className="text-xs text-text-secondary">Zones couvertes :</p>
+                    <div className="flex flex-col gap-1">
+                      {deliveryZones.map((zone, i) => {
+                        const isObj = typeof zone !== 'string'
+                        const zoneName = isObj ? (zone as any).city : zone
+                        const cost = isObj ? (zone as any).cost : null
+                        return (
+                          <div key={i} className="flex items-center justify-between text-xs">
+                            <span className="flex items-center gap-1.5 text-text-primary">
+                              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-primary flex-shrink-0">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+                              </svg>
+                              {zoneName}
+                            </span>
+                            {cost !== null && (
+                              <span className="text-primary font-semibold">~{Number(cost).toLocaleString('fr-FR')} XOF</span>
+                            )}
+                          </div>
+                        )
+                      })}
+                    </div>
+                    <p className="text-xs text-text-light italic mt-0.5">Prix indicatifs — frais négociés directement avec le prestataire</p>
+                  </div>
+                ) : (
+                  <p className="text-xs text-text-secondary">Le prestataire livre directement chez vous.</p>
+                )}
+              </div>
+            )}
+
+            {/* Retrait sur place */}
+            {provider?.acceptsPickup && (
+              <div className="flex flex-col gap-3 bg-surface-grey rounded-xl p-4 flex-1">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-white flex items-center justify-center flex-shrink-0">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                      <polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                  </div>
+                  <p className="text-sm font-semibold text-text-primary">Retrait sur place</p>
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <p className="text-xs text-text-secondary">Récupérez votre repas directement chez le prestataire :</p>
+                  {(pickupPoints && pickupPoints.length > 0
+                    ? pickupPoints
+                    : provider?.businessAddress ? [provider.businessAddress] : []
+                  ).map((point, i) => (
+                    <div key={i} className="flex items-start gap-1.5 text-xs text-text-primary font-medium">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 mt-0.5 text-primary">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+                      </svg>
+                      {point}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+          </div>
         </div>
       )}
 
