@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -55,7 +56,7 @@ export default function OrderDetailPage() {
       await activateOrder(order.id)
       const refreshed = await getOrder(order.id)
       setOrder(refreshed)
-      toast.success('Commande activée avec succès ! Le paiement a été versé au prestataire.')
+      toast.success('Abonnement démarré ! Le paiement vient d\'être transféré au prestataire.')
     } catch (err: unknown) {
       showApiError(err)
     } finally {
@@ -167,9 +168,17 @@ export default function OrderDetailPage() {
 
       {/* Bouton ACTIVER pour commandes CONFIRMED */}
       {order.status === 'CONFIRMED' && (
-        <Button variant="primary" onClick={handleActivateOrder} loading={activating}>
-          Activer ma commande
-        </Button>
+        <div className="flex flex-col gap-3">
+          <div className="bg-primary-surface border border-primary/20 rounded-xl px-4 py-3 text-sm text-text-secondary leading-relaxed">
+            <strong className="text-text-primary block mb-1">À quoi sert ce bouton ?</strong>
+            En appuyant sur ce bouton, vous démarrez officiellement votre abonnement à partir d'aujourd'hui.
+            C'est à ce moment précis que le paiement est transféré au prestataire — pas avant.
+            Cela ne signifie pas que vous avez reçu tous vos repas, mais simplement que votre abonnement est lancé et que le prestataire peut commencer à préparer vos repas.
+          </div>
+          <Button variant="primary" onClick={handleActivateOrder} loading={activating}>
+            Démarrer mon abonnement
+          </Button>
+        </div>
       )}
 
       {order.status === 'COMPLETED' && (
