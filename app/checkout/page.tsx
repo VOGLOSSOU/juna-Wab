@@ -442,7 +442,7 @@ function CheckoutForm() {
                     >
                       <span className="font-medium">{zone.city}</span>
                       <span className={`text-xs font-semibold ${selectedZone?.city === zone.city ? 'text-primary' : 'text-text-secondary'}`}>
-                        {zone.cost === 0 ? 'Gratuit' : `+ ${formatPrice(zone.cost, subscription.currency)}`}
+                        {zone.cost === 0 ? 'Inclus' : `~${formatPrice(zone.cost, subscription.currency)} (indicatif)`}
                       </span>
                     </button>
                   ))}
@@ -478,9 +478,8 @@ function CheckoutForm() {
               Information importante sur la livraison
             </p>
             <p className="text-sm text-green-800">
-              Si vous souhaitez être livré durant toute la période de votre abonnement,
-              cela sera discuté directement avec le fournisseur de repas qui vous communiquera
-              les frais et modalités.
+              Les frais de livraison affichés sont des <strong>prix indicatifs</strong>.
+              Ils sont à régler directement avec le prestataire — pas inclus dans le paiement ci-dessous.
             </p>
           </div>
         </div>
@@ -537,7 +536,7 @@ function CheckoutForm() {
           <div className="flex items-center justify-between">
             <span className="text-text-secondary text-sm">Frais de livraison ({selectedZone.city})</span>
             <span className="font-medium text-accent">
-              Négociés avec le prestataire
+              À régler directement avec le prestataire
             </span>
           </div>
         )}
