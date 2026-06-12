@@ -120,6 +120,22 @@ export function Hero({ searchValue, onSearchChange }: HeroProps = {}) {
           </button>
         </form>
 
+        {/* Lien app mobile */}
+        <a
+          href="https://play.google.com/store/apps/details?id=com.junaeats.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 border border-white/25 text-white text-sm font-medium hover:bg-white/20 transition-colors backdrop-blur-sm"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3.6 2.4c-.3.3-.5.7-.5 1.2v16.8c0 .5.2.9.5 1.2l.1.1 9.4-9.4v-.2L3.7 2.3l-.1.1z"/>
+            <path d="M16.8 12l-3.2-3.2L4.2 18l9.4-9.4 3.2 3.2z" opacity=".7"/>
+            <path d="M16.8 12l-3.2 3.2L4.2 6l9.4 9.4 3.2-3.4z" opacity=".7"/>
+            <path d="M19.5 10.6l-2.7-1.5-3.1 2.9 3.1 2.9 2.7-1.5c.7-.4.7-1.4 0-1.8z" opacity=".9"/>
+          </svg>
+          Disponible sur Google Play
+        </a>
+
       </div>
 
       {/* Flèche scroll vers le bas */}
