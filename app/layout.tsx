@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://junaeats.com'),
   title: {
     default: 'Mangez bien sans y penser - Juna',
-    template: '%s — Juna',
+    template: '%s - Juna',
   },
   description: 'Découvrez et abonnez-vous aux meilleurs plans repas en Afrique de l\'Ouest. Traiteurs locaux, livraison à domicile ou retrait sur place. Paiement Mobile Money.',
   keywords: 'abonnement repas, nourriture locale, livraison repas, traiteur, Bénin, Côte d\'Ivoire, Juna, Junaeats, food delivery, repas à domicile, petit-déjeuner, déjeuner, dîner, plan alimentaire',
