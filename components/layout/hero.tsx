@@ -125,15 +125,12 @@ export function Hero({ searchValue, onSearchChange }: HeroProps = {}) {
           href="https://play.google.com/store/apps/details?id=com.junaeats.app"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 border border-white/25 text-white text-sm font-medium hover:bg-white/20 transition-colors backdrop-blur-sm"
+          className="inline-flex items-center gap-2 text-white/90 text-sm font-medium hover:text-white transition-colors drop-shadow"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M3.6 2.4c-.3.3-.5.7-.5 1.2v16.8c0 .5.2.9.5 1.2l.1.1 9.4-9.4v-.2L3.7 2.3l-.1.1z"/>
-            <path d="M16.8 12l-3.2-3.2L4.2 18l9.4-9.4 3.2 3.2z" opacity=".7"/>
-            <path d="M16.8 12l-3.2 3.2L4.2 6l9.4 9.4 3.2-3.4z" opacity=".7"/>
-            <path d="M19.5 10.6l-2.7-1.5-3.1 2.9 3.1 2.9 2.7-1.5c.7-.4.7-1.4 0-1.8z" opacity=".9"/>
+            <path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92zm10.89 10.893l2.302 2.302L6.612 21.46l8.625-8.625zm3.183-3.183l2.83 1.624a1.001 1.001 0 0 1 0 1.736l-2.83 1.624L19.91 12l-2.328 2.328zM6.612 2.54l10.32 5.929-2.328 2.328-8.625-8.625z"/>
           </svg>
-          Disponible sur Google Play
+          Play Store
         </a>
 
       </div>
