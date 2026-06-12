@@ -9,7 +9,7 @@ export function Footer() {
           <div className="flex flex-col gap-4">
             <Image src="/juna-logo.png" alt="JUNA" width={48} height={48} className="object-contain" />
             <p className="text-sm text-text-secondary">
-              Mangez bien sans y penser - Juna
+              Découvrir et souscrire à des repas préparés par des prestataires près de chez vous
             </p>
           </div>
 

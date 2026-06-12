@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation'
 import { useCityStore } from '@/lib/store/city'
 
 const SLIDES = [
-  { src: '/plat-1.png', alt: 'Repas africain 1' },
   { src: '/plat-2.png', alt: 'Repas africain 2' },
   { src: '/plat-3.png', alt: 'Repas africain 3' },
 ]
