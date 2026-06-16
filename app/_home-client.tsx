@@ -179,14 +179,106 @@ export default function HomeClient() {
         ) : null}
 
         {!hasChosen && (
-          <div className="flex flex-col items-center gap-4 py-20 text-center">
+          <div className="flex flex-col items-center gap-4 py-16 text-center">
             <div className="text-text-light"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
-            <h2 className="text-headline-medium font-semibold text-text-primary">Où êtes-vous ?</h2>
+            <h2 className="text-headline-medium font-semibold text-text-primary">{"Où êtes-vous ?"}</h2>
             <p className="text-text-secondary text-body-medium max-w-sm">
-              Choisissez votre ville pour découvrir les abonnements repas disponibles près de chez vous.
+              {"Choisissez votre ville pour découvrir les abonnements repas disponibles près de chez vous."}
             </p>
           </div>
         )}
+
+        {/* Comment ça marche */}
+        <section className="bg-primary-surface rounded-2xl px-8 py-12">
+          <h2 className="text-2xl font-bold text-text-primary text-center mb-10">{"Comment ça marche ?"}</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <div className="flex flex-col items-center text-center gap-4">
+              <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center flex-shrink-0 shadow-md">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+              </div>
+              <div>
+                <div className="text-xs font-bold text-primary uppercase tracking-widest mb-1">{"Étape 1"}</div>
+                <h3 className="font-semibold text-text-primary mb-2">{"Choisissez votre ville"}</h3>
+                <p className="text-sm text-text-secondary leading-relaxed">{"Sélectionnez votre localisation pour découvrir les abonnements repas disponibles autour de vous."}</p>
+              </div>
+            </div>
+            <div className="flex flex-col items-center text-center gap-4">
+              <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center flex-shrink-0 shadow-md">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+                  <rect x="5" y="2" width="14" height="20" rx="2"/>
+                  <path d="M12 18h.01M9 7h6M9 11h4"/>
+                </svg>
+              </div>
+              <div>
+                <div className="text-xs font-bold text-primary uppercase tracking-widest mb-1">{"Étape 2"}</div>
+                <h3 className="font-semibold text-text-primary mb-2">{"Souscrivez à un abonnement"}</h3>
+                <p className="text-sm text-text-secondary leading-relaxed">{"Choisissez votre formule (petit-déjeuner, déjeuner, dîner) et payez en quelques secondes via Mobile Money."}</p>
+              </div>
+            </div>
+            <div className="flex flex-col items-center text-center gap-4">
+              <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center flex-shrink-0 shadow-md">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+                  <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                  <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+              </div>
+              <div>
+                <div className="text-xs font-bold text-primary uppercase tracking-widest mb-1">{"Étape 3"}</div>
+                <h3 className="font-semibold text-text-primary mb-2">{"Recevez vos repas"}</h3>
+                <p className="text-sm text-text-secondary leading-relaxed">{"Livraison à domicile ou retrait sur place — votre prestataire prépare vos repas chaque jour."}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Pourquoi Juna */}
+        <section className="pb-4">
+          <h2 className="text-2xl font-bold text-text-primary text-center mb-10">{"Pourquoi choisir Juna ?"}</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="flex flex-col gap-4 p-6 rounded-2xl border border-border bg-white hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 rounded-xl bg-primary-surface flex items-center justify-center">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A5C2A" strokeWidth="1.8">
+                  <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                  <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-semibold text-text-primary mb-1">{"Prestataires locaux"}</h3>
+                <p className="text-sm text-text-secondary leading-relaxed">{"Des cuisiniers et traiteurs de votre quartier. Repas faits maison, vrais ingrédients, saveurs locales."}</p>
+              </div>
+            </div>
+            <div className="flex flex-col gap-4 p-6 rounded-2xl border border-border bg-white hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 rounded-xl bg-primary-surface flex items-center justify-center">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A5C2A" strokeWidth="1.8">
+                  <rect x="5" y="2" width="14" height="20" rx="2"/>
+                  <path d="M12 18h.01"/>
+                  <path d="M9 7h6M9 11h6"/>
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-semibold text-text-primary mb-1">{"Paiement Mobile Money"}</h3>
+                <p className="text-sm text-text-secondary leading-relaxed">{"Payez facilement avec MTN MoMo, Moov Money ou Orange Money. Rapide, simple, sécurisé."}</p>
+              </div>
+            </div>
+            <div className="flex flex-col gap-4 p-6 rounded-2xl border border-border bg-white hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 rounded-xl bg-primary-surface flex items-center justify-center">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A5C2A" strokeWidth="1.8">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-semibold text-text-primary mb-1">{"Abonnez-vous une fois"}</h3>
+                <p className="text-sm text-text-secondary leading-relaxed">{"Livraison à domicile ou retrait sur place, vous choisissez. Souscrivez une fois, mangez bien tous les jours."}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
       </div>
     </>
   )

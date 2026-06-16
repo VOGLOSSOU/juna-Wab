@@ -4,10 +4,10 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'À propos - Juna',
-  description: 'Juna connecte les Africains de l\'Ouest à des traiteurs locaux via des abonnements repas. Fini le stress du "qu\'est-ce que je mange ?". Mangez bien, sans y penser.',
+  description: 'Juna connecte les Africains de l\'Ouest à des traiteurs locaux via des abonnements repas. Fini le stress du "qu\'est-ce que je mange ?". Mangez bien, sans se donner de la peine.',
   keywords: 'à propos Juna, mission Juna, abonnement repas, traiteur local, Junaeats, Bénin, Côte d\'Ivoire, food delivery, budget repas, gain de temps',
   openGraph: {
-    title: 'À propos de Juna — Mangez bien, sans y penser',
+    title: 'À propos de Juna — Mangez bien, sans se donner de la peine',
     description: 'Juna connecte les Africains de l\'Ouest à des traiteurs locaux via des abonnements repas.',
     url: 'https://junaeats.com/about',
     siteName: 'Juna',
@@ -192,8 +192,8 @@ export default function AboutPage() {
             <div className="flex flex-col gap-8">
               <Step
                 number="1"
-                title="Choisissez votre prestataire"
-                text="Parcourez les cuisiniers et traiteurs disponibles dans votre ville. Voyez leurs menus, leurs formules, leurs tarifs. Choisissez celui qui correspond à vos goûts."
+                title="Explorez les abonnements"
+                text="Parcourez les abonnements repas disponibles dans votre ville. Voyez les formules, les tarifs, les modes de réception. Le prestataire associé est visible directement sur chaque abonnement."
               />
               <Step
                 number="2"
@@ -260,12 +260,16 @@ export default function AboutPage() {
           <div className="max-w-3xl mx-auto text-center flex flex-col items-center gap-6">
             <SectionLabel center>Notre mission</SectionLabel>
             <h2 className="text-3xl md:text-4xl font-bold text-text-primary leading-tight">
-              Rendre les bons repas<br />accessibles à tous,<br />chaque jour.
+              Éliminer la galère du<br />&ldquo;qu&apos;est-ce que je mange ?&rdquo;<br />chaque jour.
             </h2>
             <p className="text-text-secondary text-base leading-relaxed max-w-2xl">
-              JUNA croit que bien manger ne devrait pas être un luxe ni une corvée.
-              Que chaque personne devrait pouvoir accéder à un repas de qualité préparé avec soin —
-              sans passer des heures à cuisiner, ni dépenser une fortune.
+              Trouver un bon repas chaque jour, c&apos;est une vraie friction : décider quoi manger,
+              trouver où l&apos;acheter, se déplacer, gérer le budget, recommencer le lendemain.
+              Cette charge mentale quotidienne, silencieuse mais réelle, épuise — et JUNA existe pour la supprimer.
+            </p>
+            <p className="text-text-secondary text-base leading-relaxed max-w-2xl">
+              Notre mission : rendre les bons repas accessibles à tous, sans friction, sans galère, sans se donner de la peine.
+              Un abonnement, un prestataire de confiance, et votre repas est là — chaque jour.
             </p>
             <p className="text-text-secondary text-base leading-relaxed max-w-2xl">
               En même temps, nous croyons que les talents culinaires locaux méritent
@@ -298,7 +302,7 @@ export default function AboutPage() {
           <div className="flex flex-col items-center gap-4">
             <p className="text-[11px] font-bold uppercase tracking-widest text-accent">Rejoindre JUNA</p>
             <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight">
-              Prêt à manger mieux,<br />sans y penser ?
+              Prêt à manger mieux,<br />sans se donner de la peine ?
             </h2>
             <p className="text-white/60 text-base md:text-lg max-w-lg leading-relaxed">
               Choisissez un prestataire près de chez vous. Abonnez-vous.

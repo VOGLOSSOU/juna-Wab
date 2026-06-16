@@ -7,7 +7,7 @@ import { Footer } from '@/components/layout/footer'
 export const metadata: Metadata = {
   metadataBase: new URL('https://junaeats.com'),
   title: {
-    default: 'Mangez bien sans y penser - Juna',
+    default: 'Mangez bien, sans se donner de la peine - Juna',
     template: '%s - Juna',
   },
   description: 'Découvrez et abonnez-vous aux meilleurs plans repas en Afrique de l\'Ouest. Traiteurs locaux, livraison à domicile ou retrait sur place. Paiement Mobile Money.',
