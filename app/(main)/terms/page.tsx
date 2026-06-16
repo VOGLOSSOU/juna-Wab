@@ -1,5 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 import type { Metadata } from 'next'
+import { BreadcrumbJsonLd } from '@/components/seo/breadcrumb-jsonld'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
@@ -16,6 +17,11 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
+    <>
+    <BreadcrumbJsonLd items={[
+      { name: 'Accueil', url: 'https://junaeats.com' },
+      { name: "Conditions d'utilisation", url: 'https://junaeats.com/terms' },
+    ]} />
     <div className="max-w-3xl mx-auto px-6 py-12 flex flex-col gap-10">
 
       <div className="flex flex-col gap-3">
@@ -188,6 +194,7 @@ export default function TermsPage() {
 
 
     </div>
+    </>
   )
 }
 

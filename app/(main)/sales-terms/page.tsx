@@ -1,5 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 import type { Metadata } from 'next'
+import { BreadcrumbJsonLd } from '@/components/seo/breadcrumb-jsonld'
 
 export const metadata: Metadata = {
   title: 'Juna - Conditions Générales de Vente',
@@ -15,6 +16,11 @@ export const metadata: Metadata = {
 
 export default function SalesTermsPage() {
   return (
+    <>
+    <BreadcrumbJsonLd items={[
+      { name: 'Accueil', url: 'https://junaeats.com' },
+      { name: 'Conditions de vente', url: 'https://junaeats.com/sales-terms' },
+    ]} />
     <div className="max-w-3xl mx-auto px-6 py-12 flex flex-col gap-10">
 
       <div className="flex flex-col gap-3">
@@ -128,6 +134,7 @@ export default function SalesTermsPage() {
       </Section>
 
     </div>
+    </>
   )
 }
 

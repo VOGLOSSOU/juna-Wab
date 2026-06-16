@@ -1,5 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 import type { Metadata } from 'next'
+import { BreadcrumbJsonLd } from '@/components/seo/breadcrumb-jsonld'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
@@ -9,6 +10,11 @@ export const metadata: Metadata = {
 
 export default function AccountDeletionPage() {
   return (
+    <>
+    <BreadcrumbJsonLd items={[
+      { name: 'Accueil', url: 'https://junaeats.com' },
+      { name: 'Suppression de compte', url: 'https://junaeats.com/suppression-compte' },
+    ]} />
     <div className="max-w-2xl mx-auto px-6 py-12 flex flex-col gap-10">
 
       <div className="flex flex-col gap-3">
@@ -97,6 +103,7 @@ export default function AccountDeletionPage() {
       </Link>
 
     </div>
+    </>
   )
 }
 

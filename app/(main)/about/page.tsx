@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import type { Metadata } from 'next'
+import { BreadcrumbJsonLd } from '@/components/seo/breadcrumb-jsonld'
 
 export const metadata: Metadata = {
   title: 'À propos - Juna',
@@ -60,6 +61,11 @@ function Step({ number, title, text }: { number: string; title: string; text: st
 
 export default function AboutPage() {
   return (
+    <>
+    <BreadcrumbJsonLd items={[
+      { name: 'Accueil', url: 'https://junaeats.com' },
+      { name: 'À propos', url: 'https://junaeats.com/about' },
+    ]} />
     <div className="flex flex-col">
 
       {/* ── HERO ── */}
@@ -333,5 +339,6 @@ export default function AboutPage() {
       </section>
 
     </div>
+    </>
   )
 }

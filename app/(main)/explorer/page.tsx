@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import ExplorerClient from './_explorer-client'
+import { BreadcrumbJsonLd } from '@/components/seo/breadcrumb-jsonld'
 
 export const metadata: Metadata = {
   title: 'Explorer les abonnements repas - Juna',
@@ -26,8 +27,14 @@ export const metadata: Metadata = {
 
 export default function ExplorerPage() {
   return (
-    <Suspense>
-      <ExplorerClient />
-    </Suspense>
+    <>
+      <BreadcrumbJsonLd items={[
+        { name: 'Accueil', url: 'https://junaeats.com' },
+        { name: 'Explorer', url: 'https://junaeats.com/explorer' },
+      ]} />
+      <Suspense>
+        <ExplorerClient />
+      </Suspense>
+    </>
   )
 }

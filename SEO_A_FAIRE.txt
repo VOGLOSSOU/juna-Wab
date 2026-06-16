@@ -1,0 +1,81 @@
+SEO — LISTE DES TÂCHES PAR ORDRE DE PRIORITÉ
+=============================================
+
+
+A. SUR LE SITE (TECHNIQUE)
+---------------------------
+
+[X] 1. Structured data (JSON-LD)
+    Schémas Organization, WebSite + SearchAction, et Product sur les pages abonnement.
+    → FAIT
+
+[ ] 2. Image OG correcte
+    Le logo actuel est trop petit comme image de partage (WhatsApp, Facebook, Twitter).
+    Créer une vraie image 1200×630px au nom "og-image.jpg" dans /public,
+    puis mettre à jour app/layout.tsx pour pointer vers cette image.
+
+[ ] 3. Core Web Vitals (performance)
+    Google favorise les sites rapides.
+    → Ouvrir junaeats.com dans Chrome
+    → F12 → onglet "Lighthouse" → lancer un audit
+    → Si le score est en dessous de 80, revenir pour optimiser.
+
+
+B. AUTRES MOTEURS DE RECHERCHE
+--------------------------------
+
+[ ] 4. Bing Webmaster Tools
+    Bing alimente aussi DuckDuckGo et Yahoo.
+    → Aller sur : bing.com/webmasters
+    → Ajouter junaeats.com et soumettre le sitemap : https://junaeats.com/sitemap.xml
+    (même procédure que Google Search Console)
+
+[ ] 5. Yandex Webmaster
+    Moins prioritaire mais gratuit et rapide.
+    → Aller sur : webmaster.yandex.com
+    → Ajouter junaeats.com et soumettre le sitemap.
+
+
+C. PRÉSENCE WEB (BACKLINKS)
+-----------------------------
+
+[ ] 6. Google Business Profile
+    Crée une fiche Google Maps si Juna a une adresse physique ou un bureau.
+    Ça booste énormément le SEO local.
+    → Aller sur : business.google.com
+    → Créer ou réclamer la fiche "Juna" avec l'adresse, le téléphone, le lien vers junaeats.com.
+
+[ ] 7. Annuaires africains
+    Les liens entrants depuis d'autres sites comptent pour le SEO.
+    → Soumettre junaeats.com sur :
+        - Africa Business Directory
+        - Africaink
+        - Autres annuaires locaux (Bénin, Côte d'Ivoire)
+
+[ ] 8. Réseaux sociaux
+    Google prend en compte les liens depuis les réseaux sociaux.
+    → S'assurer que les profils Instagram, Facebook et Twitter/X
+      ont bien "junaeats.com" dans la bio.
+
+
+D. ANALYTICS
+-------------
+
+[ ] 9. Google Analytics 4
+    Voir d'où viennent les visiteurs, quelles pages convertissent le mieux.
+    Gratuit, indispensable.
+    → Aller sur : analytics.google.com
+    → Créer une propriété pour junaeats.com
+    → Intégrer le tag GA4 dans app/layout.tsx (demander au dev ou revenir ici)
+
+[ ] 10. Microsoft Clarity
+    Enregistre les sessions utilisateurs et génère des heatmaps.
+    Très utile pour comprendre comment les gens naviguent sur le site.
+    Gratuit.
+    → Aller sur : clarity.microsoft.com
+    → Créer un projet pour junaeats.com
+    → Intégrer le script dans app/layout.tsx (demander au dev ou revenir ici)
+
+
+=============================================
+Légende : [X] = fait   [ ] = à faire

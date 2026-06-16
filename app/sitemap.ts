@@ -1,8 +1,29 @@
 import type { MetadataRoute } from 'next'
 
 const BASE_URL = 'https://junaeats.com'
+const API_URL = 'https://juna-app.up.railway.app/api/v1'
 
-export default function sitemap(): MetadataRoute.Sitemap {
+async function getSubscriptionUrls(): Promise<MetadataRoute.Sitemap> {
+  try {
+    const res = await fetch(`${API_URL}/subscriptions?limit=500`, {
+      next: { revalidate: 86400 },
+    })
+    const json = await res.json()
+    const items: { id: string; updatedAt?: string }[] = json.data?.items ?? json.data ?? []
+    return items.map((sub) => ({
+      url: `${BASE_URL}/subscriptions/${sub.id}`,
+      lastModified: sub.updatedAt ? new Date(sub.updatedAt) : new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    }))
+  } catch {
+    return []
+  }
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const subscriptionUrls = await getSubscriptionUrls()
+
   return [
     {
       url: BASE_URL,
@@ -58,5 +79,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.3,
     },
+    ...subscriptionUrls,
   ]
 }
