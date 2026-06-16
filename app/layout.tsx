@@ -37,6 +37,9 @@ export const metadata: Metadata = {
     shortcut: '/favicon.ico',
   },
   manifest: '/site.webmanifest',
+  verification: {
+    google: 'IsOCPEX_-_8qamlPDGB2sjB2npCjrqqwBaYay2QxIDE',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
