@@ -30,12 +30,6 @@ export default function TelechargerPage() {
       {/* Main content */}
       <div className="relative z-10 flex flex-col items-center text-center w-full max-w-[340px] mx-auto gap-8">
 
-        {/* Live badge */}
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/15 border border-green-500/30">
-          <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-          <span className="text-green-400 text-[11px] font-bold tracking-widest uppercase">Disponible maintenant</span>
-        </div>
-
         {/* Logo */}
         <Image
           src="/juna-logo.png"
@@ -48,12 +42,11 @@ export default function TelechargerPage() {
         {/* Headline */}
         <div className="flex flex-col gap-3">
           <h1 className="text-[2.75rem] font-extrabold text-white leading-[1.08] tracking-tight">
-            Tes repas.<br />Chaque jour.<br />
-            <span style={{ color: '#4ade80' }}>Sans la peine.</span>
+            Tes repas<br />planifiés<br />
+            <span style={{ color: '#4ade80' }}>quotidiennement.</span>
           </h1>
           <p className="text-white/55 text-sm leading-relaxed max-w-[280px] mx-auto">
-            Abonne-toi aux meilleurs prestataires repas autour de toi.
-            Livraison ou retrait — paiement Mobile Money.
+            Découvrir et souscrire à des repas préparés par des prestataires près de chez vous.
           </p>
         </div>
 
