@@ -42,10 +42,52 @@ export const metadata: Metadata = {
   },
 }
 
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Juna',
+  url: 'https://junaeats.com',
+  logo: 'https://junaeats.com/juna-logo.png',
+  description: "Plateforme d'abonnements repas en Afrique de l'Ouest. Prestataires locaux, livraison ou retrait, paiement Mobile Money.",
+  contactPoint: {
+    '@type': 'ContactPoint',
+    email: 'junaapp1@gmail.com',
+    contactType: 'customer service',
+    availableLanguage: 'French',
+  },
+  areaServed: ['Bénin', "Côte d'Ivoire"],
+  sameAs: [
+    'https://play.google.com/store/apps/details?id=com.junaeats.app',
+  ],
+}
+
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Juna',
+  url: 'https://junaeats.com',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: 'https://junaeats.com/explorer?search={search_term_string}',
+    },
+    'query-input': 'required name=search_term_string',
+  },
+}
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr">
       <body className="min-h-screen flex flex-col bg-background">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
         {children}
         <Toaster
           position="top-center"
