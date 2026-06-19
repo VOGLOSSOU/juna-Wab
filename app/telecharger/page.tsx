@@ -6,6 +6,16 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: 'Télécharger Juna',
   description: 'Abonne-toi aux meilleurs prestataires repas autour de toi. Disponible sur Android, bientôt sur iOS.',
+  keywords: 'télécharger Juna, app Juna, Juna Android, Juna Play Store, application repas, abonnement repas mobile, Junaeats app',
+  openGraph: {
+    title: 'Télécharger Juna - App Android',
+    description: 'Abonne-toi aux meilleurs prestataires repas autour de toi. Disponible sur Android, bientôt sur iOS.',
+    url: 'https://junaeats.com/telecharger',
+    siteName: 'Juna',
+    images: [{ url: 'https://junaeats.com/juna-logo.png', width: 800, height: 400, alt: 'Juna' }],
+    type: 'website',
+  },
+  alternates: { canonical: 'https://junaeats.com/telecharger' },
 }
 
 export default function TelechargerPage() {

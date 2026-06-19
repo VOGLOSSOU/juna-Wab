@@ -6,6 +6,16 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: 'Juna — Suppression de compte et de données',
   description: "Demandez la suppression définitive de votre compte Juna et de toutes vos données personnelles. Procédure simple par email.",
+  keywords: 'suppression compte Juna, supprimer données personnelles, droit à l\'oubli, Juna RGPD, désinscrire Juna',
+  openGraph: {
+    title: 'Juna — Suppression de compte et de données',
+    description: 'Demandez la suppression définitive de votre compte Juna et de vos données personnelles.',
+    url: 'https://junaeats.com/suppression-compte',
+    siteName: 'Juna',
+    images: [{ url: 'https://junaeats.com/juna-logo.png', width: 800, height: 400, alt: 'Juna' }],
+    type: 'website',
+  },
+  alternates: { canonical: 'https://junaeats.com/suppression-compte' },
 }
 
 export default function AccountDeletionPage() {
