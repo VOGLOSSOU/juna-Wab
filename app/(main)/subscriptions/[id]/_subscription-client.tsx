@@ -152,21 +152,6 @@ export default function SubscriptionDetailClient() {
                 {meal.description && (
                   <p className="text-xs text-text-secondary line-clamp-2">{meal.description}</p>
                 )}
-                {/* Prix */}
-                {meal.priceType === 'MULTIPLE' && meal.pricings?.length ? (
-                  <p className="text-xs font-semibold text-primary">
-                    À partir de {formatPrice(Math.min(...meal.pricings.map(p => p.price)))}
-                  </p>
-                ) : meal.priceType === 'RANGE' && meal.priceMin != null && meal.priceMax != null ? (
-                  <p className="text-xs font-semibold text-primary">
-                    {formatPrice(meal.priceMin)} – {formatPrice(meal.priceMax)}
-                  </p>
-                ) : meal.price != null ? (
-                  <p className="text-xs font-semibold text-primary">{formatPrice(meal.price)}</p>
-                ) : null}
-                {meal.priceGuideline && (
-                  <p className="text-[10px] text-text-light italic leading-tight">{meal.priceGuideline}</p>
-                )}
               </div>
             ))}
           </div>
