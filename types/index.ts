@@ -309,6 +309,29 @@ export interface HomeResponse {
   providers: ProviderSummary[]
 }
 
+export interface PublicProviderProfile {
+  id: string
+  businessName: string
+  description?: string | null
+  logo?: string | null
+  businessAddress?: string | null
+  rating?: number
+  reviewCount?: number
+  acceptsDelivery?: boolean
+  acceptsPickup?: boolean
+  deliveryZones?: string[]
+  memberSince?: string
+  isVerified?: boolean
+  city?: {
+    id: string
+    name: string
+    country?: { id: string; code: string; translations?: { fr?: string; en?: string } }
+  }
+  pickupPoints?: { id: string; name: string }[]
+  subscriptions?: Subscription[]
+  meals?: Meal[]
+}
+
 // ============================================================
 // FORM TYPES
 // ============================================================

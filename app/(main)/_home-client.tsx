@@ -110,73 +110,90 @@ export default function HomeClient() {
         )}
 
         {hasChosen && !search.trim() && (
+          <section className="flex flex-col gap-10">
+            <h2 className="text-headline-large font-semibold text-text-primary">
+              Abonnements{selectedCity ? ` à ${selectedCity.name}` : ''}
+            </h2>
+
+            {/* Les plus populaires */}
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-title-large font-semibold text-text-primary">Les plus populaires</h3>
+                <Link href="/explorer" className="text-xs font-medium text-primary flex items-center gap-0.5 hover:gap-1.5 transition-all flex-shrink-0">
+                  Voir tout <span aria-hidden>→</span>
+                </Link>
+              </div>
+              {loading ? (
+                <div className="flex gap-4 overflow-x-auto pb-2 -mx-6 px-6 hide-scrollbar">
+                  {Array.from({ length: 4 }).map((_, i) => <div key={i} className="flex-shrink-0 w-48 h-[268px]"><SkeletonCard /></div>)}
+                </div>
+              ) : data?.popular?.length ? (
+                <div className="flex gap-4 overflow-x-auto pb-2 -mx-6 px-6 hide-scrollbar">
+                  {data.popular.map((sub) => (
+                    <div key={sub.id} className="flex-shrink-0 w-48 h-[268px]">
+                      <SubscriptionCard subscription={sub} variant="compact" />
+                    </div>
+                  ))}
+                </div>
+              ) : !loading && !error && (
+                <p className="text-text-secondary text-sm py-4 text-center">
+                  Aucun abonnement populaire pour l&apos;instant.
+                </p>
+              )}
+            </div>
+
+            {/* Les plus récents */}
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-title-large font-semibold text-text-primary">Les plus récents</h3>
+                <Link href="/explorer?sort=recent" className="text-xs font-medium text-primary flex items-center gap-0.5 hover:gap-1.5 transition-all flex-shrink-0">
+                  Voir tout <span aria-hidden>→</span>
+                </Link>
+              </div>
+              {loading ? (
+                <div className="flex gap-4 overflow-x-auto pb-2 -mx-6 px-6 hide-scrollbar">
+                  {Array.from({ length: 4 }).map((_, i) => <div key={i} className="flex-shrink-0 w-48 h-[268px]"><SkeletonCard /></div>)}
+                </div>
+              ) : data?.recent?.length ? (
+                <div className="flex gap-4 overflow-x-auto pb-2 -mx-6 px-6 hide-scrollbar">
+                  {data.recent.map((sub) => (
+                    <div key={sub.id} className="flex-shrink-0 w-48 h-[268px]">
+                      <SubscriptionCard subscription={sub} variant="compact" />
+                    </div>
+                  ))}
+                </div>
+              ) : !loading && !error && (
+                <p className="text-text-secondary text-sm py-4 text-center">
+                  Aucune nouveauté pour l&apos;instant.
+                </p>
+              )}
+            </div>
+          </section>
+        )}
+
+        {/* Prestataires de la ville */}
+        {hasChosen && !search.trim() && (loading || (data?.providers?.length ?? 0) > 0) && (
           <section>
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-headline-large font-semibold text-text-primary">
-                Les plus populaires{selectedCity ? ` à ${selectedCity.name}` : ''}
+                Prestataires{selectedCity ? ` à ${selectedCity.name}` : ''}
               </h2>
-              <Link href="/explorer" className="text-xs font-medium text-primary flex items-center gap-0.5 hover:gap-1.5 transition-all flex-shrink-0">
-                Explorer <span aria-hidden>→</span>
-              </Link>
             </div>
             {loading ? (
               <div className="flex gap-4 overflow-x-auto pb-2 -mx-6 px-6 hide-scrollbar">
-                {Array.from({ length: 4 }).map((_, i) => <div key={i} className="flex-shrink-0 w-48 h-[268px]"><SkeletonCard /></div>)}
-              </div>
-            ) : data?.popular?.length ? (
-              <div className="flex gap-4 overflow-x-auto pb-2 -mx-6 px-6 hide-scrollbar">
-                {data.popular.map((sub) => (
-                  <div key={sub.id} className="flex-shrink-0 w-48 h-[268px]">
-                    <SubscriptionCard subscription={sub} variant="compact" />
-                  </div>
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <div key={i} className="flex-shrink-0 w-36 h-44 bg-surface-grey rounded-2xl animate-pulse" />
                 ))}
               </div>
-            ) : !loading && !error && (
-              <p className="text-text-secondary text-sm py-8 text-center">
-                Aucun abonnement populaire pour l&apos;instant.
-              </p>
+            ) : (
+              <div className="flex gap-4 overflow-x-auto pb-2 -mx-6 px-6 hide-scrollbar">
+                {data!.providers.map((provider) => (
+                  <ProviderCard key={provider.id} provider={provider} variant="card" />
+                ))}
+              </div>
             )}
           </section>
         )}
-
-        {hasChosen && !search.trim() && (
-          <section>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-headline-large font-semibold text-text-primary">Nouveautés</h2>
-              <Link href="/explorer?sort=recent" className="text-xs font-medium text-primary flex items-center gap-0.5 hover:gap-1.5 transition-all flex-shrink-0">
-                Explorer <span aria-hidden>→</span>
-              </Link>
-            </div>
-            {loading ? (
-              <div className="flex gap-4 overflow-x-auto pb-2 -mx-6 px-6 hide-scrollbar">
-                {Array.from({ length: 4 }).map((_, i) => <div key={i} className="flex-shrink-0 w-48 h-[268px]"><SkeletonCard /></div>)}
-              </div>
-            ) : data?.recent?.length ? (
-              <div className="flex gap-4 overflow-x-auto pb-2 -mx-6 px-6 hide-scrollbar">
-                {data.recent.map((sub) => (
-                  <div key={sub.id} className="flex-shrink-0 w-48 h-[268px]">
-                    <SubscriptionCard subscription={sub} variant="compact" />
-                  </div>
-                ))}
-              </div>
-            ) : !loading && !error && (
-              <p className="text-text-secondary text-sm py-8 text-center">
-                Aucune nouveauté pour l&apos;instant.
-              </p>
-            )}
-          </section>
-        )}
-
-        {hasChosen && !search.trim() && data?.providers?.length ? (
-          <section>
-            <h2 className="text-headline-large font-semibold text-text-primary mb-6">Nos prestataires</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {data.providers.map((provider) => (
-                <ProviderCard key={provider.id} provider={provider} />
-              ))}
-            </div>
-          </section>
-        ) : null}
 
         {!hasChosen && (
           <div className="flex flex-col items-center gap-4 py-16 text-center">
