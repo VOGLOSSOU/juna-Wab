@@ -59,6 +59,13 @@ export type SortOption = 'popular' | 'recent' | 'rating' | 'price_asc' | 'price_
 export type UserRole = 'USER' | 'PROVIDER' | 'ADMIN'
 
 export type MealType = 'BREAKFAST' | 'LUNCH' | 'DINNER' | 'SNACK'
+export type MealPriceType = 'FIXED' | 'MULTIPLE' | 'RANGE'
+
+export interface MealPricing {
+  id?: string
+  label: string
+  price: number
+}
 
 // ============================================================
 // ENTITIES
@@ -155,6 +162,11 @@ export interface Meal {
   description?: string
   imageUrl?: string | null
   price?: number
+  priceType?: MealPriceType
+  priceMin?: number | null
+  priceMax?: number | null
+  priceGuideline?: string | null
+  pricings?: MealPricing[]
   mealType?: MealType
   isActive?: boolean
   providerId?: string
@@ -355,7 +367,12 @@ export interface SubscriptionForm {
 export interface MealForm {
   name: string
   description: string
-  price: number
   imageUrl: string
   mealType: MealType
+  priceType: MealPriceType
+  price?: number
+  priceMin?: number
+  priceMax?: number
+  priceGuideline?: string
+  pricings?: { label: string; price: number }[]
 }
