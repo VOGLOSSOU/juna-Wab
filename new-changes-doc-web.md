@@ -5,6 +5,30 @@
 
 ---
 
+## [2026-06-30] Fix — `isVerified` manquant sur le profil public d'un prestataire
+
+### Route concernée
+
+**`GET /api/v1/providers/:id`**
+
+### Ce qui a changé
+
+Le champ `isVerified` (boolean) était absent de la réponse. Il est maintenant inclus, au même niveau que `businessName`, `logo`, etc. — dérivé du statut du prestataire (`status === 'APPROVED'`).
+
+```json
+{
+  "id": "uuid",
+  "businessName": "K'foods",
+  "isVerified": true,
+  "logo": "https://...",
+  "...": "..."
+}
+```
+
+Permet d'afficher le badge de certification bleu sur la page profil public.
+
+---
+
 ## [2026-06-29] Route home — prestataires de la ville désormais peuplés
 
 ### Route concernée
