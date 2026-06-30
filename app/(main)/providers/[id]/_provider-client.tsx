@@ -100,10 +100,6 @@ export default function ProviderProfileClient() {
   const rating = safeRating(provider.rating)
   const reviewCount = provider.reviewCount ?? 0
 
-  const cityLabel = provider.city
-    ? `${provider.city.name}${provider.city.country?.translations?.fr ? `, ${provider.city.country.translations.fr}` : ''}`
-    : null
-
   const pickupPoints = provider.pickupPoints ?? []
   const deliveryZones = provider.deliveryZones ?? []
 
@@ -175,13 +171,13 @@ export default function ProviderProfileClient() {
 
           <div className="flex-1 min-w-0 pt-9">
             <div className="flex items-center gap-1.5 min-w-0">
+              <h1 className="text-xl font-bold text-text-primary leading-tight truncate">{provider.businessName}</h1>
               {provider.isVerified && (
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" className="flex-shrink-0">
                   <circle cx="12" cy="12" r="10" fill="#3B82F6"/>
                   <polyline points="8 12 11 15 16 9" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               )}
-              <h1 className="text-xl font-bold text-text-primary leading-tight truncate">{provider.businessName}</h1>
             </div>
 
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1.5 text-xs text-text-secondary">
@@ -197,17 +193,12 @@ export default function ProviderProfileClient() {
         </div>
 
         {/* Localisation */}
-        {(provider.businessAddress || cityLabel) && (
-          <p className="flex items-center flex-wrap gap-1.5 text-sm text-text-secondary mt-3">
-            <span>Restaurant situé à {provider.businessAddress}{provider.businessAddress && cityLabel ? ',' : ''}</span>
-            {cityLabel && (
-              <span className="flex items-center gap-1 text-text-primary font-medium">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0">
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
-                </svg>
-                {cityLabel}
-              </span>
-            )}
+        {(provider.businessAddress || provider.city) && (
+          <p className="flex items-center gap-1.5 text-sm text-text-secondary mt-3">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+            </svg>
+            {[provider.businessAddress, provider.city?.name].filter(Boolean).join(', ')}
           </p>
         )}
 
