@@ -15,7 +15,8 @@ export function SubscriptionCard({ subscription, variant = 'compact' }: Subscrip
     id, name, images, price, currency, type, duration, rating, reviewCount, provider, isActive,
   } = subscription
 
-  const imageUrl = images?.[0]
+  const imageUrl = images?.[0] ?? subscription.imageUrl
+  const isUnavailable = isActive === false
 
   if (variant === 'horizontal') {
     return (
@@ -57,7 +58,7 @@ export function SubscriptionCard({ subscription, variant = 'compact' }: Subscrip
         ) : (
           <div className="w-full h-full flex items-center justify-center text-text-light"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg></div>
         )}
-        {!isActive && (
+        {isUnavailable && (
           <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
             <Badge variant="grey" className="text-white bg-black/60">Indisponible</Badge>
           </div>
