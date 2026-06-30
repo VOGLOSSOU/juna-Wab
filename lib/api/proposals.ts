@@ -14,13 +14,13 @@ export async function createProposal(data: CreateProposalForm) {
 }
 
 export async function getMyProposals(status?: ProposalStatus): Promise<SubscriptionProposal[]> {
-  const res = await apiClient.get<ProposalListResponse>('/subscription-proposals/me', { params: status ? { status } : undefined })
-  return res.data.data
+  const res = await apiClient.get<ApiResponse<ProposalListResponse>>('/subscription-proposals/me', { params: status ? { status } : undefined })
+  return res.data.data?.data ?? []
 }
 
 export async function getReceivedProposals(status?: ProposalStatus): Promise<SubscriptionProposal[]> {
-  const res = await apiClient.get<ProposalListResponse>('/subscription-proposals/received', { params: status ? { status } : undefined })
-  return res.data.data
+  const res = await apiClient.get<ApiResponse<ProposalListResponse>>('/subscription-proposals/received', { params: status ? { status } : undefined })
+  return res.data.data?.data ?? []
 }
 
 export async function getProposal(id: string) {
