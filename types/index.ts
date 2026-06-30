@@ -203,6 +203,67 @@ export interface Subscription {
   createdAt?: string
 }
 
+export type ProposalStatus = 'PENDING' | 'APPROVED' | 'REJECTED'
+
+export interface ProposalMealItem {
+  id: string
+  mealId: string
+  mealPricingLabel?: string | null
+  quantity: number
+  meal: {
+    id: string
+    name: string
+    imageUrl?: string | null
+    mealType: MealType
+    priceType: MealPriceType
+    price?: number
+    isActive: boolean
+  }
+}
+
+export interface SubscriptionProposal {
+  id: string
+  userId: string
+  providerId: string
+  type: SubscriptionType
+  category: SubscriptionCategory
+  duration: SubscriptionDuration
+  message?: string | null
+  status: ProposalStatus
+  rejectionReason?: string | null
+  resultingSubscriptionId?: string | null
+  respondedAt?: string | null
+  createdAt: string
+  updatedAt?: string
+  user?: { id: string; name: string; email: string }
+  provider?: { id: string; businessName: string; logo?: string | null }
+  resultingSubscription?: Subscription | null
+  meals: ProposalMealItem[]
+}
+
+export interface CreateProposalForm {
+  providerId: string
+  type: SubscriptionType
+  category: SubscriptionCategory
+  duration: SubscriptionDuration
+  message?: string
+  meals: { mealId: string; quantity: number; mealPricingLabel?: string }[]
+}
+
+export interface ApproveProposalForm {
+  name: string
+  description: string
+  price: number
+  imageUrl: string
+  junaCommissionPercent?: number
+  preparationHours?: number
+  isImmediate?: boolean
+  type?: SubscriptionType
+  category?: SubscriptionCategory
+  duration?: SubscriptionDuration
+  meals?: { mealId: string; quantity: number }[]
+}
+
 export interface Order {
   id: string
   orderNumber?: string

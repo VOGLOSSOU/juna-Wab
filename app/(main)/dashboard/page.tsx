@@ -7,9 +7,10 @@ import { getProviderProfile } from '@/lib/api/auth'
 import { getProviderOrders } from '@/lib/api/orders'
 import { getProviderSubscriptions } from '@/lib/api/subscriptions'
 import { getMyMeals } from '@/lib/api/meals'
+import { getReceivedProposals } from '@/lib/api/proposals'
 import { StatusBadge } from '@/components/ui/status-badge'
 import { formatPrice, formatDate } from '@/lib/utils'
-import type { Provider, Order, Subscription, Meal } from '@/types'
+import type { Provider, Order, Subscription, Meal, SubscriptionProposal } from '@/types'
 
 export default function DashboardPage() {
   const { isAuthenticated, hydrated } = useAuthGuard('/auth/login')
@@ -17,6 +18,7 @@ export default function DashboardPage() {
   const [orders, setOrders] = useState<Order[]>([])
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([])
   const [meals, setMeals] = useState<Meal[]>([])
+  const [proposals, setProposals] = useState<SubscriptionProposal[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -26,11 +28,13 @@ export default function DashboardPage() {
       getProviderOrders(),
       getProviderSubscriptions(),
       getMyMeals(),
-    ]).then(([prov, ords, subs, mls]) => {
+      getReceivedProposals('PENDING').catch(() => []),
+    ]).then(([prov, ords, subs, mls, props]) => {
       setProvider(prov)
       setOrders(ords)
       setSubscriptions(subs)
       setMeals(mls)
+      setProposals(props)
     }).catch(console.error).finally(() => setLoading(false))
   }, [hydrated, isAuthenticated])
 
@@ -54,6 +58,7 @@ export default function DashboardPage() {
     { label: 'Abonnements actifs', value: activeSubscriptions.length, href: '/dashboard/subscriptions', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>, color: 'text-primary' },
     { label: 'Plats enregistrés', value: meals.length, href: '/dashboard/meals', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>, color: 'text-primary' },
     { label: 'Total commandes', value: orders.length, href: '/dashboard/orders', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>, color: 'text-text-secondary' },
+    { label: 'Propositions en attente', value: proposals.length, href: '/dashboard/proposals', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>, color: 'text-accent' },
   ]
 
   return (
@@ -120,6 +125,7 @@ export default function DashboardPage() {
           { href: '/dashboard/active-subscriptions', label: 'Abonnés actifs', desc: 'Voir tous vos abonnés en cours', icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg> },
           { href: '/dashboard/subscriptions', label: 'Gérer mes abonnements', desc: `${subscriptions.length} abonnement${subscriptions.length !== 1 ? 's' : ''}`, icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg> },
           { href: '/dashboard/meals', label: 'Gérer mes plats', desc: `${meals.length} plat${meals.length !== 1 ? 's' : ''}`, icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg> },
+          { href: '/dashboard/proposals', label: 'Propositions reçues', desc: `${proposals.length} en attente`, icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg> },
           { href: '/dashboard/profile', label: 'Mon profil prestataire', desc: 'Modifier mes informations', icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> },
         ].map((item) => (
           <Link key={item.href} href={item.href} className="bg-white rounded-xl border border-border p-5 hover:shadow-sm transition-shadow flex items-center gap-4">

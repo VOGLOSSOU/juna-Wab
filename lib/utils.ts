@@ -2,7 +2,7 @@ import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { formatDistanceToNow, format } from 'date-fns'
 import { fr } from 'date-fns/locale'
-import type { SubscriptionType, SubscriptionDuration, SubscriptionCategory, OrderStatus, MealType, Meal } from '@/types'
+import type { SubscriptionType, SubscriptionDuration, SubscriptionCategory, OrderStatus, ProposalStatus, MealType, Meal } from '@/types'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -136,6 +136,18 @@ export const ORDER_STATUS_COLORS: Record<OrderStatus, string> = {
   ACTIVE:     '#388E3C',
   COMPLETED:  '#1A5C2A',
   CANCELLED:  '#D32F2F',
+}
+
+export const PROPOSAL_STATUS_LABELS: Record<ProposalStatus, string> = {
+  PENDING:  'En attente',
+  APPROVED: 'Approuvée',
+  REJECTED: 'Rejetée',
+}
+
+export const PROPOSAL_STATUS_COLORS: Record<ProposalStatus, string> = {
+  PENDING:  '#9E9E9E',
+  APPROVED: '#1A5C2A',
+  REJECTED: '#D32F2F',
 }
 
 export function getInitials(name: string): string {

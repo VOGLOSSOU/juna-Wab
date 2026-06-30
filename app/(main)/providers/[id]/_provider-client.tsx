@@ -6,6 +6,7 @@ import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { StarRating } from '@/components/ui/star-rating'
+import { useAuthStore } from '@/lib/store/auth'
 import { formatPrice, getInitials, mealDisplayPrice } from '@/lib/utils'
 import type { PublicProviderProfile } from '@/types'
 
@@ -66,6 +67,7 @@ function ProfileSkeleton() {
 export default function ProviderProfileClient() {
   const { id } = useParams<{ id: string }>()
   const router = useRouter()
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
   const [provider, setProvider] = useState<PublicProviderProfile | null>(null)
   const [loading, setLoading] = useState(true)
   const [coverIndex, setCoverIndex] = useState(0)
@@ -238,6 +240,16 @@ export default function ProviderProfileClient() {
         {/* Description */}
         {provider.description && (
           <p className="text-text-secondary text-sm leading-relaxed mt-3">{provider.description}</p>
+        )}
+
+        {isAuthenticated && meals.length > 0 && (
+          <Link
+            href={`/providers/${provider.id}/propose`}
+            className="flex items-center justify-center gap-2 bg-primary text-white text-sm font-semibold py-3 rounded-xl hover:bg-primary-light transition-colors mt-3"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M12 5v14M5 12h14"/></svg>
+            Proposer un abonnement personnalisé
+          </Link>
         )}
       </div>
 

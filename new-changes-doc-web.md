@@ -5,6 +5,161 @@
 
 ---
 
+## [2026-06-30] Nouvelle feature — Propositions d'abonnement (consumer → provider)
+
+### Contexte
+
+Un consumer peut désormais composer une proposition d'abonnement personnalisé à partir du catalogue de plats d'**un provider précis** (depuis sa page profil public). Le provider reçoit la proposition, peut l'ajuster, fixe librement le prix final, puis l'approuve ou la rejette.
+
+À l'approbation, un **nouvel abonnement public** est créé automatiquement (`isPublic: true`) et ajouté au catalogue du provider, comme n'importe quel autre abonnement. Ce n'est pas un abonnement privé réservé au demandeur.
+
+Côté web, ça concerne potentiellement deux surfaces : le **Dashboard Provider** (réception/traitement des propositions) et une éventuelle vue **Consumer** si l'app web expose la création de proposition (sinon cette partie est gérée côté mobile uniquement — à confirmer selon vos écrans).
+
+### Toutes les routes nécessitent une authentification (`Authorization: Bearer <token>`)
+
+| Méthode | Route | Rôle | Usage |
+|--------|-------|------|-------|
+| `POST` | `/api/v1/subscription-proposals` | Consumer | Créer une proposition |
+| `GET` | `/api/v1/subscription-proposals/me` | Consumer | Mes propositions envoyées (paginé) |
+| `GET` | `/api/v1/subscription-proposals/received` | Provider | Propositions reçues (paginé) — **Dashboard Provider** |
+| `GET` | `/api/v1/subscription-proposals/:id` | Les deux | Détail (accessible par l'auteur OU le provider ciblé) |
+| `POST` | `/api/v1/subscription-proposals/:id/approve` | Provider | Approuver → crée l'abonnement public |
+| `POST` | `/api/v1/subscription-proposals/:id/reject` | Provider | Rejeter avec motif |
+
+### Créer une proposition — `POST /api/v1/subscription-proposals`
+
+```json
+{
+  "providerId": "uuid",
+  "type": "LUNCH",
+  "category": "AFRICAN",
+  "duration": "WORK_WEEK",
+  "message": "Tous les midis du lundi au vendredi svp",
+  "meals": [
+    { "mealId": "uuid", "quantity": 1 },
+    { "mealId": "uuid", "mealPricingLabel": "Demi", "quantity": 1 }
+  ]
+}
+```
+
+- `meals` : 1 à 20 plats. Chaque plat doit appartenir au provider ciblé et être actif.
+- `mealPricingLabel` : **obligatoire** si le plat a `priceType: "MULTIPLE"` (ex: "Demi", "Entier" — doit correspondre à une variante existante du plat), **interdit** sinon.
+- Réponse `201` avec la proposition complète (voir structure ci-dessous).
+
+### Structure d'une proposition (réponse)
+
+```json
+{
+  "id": "uuid",
+  "userId": "uuid",
+  "providerId": "uuid",
+  "type": "LUNCH",
+  "category": "AFRICAN",
+  "duration": "WORK_WEEK",
+  "message": "Tous les midis du lundi au vendredi svp",
+  "status": "PENDING",
+  "rejectionReason": null,
+  "resultingSubscriptionId": null,
+  "respondedAt": null,
+  "createdAt": "...",
+  "updatedAt": "...",
+  "user": { "id": "uuid", "name": "...", "email": "..." },
+  "provider": { "id": "uuid", "businessName": "...", "logo": "..." },
+  "resultingSubscription": null,
+  "meals": [
+    {
+      "id": "uuid",
+      "mealId": "uuid",
+      "mealPricingLabel": "Demi",
+      "quantity": 1,
+      "meal": {
+        "id": "uuid",
+        "name": "Poulet braisé",
+        "imageUrl": "https://...",
+        "mealType": "LUNCH",
+        "priceType": "MULTIPLE",
+        "price": 1500,
+        "isActive": true
+      }
+    }
+  ]
+}
+```
+
+`status` vaut `PENDING`, `APPROVED` ou `REJECTED`.
+
+### Listes paginées — `GET /me` et `GET /received`
+
+Query params : `?status=PENDING&page=1&limit=20` (tous optionnels, `status` filtre sur `PENDING`/`APPROVED`/`REJECTED`).
+
+```json
+{
+  "data": [ /* tableau de propositions, même structure que ci-dessus */ ],
+  "total": 12,
+  "page": 1,
+  "totalPages": 1
+}
+```
+
+### Approuver — `POST /api/v1/subscription-proposals/:id/approve` (Provider)
+
+Le provider fixe **librement** tous les détails finaux de l'abonnement créé (le prix n'est PAS calculé automatiquement à partir des plats proposés) :
+
+```json
+{
+  "name": "Abonnement midi sur mesure",
+  "description": "Repas chaud chaque midi du lundi au vendredi",
+  "price": 27000,
+  "imageUrl": "https://...",
+  "junaCommissionPercent": 10,
+  "preparationHours": 2,
+  "isImmediate": true,
+  "type": "LUNCH",
+  "category": "AFRICAN",
+  "duration": "WORK_WEEK",
+  "meals": [
+    { "mealId": "uuid", "quantity": 1 }
+  ]
+}
+```
+
+- `name`, `description`, `price`, `imageUrl` : requis.
+- `type`, `category`, `duration` : optionnels — si omis, on reprend ceux proposés par le user.
+- `meals` : optionnel — si omis, on reprend exactement les plats/quantités proposés par le user. Si fourni, **remplace entièrement** la liste (permet au provider d'ajuster avant de publier).
+- Réponse `200` avec l'abonnement créé (objet `Subscription` standard, `isPublic: true`, `isActive: true`).
+
+### Rejeter — `POST /api/v1/subscription-proposals/:id/reject` (Provider)
+
+```json
+{ "rejectionReason": "Pas assez de stock pour le moment" }
+```
+
+`rejectionReason` requis (5 à 500 caractères). Réponse `200`.
+
+### Notifications
+
+| Événement | Destinataire | `NotificationType` |
+|-----------|--------------|---------------------|
+| Proposition créée | Provider | `SUBSCRIPTION_PROPOSAL_RECEIVED` |
+| Proposition approuvée | Consumer | `SUBSCRIPTION_PROPOSAL_APPROVED` |
+| Proposition rejetée | Consumer | `SUBSCRIPTION_PROPOSAL_REJECTED` |
+
+### Erreurs notables
+
+| Cas | Code | Statut HTTP |
+|-----|------|-------------|
+| Provider non trouvé / non approuvé | `PROVIDER_NOT_FOUND` / `PROVIDER_NOT_APPROVED` | 404 / 403 |
+| Plat invalide (hors catalogue, inactif, variante manquante/incorrecte) | `INVALID_INPUT` | 409 |
+| Proposition introuvable | `SUBSCRIPTION_PROPOSAL_NOT_FOUND` | 404 |
+| Pas l'auteur ni le provider ciblé | `FORBIDDEN` | 403 |
+| Proposition déjà traitée (approve/reject sur une proposition non `PENDING`, y compris en cas de double clic concurrent) | `SUBSCRIPTION_PROPOSAL_ALREADY_PROCESSED` | 409 |
+
+### Notes
+- Un plat référencé par une proposition `PENDING` ne peut pas être supprimé par le provider (`DELETE /api/v1/meals/:id` renverra `409 MEAL_IN_PENDING_PROPOSAL`) — il reste cependant modifiable/désactivable normalement.
+- L'approbation/le rejet sont protégés contre les doubles soumissions concurrentes (deux onglets, double clic) : un seul des deux appels réussit, l'autre reçoit `SUBSCRIPTION_PROPOSAL_ALREADY_PROCESSED`.
+
+---
+
 ## [2026-06-30] Fix — `provider` incomplet sur les routes plats
 
 ### Routes concernées

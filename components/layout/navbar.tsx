@@ -28,7 +28,10 @@ export function Navbar() {
         { href: '/', label: 'Accueil' },
         { href: '/explorer', label: 'Explorer' },
         { href: '/profile/orders', label: 'Mes commandes' },
-        ...(!isProvider ? [{ href: '/profile/subscriptions', label: 'Mes abonnements' }] : []),
+        ...(!isProvider ? [
+          { href: '/profile/subscriptions', label: 'Mes abonnements' },
+          { href: '/profile/proposals', label: 'Mes propositions' },
+        ] : []),
         { href: '/about', label: 'À propos' },
       ]
     : [
