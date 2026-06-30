@@ -191,42 +191,55 @@ export default function ProviderProfileClient() {
                   {rating.toFixed(1)} ({reviewCount})
                 </span>
               )}
-              {cityLabel && (
-                <span className="flex items-center gap-1">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
-                  </svg>
-                  {cityLabel}
-                </span>
-              )}
               {provider.memberSince && <span>Membre depuis {formatMemberSince(provider.memberSince)}</span>}
             </div>
           </div>
         </div>
 
-        {/* Chips livraison / retrait */}
-        {(provider.acceptsDelivery || provider.acceptsPickup) && (
-          <div className="flex items-center gap-2 flex-wrap mt-3">
-            {provider.acceptsDelivery && (
-              <span className="flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold pl-1 pr-3 py-1 rounded-full shadow-sm">
-                <span className="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center flex-shrink-0">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6">
-                    <rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
-                    <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
-                  </svg>
-                </span>
-                Livraison
+        {/* Localisation */}
+        {(provider.businessAddress || cityLabel) && (
+          <p className="flex items-center flex-wrap gap-1.5 text-sm text-text-secondary mt-3">
+            <span>Restaurant situé à {provider.businessAddress}{provider.businessAddress && cityLabel ? ',' : ''}</span>
+            {cityLabel && (
+              <span className="flex items-center gap-1 text-text-primary font-medium">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+                </svg>
+                {cityLabel}
               </span>
             )}
+          </p>
+        )}
+
+        {/* Livraison / Retrait sur place */}
+        {(provider.acceptsDelivery || provider.acceptsPickup) && (
+          <div className="flex flex-col gap-1.5 mt-3 text-sm">
+            {provider.acceptsDelivery && (
+              <div className="flex items-start gap-2">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-secondary flex-shrink-0 mt-0.5">
+                  <rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                  <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+                </svg>
+                <p className="text-text-primary">
+                  <span className="font-semibold">Livraison</span>
+                  {deliveryZones.length > 0 && (
+                    <span className="text-text-secondary"> · {deliveryZones.map((z) => (typeof z === 'string' ? z : z.city)).join(', ')}</span>
+                  )}
+                </p>
+              </div>
+            )}
             {provider.acceptsPickup && (
-              <span className="flex items-center gap-1.5 bg-amber-50 border border-amber-200 text-amber-700 text-xs font-bold pl-1 pr-3 py-1 rounded-full shadow-sm">
-                <span className="w-5 h-5 rounded-full bg-amber-500 text-white flex items-center justify-center flex-shrink-0">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
-                  </svg>
-                </span>
-                Retrait sur place
-              </span>
+              <div className="flex items-start gap-2">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-secondary flex-shrink-0 mt-0.5">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                <p className="text-text-primary">
+                  <span className="font-semibold">Retrait sur place</span>
+                  {(pickupPoints.length > 0 || provider.businessAddress) && (
+                    <span className="text-text-secondary"> · {pickupPoints.length > 0 ? pickupPoints.map((p) => p.name).join(', ') : provider.businessAddress}</span>
+                  )}
+                </p>
+              </div>
             )}
           </div>
         )}
@@ -239,35 +252,6 @@ export default function ProviderProfileClient() {
 
       {/* ── Corps ────────────────────────────────────────────── */}
       <div className="max-w-content mx-auto px-6 flex flex-col gap-6 pt-5">
-
-        {/* Adresse + zones de livraison */}
-        {(provider.businessAddress || deliveryZones.length > 0) && (
-          <div className="flex flex-col gap-3">
-            {provider.businessAddress && (
-              <div className="flex items-start gap-3 bg-surface-grey rounded-xl px-4 py-3">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-secondary flex-shrink-0 mt-0.5">
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
-                </svg>
-                <p className="text-sm text-text-primary">{provider.businessAddress}</p>
-              </div>
-            )}
-            {deliveryZones.length > 0 && (
-              <div className="flex flex-col gap-2">
-                <p className="text-xs font-semibold text-text-secondary uppercase tracking-widest">Zones de livraison</p>
-                <div className="flex flex-wrap gap-2">
-                  {deliveryZones.map((zone, i) => {
-                    const label = typeof zone === 'string' ? zone : zone.city
-                    return (
-                      <span key={`${label}-${i}`} className="bg-primary-surface text-primary text-xs font-medium px-3 py-1 rounded-full border border-primary/15">
-                        {label}
-                      </span>
-                    )
-                  })}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
 
         {/* Onglets Abonnements / Plats */}
         {(subscriptions.length > 0 || meals.length > 0) && (
