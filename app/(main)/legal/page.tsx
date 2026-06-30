@@ -4,12 +4,12 @@ import { BreadcrumbJsonLd } from '@/components/seo/breadcrumb-jsonld'
 
 export const metadata: Metadata = {
   title: 'Mentions légales',
-  description: "Mentions légales de Juna — éditeur, hébergement, propriété intellectuelle et informations légales de la plateforme d'abonnements repas.",
-  keywords: 'mentions légales Juna, éditeur, hébergement, ExternaLux6, informations légales',
+  description: "Mentions légales de Juna Eats — éditeur, hébergement, propriété intellectuelle et informations légales de la plateforme d'abonnements repas.",
+  keywords: 'mentions légales Juna Eats, éditeur, hébergement, ExternaLux6, informations légales',
   openGraph: {
-    title: 'Juna - Mentions légales',
-    description: 'Mentions légales de la plateforme Juna.',
-    images: [{ url: 'https://junaeats.com/juna-logo.png', width: 800, height: 400, alt: 'Juna' }],
+    title: 'Juna Eats - Mentions légales',
+    description: 'Mentions légales de la plateforme Juna Eats.',
+    images: [{ url: 'https://junaeats.com/juna-logo.png', width: 800, height: 400, alt: 'Juna Eats' }],
     type: 'website',
   },
 }
@@ -30,7 +30,7 @@ export default function LegalPage() {
 
       <Section title="1. Éditeur du site">
         <div className="bg-surface-grey rounded-xl p-5 flex flex-col gap-2 text-sm">
-          <Row label="Marque / Produit" value="Juna (junaeats.com)" />
+          <Row label="Marque / Produit" value="Juna Eats (junaeats.com)" />
           <Row label="Société éditrice" value="ExternaLux6" />
           <Row label="Forme juridique" value="Etablissement" />
           <Row label="N° RCCM" value="RB/COT/23 A 91500" />
@@ -44,7 +44,7 @@ export default function LegalPage() {
 
       <Section title="2. Directeur de la publication">
         <p>
-          Le directeur de la publication de la plateforme Juna est le représentant légal
+          Le directeur de la publication de la plateforme Juna Eats est le représentant légal
           d'<strong>ExternaLux6</strong>, joignable à l'adresse : <strong>externalux6@gmail.com</strong>
         </p>
       </Section>
@@ -56,14 +56,14 @@ export default function LegalPage() {
           <Row label="Adresse" value="548 Market St, San Francisco, CA 94104, USA" />
         </div>
         <p>
-          Les serveurs hébergeant l'infrastructure technique de Juna (API, base de données)
+          Les serveurs hébergeant l'infrastructure technique de Juna Eats (API, base de données)
           sont opérés par Railway. Toute l'infrastructure est accessible via HTTPS.
         </p>
       </Section>
 
       <Section title="4. Propriété intellectuelle">
         <p>
-          L'ensemble des éléments constituant la plateforme Juna — notamment le nom <strong>Juna</strong>,
+          L'ensemble des éléments constituant la plateforme Juna Eats — notamment le nom <strong>Juna Eats</strong>,
           la marque <strong>Junaeats</strong>, le logo, la charte graphique, les textes, les illustrations
           et le code source — sont la propriété exclusive d'<strong>ExternaLux6</strong> et sont protégés
           par les lois en vigueur relatives à la propriété intellectuelle.
@@ -82,7 +82,7 @@ export default function LegalPage() {
       <Section title="5. Limitation de responsabilité">
         <p>
           ExternaLux6 s'efforce d'assurer l'exactitude et la mise à jour des informations diffusées
-          sur la plateforme Juna. Toutefois, ExternaLux6 ne peut garantir l'exactitude, la complétude
+          sur la plateforme Juna Eats. Toutefois, ExternaLux6 ne peut garantir l'exactitude, la complétude
           ou l'actualité des informations publiées par les prestataires tiers.
         </p>
         <p>
@@ -95,7 +95,7 @@ export default function LegalPage() {
       <Section title="6. Contact">
         <p>Pour toute question d'ordre légal ou toute réclamation :</p>
         <div className="bg-surface-grey rounded-xl p-4 flex flex-col gap-1.5 text-sm">
-          <p><strong>ExternaLux6</strong> — éditeur de Juna</p>
+          <p><strong>ExternaLux6</strong> — éditeur de Juna Eats</p>
           <p>Email : <strong>externalux6@gmail.com</strong></p>
           <p>Site web : <strong>junaeats.com</strong></p>
         </div>

@@ -17,20 +17,20 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   const p = await getProvider(params.id)
   if (!p) return {
     title: 'Prestataire',
-    description: 'Découvrez ce prestataire repas sur Juna et abonnez-vous.',
+    description: 'Découvrez ce prestataire repas sur Juna Eats et abonnez-vous.',
   }
-  const ogTitle = `${p.businessName} - Juna`
-  const description = (p.description ?? `Découvrez les abonnements repas de ${p.businessName} sur Juna.`).slice(0, 160)
+  const ogTitle = `${p.businessName} - Juna Eats`
+  const description = (p.description ?? `Découvrez les abonnements repas de ${p.businessName} sur Juna Eats.`).slice(0, 160)
   const url = `https://junaeats.com/providers/${params.id}`
   return {
     title: p.businessName,
     description,
-    keywords: `${p.businessName}, abonnement repas, prestataire Juna, ${p.city?.name ?? ''}, traiteur, repas livraison`,
+    keywords: `${p.businessName}, abonnement repas, prestataire Juna Eats, ${p.city?.name ?? ''}, traiteur, repas livraison`,
     openGraph: {
       title: ogTitle,
       description,
       url,
-      siteName: 'Juna',
+      siteName: 'Juna Eats',
       images: [{ url: p.logo ?? 'https://junaeats.com/juna-logo.png', width: 800, height: 400, alt: p.businessName }],
       type: 'profile',
     },

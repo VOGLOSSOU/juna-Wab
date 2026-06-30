@@ -4,12 +4,12 @@ import { BreadcrumbJsonLd } from '@/components/seo/breadcrumb-jsonld'
 
 export const metadata: Metadata = {
   title: 'Conditions Générales de Vente',
-  description: 'Consultez les conditions générales de vente de Juna : processus de commande, paiement Mobile Money, activation et politique de remboursement.',
-  keywords: 'CGV Juna, conditions de vente, paiement Mobile Money, commande repas, abonnement repas, remboursement',
+  description: 'Consultez les conditions générales de vente de Juna Eats : processus de commande, paiement Mobile Money, activation et politique de remboursement.',
+  keywords: 'CGV Juna Eats, conditions de vente, paiement Mobile Money, commande repas, abonnement repas, remboursement',
   openGraph: {
-    title: 'Juna - Conditions Générales de Vente',
-    description: 'Consultez les conditions générales de vente de Juna : commande, paiement, activation.',
-    images: [{ url: 'https://junaeats.com/juna-logo.png', width: 800, height: 400, alt: 'Juna' }],
+    title: 'Juna Eats - Conditions Générales de Vente',
+    description: 'Consultez les conditions générales de vente de Juna Eats : commande, paiement, activation.',
+    images: [{ url: 'https://junaeats.com/juna-logo.png', width: 800, height: 400, alt: 'Juna Eats' }],
     type: 'website',
   },
 }
@@ -31,17 +31,17 @@ export default function SalesTermsPage() {
       <Section title="1. Objet">
         <p>
           Les présentes Conditions Générales de Vente (CGV) encadrent les transactions réalisées
-          entre les utilisateurs et les prestataires de repas via la plateforme <strong>Juna</strong>,
+          entre les utilisateurs et les prestataires de repas via la plateforme <strong>Juna Eats</strong>,
           éditée par <strong>ExternaLux6</strong>, établissement immatriculé à Cotonou, Bénin
           (N° RCCM : RB/COT/23 A 91500 — N° IFU : 0202233129461).
         </p>
         <p>
-          Toute commande passée sur Juna implique l'acceptation pleine et entière des présentes CGV.
+          Toute commande passée sur Juna Eats implique l'acceptation pleine et entière des présentes CGV.
         </p>
       </Section>
 
       <Section title="2. Processus de commande">
-        <p>La souscription à un abonnement repas sur Juna se déroule en plusieurs étapes :</p>
+        <p>La souscription à un abonnement repas sur Juna Eats se déroule en plusieurs étapes :</p>
         <ol>
           <li><strong>Sélection d'un abonnement</strong> — l'utilisateur choisit un abonnement proposé par un prestataire disponible dans sa ville.</li>
           <li><strong>Choix du mode de réception</strong> — livraison à domicile ou retrait sur place, selon les options proposées par le prestataire.</li>
@@ -90,7 +90,7 @@ export default function SalesTermsPage() {
             <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
           </svg>
           <p className="text-sm text-amber-800 leading-relaxed">
-            <strong>L'annulation de commande n'est pas encore disponible sur Juna.</strong>{' '}
+            <strong>L'annulation de commande n'est pas encore disponible sur Juna Eats.</strong>{' '}
             Cette fonctionnalité est en cours de développement et sera prochainement accessible depuis votre espace commandes.
             En attendant, nous vous invitons à vérifier attentivement les détails de l'abonnement (prestataire, durée,
             type de repas, mode de réception) avant de finaliser votre paiement. Une fois la commande
@@ -107,10 +107,10 @@ export default function SalesTermsPage() {
       <Section title="6. Litiges">
         <p>
           En cas de litige avec un prestataire (repas non conforme, non-livraison, qualité insuffisante),
-          nous vous invitons à contacter Juna en premier lieu à <strong>externalux6@gmail.com</strong>.
+          nous vous invitons à contacter Juna Eats en premier lieu à <strong>externalux6@gmail.com</strong>.
         </p>
         <p>
-          Juna joue un rôle de <strong>médiateur</strong> entre l'utilisateur et le prestataire.
+          Juna Eats joue un rôle de <strong>médiateur</strong> entre l'utilisateur et le prestataire.
           Nous ferons notre possible pour faciliter la résolution du litige, sans toutefois pouvoir
           être tenus responsables des manquements directs du prestataire.
         </p>
@@ -118,7 +118,7 @@ export default function SalesTermsPage() {
 
       <Section title="7. Force majeure">
         <p>
-          Juna ne peut être tenu responsable de tout retard ou inexécution résultant d'un événement
+          Juna Eats ne peut être tenu responsable de tout retard ou inexécution résultant d'un événement
           imprévisible et indépendant de sa volonté, notamment :
         </p>
         <ul>
@@ -128,7 +128,7 @@ export default function SalesTermsPage() {
           <li>Tout autre événement de force majeure au sens du droit applicable</li>
         </ul>
         <p>
-          En cas d'interruption du service, Juna s'engage à rétablir l'accès dans les meilleurs délais
+          En cas d'interruption du service, Juna Eats s'engage à rétablir l'accès dans les meilleurs délais
           et à informer les utilisateurs concernés.
         </p>
       </Section>

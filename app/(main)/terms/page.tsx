@@ -5,12 +5,12 @@ import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: "Conditions Générales d'Utilisation",
-  description: "Consultez les conditions générales d'utilisation de Juna. Droits, obligations et règles d'utilisation de la plateforme d'abonnements repas.",
-  keywords: "CGU Juna, conditions d'utilisation, règles d'utilisation, abonnement repas, conditions générales",
+  description: "Consultez les conditions générales d'utilisation de Juna Eats. Droits, obligations et règles d'utilisation de la plateforme d'abonnements repas.",
+  keywords: "CGU Juna Eats, conditions d'utilisation, règles d'utilisation, abonnement repas, conditions générales",
   openGraph: {
-    title: "Juna - Conditions Générales d'Utilisation",
-    description: "Consultez les conditions générales d'utilisation de Juna.",
-    images: [{ url: 'https://junaeats.com/juna-logo.png', width: 800, height: 400, alt: 'Juna' }],
+    title: "Juna Eats - Conditions Générales d'Utilisation",
+    description: "Consultez les conditions générales d'utilisation de Juna Eats.",
+    images: [{ url: 'https://junaeats.com/juna-logo.png', width: 800, height: 400, alt: 'Juna Eats' }],
     type: 'website',
   },
 }
@@ -32,17 +32,17 @@ export default function TermsPage() {
       <Section title="1. Objet">
         <p>
           Les présentes Conditions Générales d'Utilisation (CGU) régissent l'accès et l'utilisation
-          de la plateforme <strong>Juna</strong> (site web et application mobile), éditée par{' '}
+          de la plateforme <strong>Juna Eats</strong> (site web et application mobile), éditée par{' '}
           <strong>ExternaLux6</strong>, établissement immatriculé à Cotonou, Bénin
           (N° RCCM : RB/COT/23 A 91500 — N° IFU : 0202233129461).
         </p>
         <p>
-          Juna est une <strong>plateforme d'intermédiation</strong> qui met en relation des utilisateurs
+          Juna Eats est une <strong>plateforme d'intermédiation</strong> qui met en relation des utilisateurs
           souhaitant s'abonner à des repas avec des prestataires (traiteurs, restaurateurs, cuisiniers)
           proposant des abonnements repas.
         </p>
         <p>
-          Juna agit en tant qu'<strong>intermédiaire technique</strong> et n'est en aucun cas un
+          Juna Eats agit en tant qu'<strong>intermédiaire technique</strong> et n'est en aucun cas un
           restaurateur, un traiteur ou un service de livraison. La préparation, la qualité et la
           livraison des repas relèvent de la seule responsabilité du prestataire concerné.
         </p>
@@ -53,29 +53,29 @@ export default function TermsPage() {
 
       <Section title="2. Accès au service">
         <ul>
-          <li>L'accès à Juna est ouvert à toute personne physique âgée d'au moins <strong>18 ans</strong>, ou mineure avec l'autorisation d'un représentant légal.</li>
+          <li>L'accès à Juna Eats est ouvert à toute personne physique âgée d'au moins <strong>18 ans</strong>, ou mineure avec l'autorisation d'un représentant légal.</li>
           <li>L'inscription est obligatoire pour passer une commande ou souscrire à un abonnement.</li>
           <li>Chaque utilisateur ne peut posséder <strong>qu'un seul compte personnel</strong>. La création de comptes multiples est interdite.</li>
           <li>L'utilisateur est seul responsable de la confidentialité de ses identifiants (email et mot de passe). Toute connexion effectuée depuis son compte lui est attribuée.</li>
-          <li>En cas de suspicion d'utilisation frauduleuse de son compte, l'utilisateur doit en informer Juna immédiatement à <strong>externalux6@gmail.com</strong>.</li>
+          <li>En cas de suspicion d'utilisation frauduleuse de son compte, l'utilisateur doit en informer Juna Eats immédiatement à <strong>externalux6@gmail.com</strong>.</li>
         </ul>
       </Section>
 
       <Section title="3. Comptes prestataires">
         <p>
-          Les prestataires souhaitant proposer leurs abonnements sur Juna doivent créer un compte
+          Les prestataires souhaitant proposer leurs abonnements sur Juna Eats doivent créer un compte
           prestataire et passer par un processus de validation avant toute mise en ligne.
         </p>
         <ul>
-          <li><strong>Validation préalable</strong> — tout compte prestataire est examiné par l'équipe Juna avant activation. Juna se réserve le droit de refuser ou de suspendre un compte sans avoir à s'en justifier.</li>
+          <li><strong>Validation préalable</strong> — tout compte prestataire est examiné par l'équipe Juna Eats avant activation. Juna Eats se réserve le droit de refuser ou de suspendre un compte sans avoir à s'en justifier.</li>
           <li><strong>Obligations du prestataire</strong> — le prestataire s'engage à honorer les commandes confirmées, à respecter la qualité et la description des repas publiés, et à maintenir ses informations (disponibilité, tarifs, zones de livraison) à jour.</li>
-          <li><strong>Suspension</strong> — en cas de manquement grave (non-respect des commandes, fausses informations, avis suspects), Juna peut suspendre ou supprimer le compte prestataire sans préavis.</li>
+          <li><strong>Suspension</strong> — en cas de manquement grave (non-respect des commandes, fausses informations, avis suspects), Juna Eats peut suspendre ou supprimer le compte prestataire sans préavis.</li>
           <li>Le prestataire reconnaît être <strong>seul responsable</strong> des repas qu'il prépare, de leur qualité et de leur livraison.</li>
         </ul>
       </Section>
 
       <Section title="4. Responsabilités">
-        <Subsection title="Juna est responsable de">
+        <Subsection title="Juna Eats est responsable de">
           <ul>
             <li>Le bon fonctionnement technique de la plateforme</li>
             <li>La sécurisation des paiements via PawaPay</li>
@@ -83,7 +83,7 @@ export default function TermsPage() {
             <li>La disponibilité du service dans des conditions normales d'utilisation</li>
           </ul>
         </Subsection>
-        <Subsection title="Juna n'est pas responsable de">
+        <Subsection title="Juna Eats n'est pas responsable de">
           <ul>
             <li>La qualité, la fraîcheur ou la composition des repas préparés par les prestataires</li>
             <li>Les retards ou défauts de livraison imputables au prestataire</li>
@@ -96,7 +96,7 @@ export default function TermsPage() {
 
       <Section title="5. Propriété intellectuelle">
         <p>
-          Le nom <strong>Juna</strong>, la marque <strong>Junaeats</strong>, le logo, le design, les textes
+          Le nom <strong>Juna Eats</strong>, la marque <strong>Junaeats</strong>, le logo, le design, les textes
           et l'ensemble du contenu de la plateforme sont la propriété exclusive d'<strong>ExternaLux6</strong>.
         </p>
         <p>
@@ -106,13 +106,13 @@ export default function TermsPage() {
         </p>
         <p>
           Les contenus publiés par les prestataires (photos, descriptions) restent leur propriété.
-          En les publiant sur Juna, ils accordent à ExternaLux6 une licence non exclusive d'utilisation
+          En les publiant sur Juna Eats, ils accordent à ExternaLux6 une licence non exclusive d'utilisation
           pour les afficher sur la plateforme.
         </p>
       </Section>
 
       <Section title="6. Comportements interdits">
-        <p>Il est strictement interdit sur la plateforme Juna de :</p>
+        <p>Il est strictement interdit sur la plateforme Juna Eats de :</p>
         <ul>
           <li>Publier de faux avis ou de fausses évaluations</li>
           <li>Passer de fausses commandes dans le but de nuire à un prestataire</li>
@@ -135,7 +135,7 @@ export default function TermsPage() {
             <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
           </svg>
           <p className="text-sm text-amber-800 leading-relaxed">
-            <strong>La suppression de compte en libre-service n'est pas encore disponible sur Juna.</strong>{' '}
+            <strong>La suppression de compte en libre-service n'est pas encore disponible sur Juna Eats.</strong>{' '}
             Cette fonctionnalité est en cours de développement et sera prochainement accessible depuis les paramètres de votre profil.
             En attendant, consultez la procédure à suivre sur notre page dédiée :{' '}
             <Link href="/suppression-compte" className="underline font-semibold">
@@ -145,7 +145,7 @@ export default function TermsPage() {
         </div>
         <ul>
           <li>
-            <strong>Par Juna</strong> — Juna se réserve le droit de suspendre ou de supprimer tout compte
+            <strong>Par Juna Eats</strong> — Juna Eats se réserve le droit de suspendre ou de supprimer tout compte
             en cas de fraude, de violation des présentes CGU ou de comportement préjudiciable à la plateforme
             ou à ses utilisateurs, sans préavis et sans indemnité.
           </li>
@@ -168,7 +168,7 @@ export default function TermsPage() {
             <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
           </svg>
           <p className="text-sm text-amber-800 leading-relaxed">
-            <strong>L'annulation de commande n'est pas encore disponible sur Juna.</strong>{' '}
+            <strong>L'annulation de commande n'est pas encore disponible sur Juna Eats.</strong>{' '}
             Cette fonctionnalité est en cours de développement et sera prochainement accessible depuis votre espace commandes.
             En attendant, nous vous invitons à vérifier attentivement les détails de l'abonnement avant de finaliser votre paiement.
           </p>

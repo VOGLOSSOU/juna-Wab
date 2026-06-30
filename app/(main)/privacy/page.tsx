@@ -4,12 +4,12 @@ import { BreadcrumbJsonLd } from '@/components/seo/breadcrumb-jsonld'
 
 export const metadata: Metadata = {
   title: 'Politique de confidentialité',
-  description: 'Découvrez comment Juna collecte, utilise et protège vos données personnelles. Transparence totale sur le traitement de vos informations.',
-  keywords: 'politique de confidentialité Juna, données personnelles, vie privée, RGPD, protection des données',
+  description: 'Découvrez comment Juna Eats collecte, utilise et protège vos données personnelles. Transparence totale sur le traitement de vos informations.',
+  keywords: 'politique de confidentialité Juna Eats, données personnelles, vie privée, RGPD, protection des données',
   openGraph: {
-    title: 'Juna - Politique de confidentialité',
-    description: 'Découvrez comment Juna collecte, utilise et protège vos données personnelles.',
-    images: [{ url: 'https://junaeats.com/juna-logo.png', width: 800, height: 400, alt: 'Juna' }],
+    title: 'Juna Eats - Politique de confidentialité',
+    description: 'Découvrez comment Juna Eats collecte, utilise et protège vos données personnelles.',
+    images: [{ url: 'https://junaeats.com/juna-logo.png', width: 800, height: 400, alt: 'Juna Eats' }],
     type: 'website',
   },
 }
@@ -30,7 +30,7 @@ export default function PrivacyPage() {
 
       <Section title="1. Introduction">
         <p>
-          Juna est une plateforme de mise en relation entre abonnés et prestataires de repas,
+          Juna Eats est une plateforme de mise en relation entre abonnés et prestataires de repas,
           éditée par <strong>ExternaLux6</strong>, établissement immatriculé à Cotonou, Bénin
           (N° RCCM : RB/COT/23 A 91500 — N° IFU : 0202233129461).
         </p>
@@ -41,7 +41,7 @@ export default function PrivacyPage() {
         </p>
         <p>
           La présente politique de confidentialité s'applique à tous les utilisateurs de la
-          plateforme Juna (site web et application mobile). En utilisant nos services, vous
+          plateforme Juna Eats (site web et application mobile). En utilisant nos services, vous
           acceptez les pratiques décrites dans ce document.
         </p>
         <p>
@@ -75,7 +75,7 @@ export default function PrivacyPage() {
         <Subsection title="Données de paiement">
           <ul>
             <li>Numéro Mobile Money utilisé pour le paiement (transmis à notre prestataire de paiement PawaPay)</li>
-            <li>Juna ne stocke pas vos numéros de carte bancaire ni vos informations de paiement complètes</li>
+            <li>Juna Eats ne stocke pas vos numéros de carte bancaire ni vos informations de paiement complètes</li>
           </ul>
         </Subsection>
         <Subsection title="Données techniques">
@@ -100,7 +100,7 @@ export default function PrivacyPage() {
 
       <Section title="4. Partage avec des tiers">
         <p>
-          Juna ne vend jamais vos données personnelles à des tiers à des fins publicitaires ou commerciales.
+          Juna Eats ne vend jamais vos données personnelles à des tiers à des fins publicitaires ou commerciales.
           Vos données peuvent être partagées uniquement dans les cas suivants :
         </p>
         <ul>
@@ -114,7 +114,7 @@ export default function PrivacyPage() {
             concerné pour exécuter votre commande. Ces informations sont strictement limitées à ce qui est nécessaire.
           </li>
           <li>
-            <strong>Railway</strong> — hébergeur de l'infrastructure technique de Juna (backend, base de données).
+            <strong>Railway</strong> — hébergeur de l'infrastructure technique de Juna Eats (backend, base de données).
             Les données sont stockées sur des serveurs sécurisés gérés par Railway (Railsware Products, Inc.),
             548 Market St, San Francisco, CA 94104, USA.
           </li>
@@ -149,12 +149,12 @@ export default function PrivacyPage() {
       </Section>
 
       <Section title="7. Sécurité des données">
-        <p>Juna met en œuvre des mesures techniques et organisationnelles adaptées pour protéger vos données :</p>
+        <p>Juna Eats met en œuvre des mesures techniques et organisationnelles adaptées pour protéger vos données :</p>
         <ul>
           <li><strong>Chiffrement en transit</strong> — toutes les communications entre votre appareil et nos serveurs sont chiffrées via HTTPS (TLS)</li>
           <li><strong>Mots de passe hashés</strong> — vos mots de passe ne sont jamais stockés en clair. Nous utilisons un algorithme de hachage sécurisé</li>
           <li><strong>Tokens JWT sécurisés</strong> — l'authentification est gérée par des tokens à durée de vie limitée</li>
-          <li><strong>Accès restreint</strong> — seules les personnes habilitées au sein de l'équipe Juna ont accès aux données sensibles</li>
+          <li><strong>Accès restreint</strong> — seules les personnes habilitées au sein de l'équipe Juna Eats ont accès aux données sensibles</li>
         </ul>
         <p>
           En cas de violation de données susceptible d'affecter vos droits, nous nous engageons à vous en informer
@@ -164,7 +164,7 @@ export default function PrivacyPage() {
 
       <Section title="8. Modifications de cette politique">
         <p>
-          Juna se réserve le droit de modifier la présente politique de confidentialité à tout moment,
+          Juna Eats se réserve le droit de modifier la présente politique de confidentialité à tout moment,
           notamment pour se conformer à de nouvelles obligations légales ou réglementaires.
         </p>
         <p>
@@ -177,7 +177,7 @@ export default function PrivacyPage() {
       <Section title="9. Contact">
         <p>Pour toute question relative à cette politique ou au traitement de vos données personnelles :</p>
         <div className="bg-surface-grey rounded-xl p-4 flex flex-col gap-1.5 text-sm">
-          <p><strong>ExternaLux6</strong> — éditeur de Juna</p>
+          <p><strong>ExternaLux6</strong> — éditeur de Juna Eats</p>
           <p>Forme juridique : Etablissement</p>
           <p>N° RCCM : RB/COT/23 A 91500</p>
           <p>N° IFU : 0202233129461</p>

@@ -5,16 +5,16 @@ import { Toaster } from 'react-hot-toast'
 export const metadata: Metadata = {
   metadataBase: new URL('https://junaeats.com'),
   title: {
-    default: 'Mangez bien, sans se donner de la peine - Juna',
-    template: '%s - Juna',
+    default: 'Mangez bien, sans se donner de la peine - Juna Eats',
+    template: '%s - Juna Eats',
   },
   description: 'Découvrez et abonnez-vous aux meilleurs plans repas en Afrique de l\'Ouest. Traiteurs locaux, livraison à domicile ou retrait sur place. Paiement Mobile Money.',
-  keywords: 'abonnement repas, nourriture locale, livraison repas, traiteur, Bénin, Côte d\'Ivoire, Juna, Junaeats, food delivery, repas à domicile, petit-déjeuner, déjeuner, dîner, plan alimentaire',
+  keywords: 'abonnement repas, nourriture locale, livraison repas, traiteur, Bénin, Côte d\'Ivoire, Juna Eats, Junaeats, food delivery, repas à domicile, petit-déjeuner, déjeuner, dîner, plan alimentaire',
   openGraph: {
-    siteName: 'Juna',
+    siteName: 'Juna Eats',
     locale: 'fr_FR',
     type: 'website',
-    images: [{ url: '/juna-logo.png', width: 800, height: 400, alt: 'Juna' }],
+    images: [{ url: '/juna-logo.png', width: 800, height: 400, alt: 'Juna Eats' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
 const organizationJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
-  name: 'Juna',
+  name: 'Juna Eats',
   url: 'https://junaeats.com',
   logo: 'https://junaeats.com/juna-logo.png',
   description: "Plateforme d'abonnements repas en Afrique de l'Ouest. Prestataires locaux, livraison ou retrait, paiement Mobile Money.",
@@ -64,7 +64,7 @@ const organizationJsonLd = {
 const websiteJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
-  name: 'Juna',
+  name: 'Juna Eats',
   url: 'https://junaeats.com',
   potentialAction: {
     '@type': 'SearchAction',

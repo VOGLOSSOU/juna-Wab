@@ -5,14 +5,14 @@ import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: 'Suppression de compte et de données',
-  description: "Demandez la suppression définitive de votre compte Juna et de toutes vos données personnelles. Procédure simple par email.",
-  keywords: 'suppression compte Juna, supprimer données personnelles, droit à l\'oubli, Juna RGPD, désinscrire Juna',
+  description: "Demandez la suppression définitive de votre compte Juna Eats et de toutes vos données personnelles. Procédure simple par email.",
+  keywords: 'suppression compte Juna Eats, supprimer données personnelles, droit à l\'oubli, Juna Eats RGPD, désinscrire Juna Eats',
   openGraph: {
-    title: 'Juna — Suppression de compte et de données',
-    description: 'Demandez la suppression définitive de votre compte Juna et de vos données personnelles.',
+    title: 'Juna Eats — Suppression de compte et de données',
+    description: 'Demandez la suppression définitive de votre compte Juna Eats et de vos données personnelles.',
     url: 'https://junaeats.com/suppression-compte',
-    siteName: 'Juna',
-    images: [{ url: 'https://junaeats.com/juna-logo.png', width: 800, height: 400, alt: 'Juna' }],
+    siteName: 'Juna Eats',
+    images: [{ url: 'https://junaeats.com/juna-logo.png', width: 800, height: 400, alt: 'Juna Eats' }],
     type: 'website',
   },
   alternates: { canonical: 'https://junaeats.com/suppression-compte' },
@@ -29,7 +29,7 @@ export default function AccountDeletionPage() {
 
       <div className="flex flex-col gap-3">
         <h1 className="text-3xl font-bold text-text-primary">Suppression de compte et de données</h1>
-        <p className="text-sm text-text-secondary">Applicable à l'application mobile <strong>Juna</strong>, éditée par ExternaLux6.</p>
+        <p className="text-sm text-text-secondary">Applicable à l'application mobile <strong>Juna Eats</strong>, éditée par ExternaLux6.</p>
       </div>
 
       {/* Encart procédure */}
@@ -46,7 +46,7 @@ export default function AccountDeletionPage() {
         <ol className="flex flex-col gap-3 text-sm text-text-secondary leading-relaxed pl-1">
           <li className="flex gap-3">
             <span className="w-6 h-6 rounded-full bg-primary text-white text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
-            <span>Envoyez un email à <a href="mailto:junaapp1@gmail.com" className="text-primary font-semibold hover:underline">junaapp1@gmail.com</a> depuis l'adresse associée à votre compte Juna.</span>
+            <span>Envoyez un email à <a href="mailto:junaapp1@gmail.com" className="text-primary font-semibold hover:underline">junaapp1@gmail.com</a> depuis l'adresse associée à votre compte Juna Eats.</span>
           </li>
           <li className="flex gap-3">
             <span className="w-6 h-6 rounded-full bg-primary text-white text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">2</span>

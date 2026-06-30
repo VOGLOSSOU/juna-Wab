@@ -251,9 +251,9 @@ export default function HomeClient() {
           </div>
         </section>
 
-        {/* Pourquoi Juna */}
+        {/* Pourquoi Juna Eats */}
         <section className="pb-4">
-          <h2 className="text-2xl font-bold text-text-primary text-center mb-10">{"Pourquoi choisir Juna ?"}</h2>
+          <h2 className="text-2xl font-bold text-text-primary text-center mb-10">{"Pourquoi choisir Juna Eats ?"}</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="flex flex-col gap-4 p-6 rounded-2xl border border-border bg-white hover:shadow-md transition-shadow">
               <div className="w-12 h-12 rounded-xl bg-primary-surface flex items-center justify-center">

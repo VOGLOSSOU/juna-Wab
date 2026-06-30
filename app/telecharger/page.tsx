@@ -6,13 +6,13 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: "Télécharger l'application",
   description: 'Abonne-toi aux meilleurs prestataires repas autour de toi. Disponible sur Android, bientôt sur iOS.',
-  keywords: 'télécharger Juna, app Juna, Juna Android, Juna Play Store, application repas, abonnement repas mobile, Junaeats app',
+  keywords: 'télécharger Juna Eats, app Juna Eats, Juna Eats Android, Juna Eats Play Store, application repas, abonnement repas mobile, Junaeats app',
   openGraph: {
-    title: 'Télécharger Juna - App Android',
+    title: 'Télécharger Juna Eats - App Android',
     description: 'Abonne-toi aux meilleurs prestataires repas autour de toi. Disponible sur Android, bientôt sur iOS.',
     url: 'https://junaeats.com/telecharger',
-    siteName: 'Juna',
-    images: [{ url: 'https://junaeats.com/juna-logo.png', width: 800, height: 400, alt: 'Juna' }],
+    siteName: 'Juna Eats',
+    images: [{ url: 'https://junaeats.com/juna-logo.png', width: 800, height: 400, alt: 'Juna Eats' }],
     type: 'website',
   },
   alternates: { canonical: 'https://junaeats.com/telecharger' },
@@ -43,7 +43,7 @@ export default function TelechargerPage() {
         {/* Logo */}
         <Image
           src="/juna-logo.png"
-          alt="Juna"
+          alt="Juna Eats"
           width={64}
           height={64}
           className="object-contain drop-shadow-2xl"
@@ -142,7 +142,7 @@ export default function TelechargerPage() {
 
         {/* Footer */}
         <p className="text-white/20 text-[11px] tracking-wide">
-          © 2026 JUNA · junaeats.com
+          © 2026 JUNA EATS · junaeats.com
         </p>
 
       </div>

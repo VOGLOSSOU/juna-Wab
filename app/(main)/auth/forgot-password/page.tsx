@@ -34,7 +34,7 @@ export default function ForgotPasswordPage() {
       <div className="w-full max-w-md bg-white rounded-xl shadow-md p-8 flex flex-col gap-6">
 
         <div className="flex flex-col items-center gap-3">
-          <Image src="/juna-logo.png" alt="JUNA" width={64} height={64} className="object-contain" />
+          <Image src="/juna-logo.png" alt="JUNA EATS" width={64} height={64} className="object-contain" />
           <h1 className="text-headline-large font-semibold text-text-primary">Mot de passe oublié</h1>
           <p className="text-text-secondary text-sm text-center">
             {sent

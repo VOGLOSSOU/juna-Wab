@@ -350,9 +350,9 @@ export default function NewSubscriptionPage() {
           <div className="flex flex-col gap-3 p-4 rounded-xl bg-[var(--color-surface-grey)] border border-[var(--color-border)]">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <p className="text-sm font-semibold text-[var(--color-text-primary)]">Commission JUNA</p>
+                <p className="text-sm font-semibold text-[var(--color-text-primary)]">Commission JUNA EATS</p>
                 <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">
-                  JUNA prélève un pourcentage sur chaque vente réalisée via la plateforme.
+                  JUNA EATS prélève un pourcentage sur chaque vente réalisée via la plateforme.
                 </p>
               </div>
               <div className="relative flex-shrink-0">
