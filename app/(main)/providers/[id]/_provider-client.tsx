@@ -218,11 +218,14 @@ export default function ProviderProfileClient() {
               <div className="flex flex-col gap-2">
                 <p className="text-xs font-semibold text-text-secondary uppercase tracking-widest">Zones de livraison</p>
                 <div className="flex flex-wrap gap-2">
-                  {deliveryZones.map((zone) => (
-                    <span key={zone} className="bg-primary-surface text-primary text-xs font-medium px-3 py-1 rounded-full border border-primary/15">
-                      {zone}
-                    </span>
-                  ))}
+                  {deliveryZones.map((zone, i) => {
+                    const label = typeof zone === 'string' ? zone : zone.city
+                    return (
+                      <span key={`${label}-${i}`} className="bg-primary-surface text-primary text-xs font-medium px-3 py-1 rounded-full border border-primary/15">
+                        {label}
+                      </span>
+                    )
+                  })}
                 </div>
               </div>
             )}

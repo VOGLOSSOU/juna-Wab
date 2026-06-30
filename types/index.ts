@@ -319,7 +319,7 @@ export interface PublicProviderProfile {
   reviewCount?: number
   acceptsDelivery?: boolean
   acceptsPickup?: boolean
-  deliveryZones?: string[]
+  deliveryZones?: ({ city: string; country?: string; cost?: number } | string)[]
   memberSince?: string
   isVerified?: boolean
   city?: {
