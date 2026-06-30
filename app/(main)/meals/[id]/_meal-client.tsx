@@ -171,12 +171,24 @@ export default function MealDetailClient() {
             href={`/providers/${meal.provider.id}`}
             className="flex items-center gap-3 bg-white rounded-2xl border border-border px-5 py-4 shadow-sm hover:shadow-md hover:border-primary/20 transition-all"
           >
-            <div className="w-12 h-12 rounded-2xl bg-primary-surface flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">
-              {getInitials(meal.provider.businessName)}
+            <div className="relative w-12 h-12 rounded-2xl bg-primary-surface flex items-center justify-center text-primary font-bold text-sm flex-shrink-0 overflow-hidden">
+              {meal.provider.logo ? (
+                <Image src={meal.provider.logo} alt={meal.provider.businessName} fill sizes="48px" className="object-cover" />
+              ) : (
+                getInitials(meal.provider.businessName)
+              )}
             </div>
             <div className="flex flex-col min-w-0 flex-1">
               <span className="text-xs text-text-light uppercase tracking-widest">Proposé par</span>
-              <span className="text-sm font-semibold text-text-primary line-clamp-1">{meal.provider.businessName}</span>
+              <span className="flex items-center gap-1 text-sm font-semibold text-text-primary">
+                <span className="truncate">{meal.provider.businessName}</span>
+                {meal.provider.isVerified && (
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="flex-shrink-0">
+                    <circle cx="12" cy="12" r="10" fill="#3B82F6"/>
+                    <polyline points="8 12 11 15 16 9" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                )}
+              </span>
             </div>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className="flex-shrink-0 text-text-light"><polyline points="9 18 15 12 9 6"/></svg>
           </Link>

@@ -170,7 +170,7 @@ export interface Meal {
   mealType?: MealType
   isActive?: boolean
   providerId?: string
-  provider?: { id: string; businessName: string }
+  provider?: { id: string; businessName: string; logo?: string | null; isVerified?: boolean }
   createdAt?: string
 }
 

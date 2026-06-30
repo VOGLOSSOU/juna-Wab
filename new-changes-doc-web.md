@@ -5,6 +5,29 @@
 
 ---
 
+## [2026-06-30] Fix — `provider` incomplet sur les routes plats
+
+### Routes concernées
+
+**`GET /api/v1/meals/:id`** et **`GET /api/v1/meals`**
+
+### Ce qui a changé
+
+L'objet `provider` imbriqué ne contenait que `id` et `businessName`. Il inclut maintenant `logo` et `isVerified`, comme dans `GET /api/v1/subscriptions`.
+
+```json
+{
+  "id": "uuid",
+  "businessName": "K'foods",
+  "logo": "https://...",
+  "isVerified": true
+}
+```
+
+Permet d'afficher la vraie photo de profil (au lieu des initiales) et le badge de certification sur la carte "Proposé par {provider}" de la page détail d'un plat.
+
+---
+
 ## [2026-06-30] Fix — `isVerified` manquant sur le profil public d'un prestataire
 
 ### Route concernée
