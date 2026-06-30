@@ -5,22 +5,36 @@ import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { getPublicProvider } from '@/lib/api/providers'
 import { SubscriptionCard } from '@/components/cards/subscription-card'
 import { StarRating } from '@/components/ui/star-rating'
 import { formatPrice, getInitials } from '@/lib/utils'
-import type { PublicProviderProfile, Meal, MealPriceType } from '@/types'
+import type { PublicProviderProfile, Meal } from '@/types'
+
+const API_URL = 'https://juna-app.up.railway.app/api/v1'
+
+async function fetchProvider(id: string): Promise<PublicProviderProfile | null> {
+  try {
+    const res = await fetch(`${API_URL}/providers/${id}`)
+    if (!res.ok) return null
+    const json = await res.json()
+    return json?.data ?? null
+  } catch {
+    return null
+  }
+}
 
 // ─── Helpers ─────────────────────────────────────────────────
 
 function mealDisplayPrice(meal: Meal): string | null {
   if (meal.priceType === 'MULTIPLE' && meal.pricings?.length) {
-    return `À partir de ${formatPrice(Math.min(...meal.pricings.map(p => p.price)))}`
+    const prices = meal.pricings.map(p => Number(p.price)).filter(n => !isNaN(n))
+    if (!prices.length) return null
+    return `À partir de ${formatPrice(Math.min(...prices))}`
   }
   if (meal.priceType === 'RANGE' && meal.priceMin != null && meal.priceMax != null) {
-    return `${formatPrice(meal.priceMin)} – ${formatPrice(meal.priceMax)}`
+    return `${formatPrice(Number(meal.priceMin))} – ${formatPrice(Number(meal.priceMax))}`
   }
-  if (meal.price != null) return formatPrice(meal.price)
+  if (meal.price != null) return formatPrice(Number(meal.price))
   return null
 }
 
@@ -32,18 +46,18 @@ function formatMemberSince(iso: string): string {
   }
 }
 
+function safeRating(value: unknown): number {
+  const n = Number(value)
+  return isNaN(n) ? 0 : n
+}
+
 // ─── Skeleton ────────────────────────────────────────────────
 
 function ProfileSkeleton() {
   return (
     <div className="animate-pulse">
-      <div className="h-56 bg-[#1a3a22]" />
-      <div className="max-w-content mx-auto px-6">
-        <div className="flex flex-col items-center -mt-12 mb-8 gap-4">
-          <div className="w-24 h-24 rounded-full bg-white/20" />
-          <div className="h-6 w-48 bg-surface-grey rounded-lg" />
-          <div className="h-4 w-32 bg-surface-grey rounded-lg" />
-        </div>
+      <div className="h-64 bg-[#1a3a22]" />
+      <div className="max-w-content mx-auto px-6 pt-10">
         <div className="flex flex-col gap-8">
           {[1, 2].map(i => (
             <div key={i}>
@@ -68,55 +82,42 @@ export default function ProviderProfileClient() {
   const router = useRouter()
   const [provider, setProvider] = useState<PublicProviderProfile | null>(null)
   const [loading, setLoading] = useState(true)
-  const [notFound, setNotFound] = useState(false)
 
   useEffect(() => {
-    getPublicProvider(id)
-      .then(setProvider)
-      .catch(() => setNotFound(true))
+    if (!id) return
+    fetchProvider(id)
+      .then((data) => {
+        if (!data) router.push('/')
+        else setProvider(data)
+      })
       .finally(() => setLoading(false))
-  }, [id])
+  }, [id, router])
 
   if (loading) return <ProfileSkeleton />
+  if (!provider) return null
 
-  if (notFound || !provider) {
-    return (
-      <div className="flex flex-col items-center gap-4 py-24 text-center px-6">
-        <div className="w-16 h-16 rounded-2xl bg-surface-grey flex items-center justify-center text-text-light">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>
-            <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
-          </svg>
-        </div>
-        <h1 className="text-xl font-semibold text-text-primary">Prestataire introuvable</h1>
-        <p className="text-text-secondary text-sm max-w-xs">Ce prestataire n'existe pas ou n'est plus disponible sur Juna.</p>
-        <button onClick={() => router.back()} className="text-primary text-sm font-medium hover:underline">
-          ← Retour
-        </button>
-      </div>
-    )
-  }
+  const rating = safeRating(provider.rating)
+  const reviewCount = provider.reviewCount ?? 0
 
   const cityLabel = provider.city
     ? `${provider.city.name}${provider.city.country?.translations?.fr ? `, ${provider.city.country.translations.fr}` : ''}`
     : null
 
-  const hasSubscriptions = (provider.subscriptions?.length ?? 0) > 0
-  const hasMeals = (provider.meals?.length ?? 0) > 0
-  const hasPickupPoints = (provider.pickupPoints?.length ?? 0) > 0
-  const hasDeliveryZones = (provider.deliveryZones?.length ?? 0) > 0
+  const subscriptions = provider.subscriptions ?? []
+  const meals = provider.meals ?? []
+  const pickupPoints = provider.pickupPoints ?? []
+  const deliveryZones = provider.deliveryZones ?? []
 
   return (
     <div className="pb-16">
 
       {/* ── Hero ─────────────────────────────────────────────── */}
       <div className="relative bg-gradient-to-br from-[#0c2214] via-[#163320] to-[#1f4a2e] overflow-hidden">
-        {/* Texture subtile */}
         <div className="absolute inset-0 opacity-[0.04]" style={{
           backgroundImage: 'radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 20%, white 1px, transparent 1px)',
           backgroundSize: '40px 40px',
         }} />
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white/[0.06] to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white/[0.04] to-transparent" />
 
         <div className="relative max-w-content mx-auto px-6 pt-10 pb-14 flex flex-col items-center text-center gap-5">
 
@@ -144,11 +145,11 @@ export default function ProviderProfileClient() {
             </div>
 
             {/* Note */}
-            {provider.rating !== undefined && (provider.reviewCount ?? 0) > 0 && (
+            {rating > 0 && reviewCount > 0 && (
               <div className="flex items-center gap-2">
-                <StarRating value={provider.rating} size={16} readOnly />
-                <span className="text-white/70 text-sm">{provider.rating.toFixed(1)}</span>
-                <span className="text-white/40 text-sm">({provider.reviewCount} avis)</span>
+                <StarRating value={rating} size={16} readOnly />
+                <span className="text-white/70 text-sm">{rating.toFixed(1)}</span>
+                <span className="text-white/40 text-sm">({reviewCount} avis)</span>
               </div>
             )}
 
@@ -199,13 +200,11 @@ export default function ProviderProfileClient() {
 
         {/* Description */}
         {provider.description && (
-          <div className="flex flex-col gap-2">
-            <p className="text-text-secondary text-sm leading-relaxed">{provider.description}</p>
-          </div>
+          <p className="text-text-secondary text-sm leading-relaxed">{provider.description}</p>
         )}
 
         {/* Adresse + zones de livraison */}
-        {(provider.businessAddress || hasDeliveryZones) && (
+        {(provider.businessAddress || deliveryZones.length > 0) && (
           <div className="flex flex-col gap-3">
             {provider.businessAddress && (
               <div className="flex items-start gap-3 bg-surface-grey rounded-xl px-4 py-3">
@@ -215,11 +214,11 @@ export default function ProviderProfileClient() {
                 <p className="text-sm text-text-primary">{provider.businessAddress}</p>
               </div>
             )}
-            {hasDeliveryZones && (
+            {deliveryZones.length > 0 && (
               <div className="flex flex-col gap-2">
                 <p className="text-xs font-semibold text-text-secondary uppercase tracking-widest">Zones de livraison</p>
                 <div className="flex flex-wrap gap-2">
-                  {provider.deliveryZones!.map((zone) => (
+                  {deliveryZones.map((zone) => (
                     <span key={zone} className="bg-primary-surface text-primary text-xs font-medium px-3 py-1 rounded-full border border-primary/15">
                       {zone}
                     </span>
@@ -231,16 +230,14 @@ export default function ProviderProfileClient() {
         )}
 
         {/* Abonnements */}
-        {hasSubscriptions && (
+        {subscriptions.length > 0 && (
           <section>
-            <div className="flex items-center justify-between mb-5">
-              <div className="flex items-baseline gap-2">
-                <h2 className="text-xl font-bold text-text-primary">Abonnements</h2>
-                <span className="text-sm text-text-secondary font-normal">{provider.subscriptions!.length}</span>
-              </div>
+            <div className="flex items-baseline gap-2 mb-5">
+              <h2 className="text-xl font-bold text-text-primary">Abonnements</h2>
+              <span className="text-sm text-text-secondary font-normal">{subscriptions.length}</span>
             </div>
             <div className="flex gap-4 overflow-x-auto pb-2 -mx-6 px-6 hide-scrollbar">
-              {provider.subscriptions!.map((sub) => (
+              {subscriptions.map((sub) => (
                 <div key={sub.id} className="flex-shrink-0 w-52 h-[280px]">
                   <SubscriptionCard subscription={sub} variant="compact" />
                 </div>
@@ -250,14 +247,14 @@ export default function ProviderProfileClient() {
         )}
 
         {/* Plats */}
-        {hasMeals && (
+        {meals.length > 0 && (
           <section>
             <div className="flex items-baseline gap-2 mb-5">
               <h2 className="text-xl font-bold text-text-primary">Plats proposés</h2>
-              <span className="text-sm text-text-secondary font-normal">{provider.meals!.length}</span>
+              <span className="text-sm text-text-secondary font-normal">{meals.length}</span>
             </div>
             <div className="flex gap-4 overflow-x-auto pb-2 -mx-6 px-6 hide-scrollbar">
-              {provider.meals!.map((meal) => {
+              {meals.map((meal) => {
                 const price = mealDisplayPrice(meal)
                 return (
                   <div key={meal.id} className="flex-shrink-0 w-40 flex flex-col bg-white rounded-2xl border border-border overflow-hidden hover:shadow-md transition-shadow">
@@ -291,11 +288,11 @@ export default function ProviderProfileClient() {
         )}
 
         {/* Points de retrait */}
-        {hasPickupPoints && (
+        {pickupPoints.length > 0 && (
           <section>
             <h2 className="text-xl font-bold text-text-primary mb-4">Points de retrait</h2>
             <div className="flex flex-col gap-2">
-              {provider.pickupPoints!.map((point) => (
+              {pickupPoints.map((point) => (
                 <div key={point.id} className="flex items-center gap-3 bg-surface-grey rounded-xl px-4 py-3">
                   <div className="w-8 h-8 rounded-lg bg-primary-surface flex items-center justify-center flex-shrink-0">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1A5C2A" strokeWidth="2.2">
@@ -310,7 +307,7 @@ export default function ProviderProfileClient() {
         )}
 
         {/* Vide */}
-        {!hasSubscriptions && !hasMeals && (
+        {subscriptions.length === 0 && meals.length === 0 && (
           <div className="flex flex-col items-center gap-3 py-12 text-center">
             <div className="w-14 h-14 rounded-2xl bg-surface-grey flex items-center justify-center text-text-light">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
@@ -320,12 +317,10 @@ export default function ProviderProfileClient() {
         )}
 
         {/* Back */}
-        <div className="pt-2">
-          <Link href="/" className="text-sm text-text-secondary hover:text-text-primary flex items-center gap-1.5 transition-colors w-fit">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-            Retour à l'accueil
-          </Link>
-        </div>
+        <Link href="/" className="text-sm text-text-secondary hover:text-text-primary flex items-center gap-1.5 transition-colors w-fit">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          Retour à l'accueil
+        </Link>
 
       </div>
     </div>
