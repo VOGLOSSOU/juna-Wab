@@ -114,7 +114,7 @@ export default function ProviderProfileClient() {
     <div className="pb-16">
 
       {/* ── Couverture ───────────────────────────────────────── */}
-      <div className="relative h-60 md:h-80 bg-gradient-to-br from-[#0c2214] via-[#163320] to-[#1f4a2e] overflow-hidden">
+      <div className="relative h-40 md:h-56 bg-gradient-to-br from-[#0c2214] via-[#163320] to-[#1f4a2e] overflow-hidden">
         {coverItems.length > 0 ? (
           coverItems.map((item, i) => (
             <div
@@ -163,85 +163,82 @@ export default function ProviderProfileClient() {
 
       {/* ── Avatar + identité ────────────────────────────────── */}
       <div className="max-w-content mx-auto px-6">
-        <div className="-mt-12 flex flex-col items-center text-center gap-3">
+        <div className="-mt-8 flex items-start gap-4">
 
-          <div className="relative w-24 h-24 rounded-full overflow-hidden bg-primary-surface border-4 border-white shadow-xl flex items-center justify-center flex-shrink-0">
+          <div className="relative w-20 h-20 rounded-full overflow-hidden bg-primary-surface border-4 border-white shadow-xl flex items-center justify-center flex-shrink-0">
             {provider.logo ? (
-              <Image src={provider.logo} alt={provider.businessName} fill sizes="96px" className="object-cover" />
+              <Image src={provider.logo} alt={provider.businessName} fill sizes="80px" className="object-cover" />
             ) : (
-              <span className="font-bold text-primary text-3xl">{getInitials(provider.businessName)}</span>
+              <span className="font-bold text-primary text-2xl">{getInitials(provider.businessName)}</span>
             )}
           </div>
 
-          <div className="flex flex-col items-center gap-2">
-            <div className="flex items-center gap-2 flex-wrap justify-center">
-              <h1 className="text-2xl font-bold text-text-primary leading-tight">{provider.businessName}</h1>
+          <div className="flex-1 min-w-0 pt-9">
+            <div className="flex items-center gap-1.5 min-w-0">
               {provider.isVerified && (
-                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" className="flex-shrink-0">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" className="flex-shrink-0">
                   <circle cx="12" cy="12" r="10" fill="#3B82F6"/>
                   <polyline points="8 12 11 15 16 9" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               )}
+              <h1 className="text-xl font-bold text-text-primary leading-tight truncate">{provider.businessName}</h1>
             </div>
 
-            {rating > 0 && reviewCount > 0 && (
-              <div className="flex items-center gap-2">
-                <StarRating value={rating} size={16} readOnly />
-                <span className="text-text-secondary text-sm">{rating.toFixed(1)}</span>
-                <span className="text-text-light text-sm">({reviewCount} avis)</span>
-              </div>
-            )}
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1.5 text-xs text-text-secondary">
+              {rating > 0 && reviewCount > 0 && (
+                <span className="flex items-center gap-1">
+                  <StarRating value={rating} size={13} readOnly />
+                  {rating.toFixed(1)} ({reviewCount})
+                </span>
+              )}
+              {cityLabel && (
+                <span className="flex items-center gap-1">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+                  </svg>
+                  {cityLabel}
+                </span>
+              )}
+              {provider.memberSince && <span>Membre depuis {formatMemberSince(provider.memberSince)}</span>}
+            </div>
+          </div>
+        </div>
 
-            {cityLabel && (
-              <div className="flex items-center gap-1.5 text-text-secondary text-sm">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
-                </svg>
-                {cityLabel}
-              </div>
+        {/* Chips livraison / retrait */}
+        {(provider.acceptsDelivery || provider.acceptsPickup) && (
+          <div className="flex items-center gap-2 flex-wrap mt-3">
+            {provider.acceptsDelivery && (
+              <span className="flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold pl-1 pr-3 py-1 rounded-full shadow-sm">
+                <span className="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center flex-shrink-0">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6">
+                    <rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                    <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+                  </svg>
+                </span>
+                Livraison
+              </span>
             )}
-
-            {provider.memberSince && (
-              <p className="text-text-light text-xs">Membre depuis {formatMemberSince(provider.memberSince)}</p>
+            {provider.acceptsPickup && (
+              <span className="flex items-center gap-1.5 bg-amber-50 border border-amber-200 text-amber-700 text-xs font-bold pl-1 pr-3 py-1 rounded-full shadow-sm">
+                <span className="w-5 h-5 rounded-full bg-amber-500 text-white flex items-center justify-center flex-shrink-0">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+                  </svg>
+                </span>
+                Retrait sur place
+              </span>
             )}
           </div>
-
-          {/* Chips livraison / retrait */}
-          {(provider.acceptsDelivery || provider.acceptsPickup) && (
-            <div className="flex items-center gap-2 flex-wrap justify-center pt-1">
-              {provider.acceptsDelivery && (
-                <span className="flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold pl-1 pr-3 py-1 rounded-full shadow-sm">
-                  <span className="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center flex-shrink-0">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
-                      <rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
-                      <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
-                    </svg>
-                  </span>
-                  Livraison
-                </span>
-              )}
-              {provider.acceptsPickup && (
-                <span className="flex items-center gap-1.5 bg-amber-50 border border-amber-200 text-amber-700 text-xs font-bold pl-1 pr-3 py-1 rounded-full shadow-sm">
-                  <span className="w-6 h-6 rounded-full bg-amber-500 text-white flex items-center justify-center flex-shrink-0">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
-                      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
-                    </svg>
-                  </span>
-                  Retrait sur place
-                </span>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* ── Corps ────────────────────────────────────────────── */}
-      <div className="max-w-content mx-auto px-6 flex flex-col gap-8 pt-8">
+        )}
 
         {/* Description */}
         {provider.description && (
-          <p className="text-text-secondary text-sm leading-relaxed text-center">{provider.description}</p>
+          <p className="text-text-secondary text-sm leading-relaxed mt-3">{provider.description}</p>
         )}
+      </div>
+
+      {/* ── Corps ────────────────────────────────────────────── */}
+      <div className="max-w-content mx-auto px-6 flex flex-col gap-6 pt-5">
 
         {/* Adresse + zones de livraison */}
         {(provider.businessAddress || deliveryZones.length > 0) && (
