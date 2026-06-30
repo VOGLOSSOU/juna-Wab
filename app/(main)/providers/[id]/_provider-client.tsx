@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { SubscriptionCard } from '@/components/cards/subscription-card'
 import { StarRating } from '@/components/ui/star-rating'
 import { formatPrice, getInitials, mealDisplayPrice } from '@/lib/utils'
 import type { PublicProviderProfile } from '@/types'
@@ -69,6 +68,8 @@ export default function ProviderProfileClient() {
   const router = useRouter()
   const [provider, setProvider] = useState<PublicProviderProfile | null>(null)
   const [loading, setLoading] = useState(true)
+  const [coverIndex, setCoverIndex] = useState(0)
+  const [tabOverride, setTabOverride] = useState<'subscriptions' | 'meals' | null>(null)
 
   useEffect(() => {
     if (!id) return
@@ -80,6 +81,19 @@ export default function ProviderProfileClient() {
       .finally(() => setLoading(false))
   }, [id, router])
 
+  const subscriptions = provider?.subscriptions ?? []
+  const meals = provider?.meals ?? []
+
+  const coverItems = subscriptions
+    .map((s) => ({ id: s.id, image: s.images?.[0] ?? s.imageUrl }))
+    .filter((s): s is { id: string; image: string } => !!s.image)
+
+  useEffect(() => {
+    if (coverItems.length <= 1) return
+    const t = setInterval(() => setCoverIndex((i) => (i + 1) % coverItems.length), 4000)
+    return () => clearInterval(t)
+  }, [coverItems.length])
+
   if (loading) return <ProfileSkeleton />
   if (!provider) return null
 
@@ -90,59 +104,96 @@ export default function ProviderProfileClient() {
     ? `${provider.city.name}${provider.city.country?.translations?.fr ? `, ${provider.city.country.translations.fr}` : ''}`
     : null
 
-  const subscriptions = provider.subscriptions ?? []
-  const meals = provider.meals ?? []
   const pickupPoints = provider.pickupPoints ?? []
   const deliveryZones = provider.deliveryZones ?? []
+
+  const activeTab = tabOverride ?? (subscriptions.length > 0 ? 'subscriptions' : 'meals')
+  const showTabs = subscriptions.length > 0 && meals.length > 0
 
   return (
     <div className="pb-16">
 
-      {/* ── Hero ─────────────────────────────────────────────── */}
-      <div className="relative bg-gradient-to-br from-[#0c2214] via-[#163320] to-[#1f4a2e] overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.04]" style={{
-          backgroundImage: 'radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 20%, white 1px, transparent 1px)',
-          backgroundSize: '40px 40px',
-        }} />
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white/[0.04] to-transparent" />
+      {/* ── Couverture ───────────────────────────────────────── */}
+      <div className="relative h-60 md:h-80 bg-gradient-to-br from-[#0c2214] via-[#163320] to-[#1f4a2e] overflow-hidden">
+        {coverItems.length > 0 ? (
+          coverItems.map((item, i) => (
+            <div
+              key={item.id}
+              className={`absolute inset-0 transition-opacity duration-1000 ${i === coverIndex ? 'opacity-100' : 'opacity-0'}`}
+            >
+              <Image src={item.image} alt="" fill sizes="100vw" priority={i === 0} className="object-cover" />
+            </div>
+          ))
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="absolute inset-0 opacity-[0.05]" style={{
+              backgroundImage: 'radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 20%, white 1px, transparent 1px)',
+              backgroundSize: '40px 40px',
+            }} />
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.3" className="opacity-20">
+              <path d="M3 11l19-9-9 19-2-8-8-2z"/>
+            </svg>
+          </div>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/5 to-transparent" />
 
-        <div className="relative max-w-content mx-auto px-6 pt-10 pb-14 flex flex-col items-center text-center gap-5">
+        {/* Lien vers l'abonnement affiché */}
+        {coverItems.length > 0 && (
+          <Link
+            href={`/subscriptions/${coverItems[coverIndex].id}`}
+            className="absolute top-4 right-4 z-10 flex items-center gap-1.5 bg-black/40 backdrop-blur-md text-white text-xs font-semibold pl-3 pr-2.5 py-1.5 rounded-full hover:bg-black/55 transition-colors"
+          >
+            Voir l'offre
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </Link>
+        )}
 
-          {/* Avatar */}
-          <div className="relative w-24 h-24 rounded-full overflow-hidden bg-white/10 border-[3px] border-white/20 shadow-2xl flex items-center justify-center flex-shrink-0">
+        {/* Indicateurs de défilement */}
+        {coverItems.length > 1 && (
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+            {coverItems.map((item, i) => (
+              <span
+                key={item.id}
+                className={`h-1.5 rounded-full transition-all duration-300 ${i === coverIndex ? 'w-5 bg-white' : 'w-1.5 bg-white/50'}`}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* ── Avatar + identité ────────────────────────────────── */}
+      <div className="max-w-content mx-auto px-6">
+        <div className="-mt-12 flex flex-col items-center text-center gap-3">
+
+          <div className="relative w-24 h-24 rounded-full overflow-hidden bg-primary-surface border-4 border-white shadow-xl flex items-center justify-center flex-shrink-0">
             {provider.logo ? (
               <Image src={provider.logo} alt={provider.businessName} fill sizes="96px" className="object-cover" />
             ) : (
-              <span className="font-bold text-white text-3xl">{getInitials(provider.businessName)}</span>
+              <span className="font-bold text-primary text-3xl">{getInitials(provider.businessName)}</span>
             )}
           </div>
 
-          {/* Nom + badge vérifié */}
           <div className="flex flex-col items-center gap-2">
             <div className="flex items-center gap-2 flex-wrap justify-center">
-              <h1 className="text-2xl font-bold text-white leading-tight">{provider.businessName}</h1>
+              <h1 className="text-2xl font-bold text-text-primary leading-tight">{provider.businessName}</h1>
               {provider.isVerified && (
-                <span className="flex items-center gap-1 bg-blue-500/20 border border-blue-400/30 text-blue-300 text-[11px] font-semibold px-2 py-0.5 rounded-full">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                    <polyline points="20 6 9 17 4 12"/>
-                  </svg>
-                  Vérifié
-                </span>
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" className="flex-shrink-0">
+                  <circle cx="12" cy="12" r="10" fill="#3B82F6"/>
+                  <polyline points="8 12 11 15 16 9" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
               )}
             </div>
 
-            {/* Note */}
             {rating > 0 && reviewCount > 0 && (
               <div className="flex items-center gap-2">
                 <StarRating value={rating} size={16} readOnly />
-                <span className="text-white/70 text-sm">{rating.toFixed(1)}</span>
-                <span className="text-white/40 text-sm">({reviewCount} avis)</span>
+                <span className="text-text-secondary text-sm">{rating.toFixed(1)}</span>
+                <span className="text-text-light text-sm">({reviewCount} avis)</span>
               </div>
             )}
 
-            {/* Ville */}
             {cityLabel && (
-              <div className="flex items-center gap-1.5 text-white/60 text-sm">
+              <div className="flex items-center gap-1.5 text-text-secondary text-sm">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
                 </svg>
@@ -150,44 +201,46 @@ export default function ProviderProfileClient() {
               </div>
             )}
 
-            {/* Membre depuis */}
             {provider.memberSince && (
-              <p className="text-white/40 text-xs">Membre depuis {formatMemberSince(provider.memberSince)}</p>
+              <p className="text-text-light text-xs">Membre depuis {formatMemberSince(provider.memberSince)}</p>
             )}
           </div>
 
           {/* Chips livraison / retrait */}
           {(provider.acceptsDelivery || provider.acceptsPickup) && (
-            <div className="flex items-center gap-2 flex-wrap justify-center">
+            <div className="flex items-center gap-2 flex-wrap justify-center pt-1">
               {provider.acceptsDelivery && (
-                <span className="flex items-center gap-1.5 bg-white/10 border border-white/15 text-white/80 text-xs font-medium px-3 py-1.5 rounded-full">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-                    <rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
-                    <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
-                  </svg>
+                <span className="flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold pl-1 pr-3 py-1 rounded-full shadow-sm">
+                  <span className="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center flex-shrink-0">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
+                      <rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                      <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+                    </svg>
+                  </span>
                   Livraison
                 </span>
               )}
               {provider.acceptsPickup && (
-                <span className="flex items-center gap-1.5 bg-white/10 border border-white/15 text-white/80 text-xs font-medium px-3 py-1.5 rounded-full">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
-                  </svg>
+                <span className="flex items-center gap-1.5 bg-amber-50 border border-amber-200 text-amber-700 text-xs font-bold pl-1 pr-3 py-1 rounded-full shadow-sm">
+                  <span className="w-6 h-6 rounded-full bg-amber-500 text-white flex items-center justify-center flex-shrink-0">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
+                      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                  </span>
                   Retrait sur place
                 </span>
               )}
             </div>
           )}
-
         </div>
       </div>
 
       {/* ── Corps ────────────────────────────────────────────── */}
-      <div className="max-w-content mx-auto px-6 flex flex-col gap-10 pt-10">
+      <div className="max-w-content mx-auto px-6 flex flex-col gap-8 pt-8">
 
         {/* Description */}
         {provider.description && (
-          <p className="text-text-secondary text-sm leading-relaxed">{provider.description}</p>
+          <p className="text-text-secondary text-sm leading-relaxed text-center">{provider.description}</p>
         )}
 
         {/* Adresse + zones de livraison */}
@@ -219,60 +272,91 @@ export default function ProviderProfileClient() {
           </div>
         )}
 
-        {/* Abonnements */}
-        {subscriptions.length > 0 && (
+        {/* Onglets Abonnements / Plats */}
+        {(subscriptions.length > 0 || meals.length > 0) && (
           <section>
-            <div className="flex items-baseline gap-2 mb-5">
-              <h2 className="text-xl font-bold text-text-primary">Abonnements</h2>
-              <span className="text-sm text-text-secondary font-normal">{subscriptions.length}</span>
-            </div>
-            <div className="flex gap-4 overflow-x-auto pb-2 -mx-6 px-6 hide-scrollbar">
-              {subscriptions.map((sub) => (
-                <div key={sub.id} className="flex-shrink-0 w-52 h-[280px]">
-                  <SubscriptionCard subscription={sub} variant="compact" />
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
+            {showTabs ? (
+              <div className="flex border-b border-border -mx-6 px-6 mb-px">
+                <button
+                  onClick={() => setTabOverride('subscriptions')}
+                  className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-semibold border-b-2 transition-colors ${
+                    activeTab === 'subscriptions' ? 'border-primary text-primary' : 'border-transparent text-text-light'
+                  }`}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+                    <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+                  </svg>
+                  Abonnements
+                  <span className="text-xs font-normal">({subscriptions.length})</span>
+                </button>
+                <button
+                  onClick={() => setTabOverride('meals')}
+                  className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-semibold border-b-2 transition-colors ${
+                    activeTab === 'meals' ? 'border-primary text-primary' : 'border-transparent text-text-light'
+                  }`}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M3 2v7a2 2 0 002 2 2 2 0 002-2V2M5 11v11M9 2v7a2 2 0 01-2 2M19 2v20M19 2a4 4 0 00-4 4v3a2 2 0 002 2h2"/>
+                  </svg>
+                  Plats
+                  <span className="text-xs font-normal">({meals.length})</span>
+                </button>
+              </div>
+            ) : (
+              <h2 className="text-xl font-bold text-text-primary mb-4">
+                {subscriptions.length > 0 ? 'Abonnements' : 'Plats proposés'}
+              </h2>
+            )}
 
-        {/* Plats */}
-        {meals.length > 0 && (
-          <section>
-            <div className="flex items-baseline gap-2 mb-5">
-              <h2 className="text-xl font-bold text-text-primary">Plats proposés</h2>
-              <span className="text-sm text-text-secondary font-normal">{meals.length}</span>
-            </div>
-            <div className="flex gap-4 overflow-x-auto pb-2 -mx-6 px-6 hide-scrollbar">
-              {meals.map((meal) => {
+            {/* Grille type Instagram */}
+            <div className={`grid grid-cols-3 gap-1.5 ${showTabs ? 'mt-4' : ''}`}>
+              {activeTab === 'subscriptions' && subscriptions.map((sub) => {
+                const image = sub.images?.[0] ?? sub.imageUrl
+                return (
+                  <Link
+                    key={sub.id}
+                    href={`/subscriptions/${sub.id}`}
+                    className="group relative aspect-square overflow-hidden rounded-lg bg-surface-grey"
+                  >
+                    {image ? (
+                      <Image src={image} alt={sub.name} fill sizes="33vw" className="object-cover group-hover:scale-105 transition-transform duration-300" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-text-light">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/0 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-2">
+                      <p className="text-white text-[11px] font-semibold line-clamp-1">{sub.name}</p>
+                      <p className="text-white/85 text-[10px] font-medium">{formatPrice(sub.price, sub.currency)}</p>
+                    </div>
+                  </Link>
+                )
+              })}
+
+              {activeTab === 'meals' && meals.map((meal) => {
                 const price = mealDisplayPrice(meal)
                 return (
                   <Link
                     key={meal.id}
                     href={`/meals/${meal.id}`}
-                    className="flex-shrink-0 w-40 flex flex-col bg-white rounded-2xl border border-border overflow-hidden hover:shadow-md transition-shadow"
+                    className="group relative aspect-square overflow-hidden rounded-lg bg-surface-grey"
                   >
-                    <div className="relative h-28 bg-surface-grey">
-                      {meal.imageUrl ? (
-                        <Image src={meal.imageUrl} alt={meal.name} fill sizes="160px" className="object-cover" />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-text-light">
-                          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
-                        </div>
-                      )}
-                      {meal.priceType === 'MULTIPLE' && (
-                        <span className="absolute top-2 left-2 bg-black/60 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">Variantes</span>
-                      )}
-                    </div>
-                    <div className="p-3 flex flex-col gap-1 flex-1">
-                      <p className="text-xs font-semibold text-text-primary line-clamp-2 leading-snug">{meal.name}</p>
-                      {meal.description && (
-                        <p className="text-[10px] text-text-secondary line-clamp-2 leading-tight">{meal.description}</p>
-                      )}
-                      {price && <p className="text-xs font-bold text-primary mt-auto pt-1">{price}</p>}
-                      {meal.priceGuideline && (
-                        <p className="text-[10px] text-text-light italic leading-tight">{meal.priceGuideline}</p>
-                      )}
+                    {meal.imageUrl ? (
+                      <Image src={meal.imageUrl} alt={meal.name} fill sizes="33vw" className="object-cover group-hover:scale-105 transition-transform duration-300" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-text-light">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+                      </div>
+                    )}
+                    {meal.priceType === 'MULTIPLE' && (
+                      <span className="absolute top-1.5 left-1.5 bg-black/60 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">Variantes</span>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/0 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-2">
+                      <p className="text-white text-[11px] font-semibold line-clamp-1">{meal.name}</p>
+                      {price && <p className="text-white/85 text-[10px] font-medium">{price}</p>}
                     </div>
                   </Link>
                 )
