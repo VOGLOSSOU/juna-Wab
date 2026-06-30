@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
+import Link from 'next/link'
 import { getSubscription } from '@/lib/api/subscriptions'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -279,7 +280,10 @@ export default function SubscriptionDetailClient() {
 
       {/* ── 6. Provider ── */}
       {provider && (
-        <div className="bg-white rounded-2xl border border-border p-6 flex flex-col gap-5 shadow-sm">
+        <Link
+          href={`/providers/${provider.id}`}
+          className="bg-white rounded-2xl border border-border p-6 flex flex-col gap-5 shadow-sm hover:shadow-md hover:border-primary/20 transition-all"
+        >
           <p className="text-xs text-text-light uppercase tracking-widest">Cet abonnement est proposé par</p>
 
           <div className="flex items-center gap-3">
@@ -307,6 +311,9 @@ export default function SubscriptionDetailClient() {
                 </div>
               )}
             </div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className="ml-auto flex-shrink-0 text-text-light">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
           </div>
 
           {provider.description && (
@@ -323,7 +330,7 @@ export default function SubscriptionDetailClient() {
               </span>
             </div>
           )}
-        </div>
+        </Link>
       )}
 
       {/* ── 7. Autres abonnements du provider ── */}
