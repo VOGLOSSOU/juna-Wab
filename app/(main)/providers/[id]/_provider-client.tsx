@@ -141,10 +141,10 @@ export default function ProviderProfileClient() {
         {coverItems.length > 0 && (
           <Link
             href={`/subscriptions/${coverItems[coverIndex].id}`}
-            className="absolute top-4 right-4 z-10 flex items-center gap-1.5 bg-black/40 backdrop-blur-md text-white text-xs font-semibold pl-3 pr-2.5 py-1.5 rounded-full hover:bg-black/55 transition-colors"
+            aria-label="Voir l'abonnement"
+            className="absolute top-4 right-4 z-10 w-9 h-9 flex items-center justify-center bg-black/40 backdrop-blur-md text-white rounded-full hover:bg-black/55 transition-colors"
           >
-            Voir l'offre
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M7 17L17 7M7 7h10v10"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M7 17L17 7M7 7h10v10"/></svg>
           </Link>
         )}
 
@@ -235,8 +235,8 @@ export default function ProviderProfileClient() {
                 </svg>
                 <p className="text-text-primary">
                   <span className="font-semibold">Retrait sur place</span>
-                  {(pickupPoints.length > 0 || provider.businessAddress) && (
-                    <span className="text-text-secondary"> · {pickupPoints.length > 0 ? pickupPoints.map((p) => p.name).join(', ') : provider.businessAddress}</span>
+                  {pickupPoints.length > 0 && (
+                    <span className="text-text-secondary"> · {pickupPoints.map((p) => p.name).join(', ')}</span>
                   )}
                 </p>
               </div>
