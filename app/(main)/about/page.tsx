@@ -4,7 +4,7 @@ import type { Metadata } from 'next'
 import { BreadcrumbJsonLd } from '@/components/seo/breadcrumb-jsonld'
 
 export const metadata: Metadata = {
-  title: 'À propos - Juna',
+  title: 'À propos',
   description: 'Juna connecte les Africains de l\'Ouest à des traiteurs locaux via des abonnements repas. Fini le stress du "qu\'est-ce que je mange ?". Mangez bien, sans se donner de la peine.',
   keywords: 'à propos Juna, mission Juna, abonnement repas, traiteur local, Junaeats, Bénin, Côte d\'Ivoire, food delivery, budget repas, gain de temps',
   openGraph: {

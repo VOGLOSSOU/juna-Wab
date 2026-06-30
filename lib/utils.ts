@@ -2,7 +2,7 @@ import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { formatDistanceToNow, format } from 'date-fns'
 import { fr } from 'date-fns/locale'
-import type { SubscriptionType, SubscriptionDuration, SubscriptionCategory, OrderStatus } from '@/types'
+import type { SubscriptionType, SubscriptionDuration, SubscriptionCategory, OrderStatus, MealType, Meal } from '@/types'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -10,6 +10,26 @@ export function cn(...inputs: ClassValue[]) {
 
 export function formatPrice(amount: number, currency = 'XOF'): string {
   return `${amount.toLocaleString('fr-FR')} ${currency}`
+}
+
+export const MEAL_TYPE_LABELS: Record<MealType, string> = {
+  BREAKFAST: 'Petit-déjeuner',
+  LUNCH: 'Déjeuner',
+  DINNER: 'Dîner',
+  SNACK: 'Collation',
+}
+
+export function mealDisplayPrice(meal: Meal): string | null {
+  if (meal.priceType === 'MULTIPLE' && meal.pricings?.length) {
+    const prices = meal.pricings.map(p => Number(p.price)).filter(n => !isNaN(n))
+    if (!prices.length) return null
+    return `À partir de ${formatPrice(Math.min(...prices))}`
+  }
+  if (meal.priceType === 'RANGE' && meal.priceMin != null && meal.priceMax != null) {
+    return `${formatPrice(Number(meal.priceMin))} – ${formatPrice(Number(meal.priceMax))}`
+  }
+  if (meal.price != null) return formatPrice(Number(meal.price))
+  return null
 }
 
 export function timeAgo(date: string | null | undefined): string {

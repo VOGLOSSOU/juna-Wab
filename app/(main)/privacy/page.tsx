@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import { BreadcrumbJsonLd } from '@/components/seo/breadcrumb-jsonld'
 
 export const metadata: Metadata = {
-  title: 'Juna - Politique de confidentialité',
+  title: 'Politique de confidentialité',
   description: 'Découvrez comment Juna collecte, utilise et protège vos données personnelles. Transparence totale sur le traitement de vos informations.',
   keywords: 'politique de confidentialité Juna, données personnelles, vie privée, RGPD, protection des données',
   openGraph: {

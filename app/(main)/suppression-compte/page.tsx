@@ -4,7 +4,7 @@ import { BreadcrumbJsonLd } from '@/components/seo/breadcrumb-jsonld'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Juna — Suppression de compte et de données',
+  title: 'Suppression de compte et de données',
   description: "Demandez la suppression définitive de votre compte Juna et de toutes vos données personnelles. Procédure simple par email.",
   keywords: 'suppression compte Juna, supprimer données personnelles, droit à l\'oubli, Juna RGPD, désinscrire Juna',
   openGraph: {

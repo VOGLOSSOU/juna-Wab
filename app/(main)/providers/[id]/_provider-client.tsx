@@ -7,8 +7,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { SubscriptionCard } from '@/components/cards/subscription-card'
 import { StarRating } from '@/components/ui/star-rating'
-import { formatPrice, getInitials } from '@/lib/utils'
-import type { PublicProviderProfile, Meal } from '@/types'
+import { formatPrice, getInitials, mealDisplayPrice } from '@/lib/utils'
+import type { PublicProviderProfile } from '@/types'
 
 const API_URL = 'https://juna-app.up.railway.app/api/v1'
 
@@ -24,19 +24,6 @@ async function fetchProvider(id: string): Promise<PublicProviderProfile | null> 
 }
 
 // ─── Helpers ─────────────────────────────────────────────────
-
-function mealDisplayPrice(meal: Meal): string | null {
-  if (meal.priceType === 'MULTIPLE' && meal.pricings?.length) {
-    const prices = meal.pricings.map(p => Number(p.price)).filter(n => !isNaN(n))
-    if (!prices.length) return null
-    return `À partir de ${formatPrice(Math.min(...prices))}`
-  }
-  if (meal.priceType === 'RANGE' && meal.priceMin != null && meal.priceMax != null) {
-    return `${formatPrice(Number(meal.priceMin))} – ${formatPrice(Number(meal.priceMax))}`
-  }
-  if (meal.price != null) return formatPrice(Number(meal.price))
-  return null
-}
 
 function formatMemberSince(iso: string): string {
   try {
@@ -260,7 +247,11 @@ export default function ProviderProfileClient() {
               {meals.map((meal) => {
                 const price = mealDisplayPrice(meal)
                 return (
-                  <div key={meal.id} className="flex-shrink-0 w-40 flex flex-col bg-white rounded-2xl border border-border overflow-hidden hover:shadow-md transition-shadow">
+                  <Link
+                    key={meal.id}
+                    href={`/meals/${meal.id}`}
+                    className="flex-shrink-0 w-40 flex flex-col bg-white rounded-2xl border border-border overflow-hidden hover:shadow-md transition-shadow"
+                  >
                     <div className="relative h-28 bg-surface-grey">
                       {meal.imageUrl ? (
                         <Image src={meal.imageUrl} alt={meal.name} fill sizes="160px" className="object-cover" />
@@ -283,7 +274,7 @@ export default function ProviderProfileClient() {
                         <p className="text-[10px] text-text-light italic leading-tight">{meal.priceGuideline}</p>
                       )}
                     </div>
-                  </div>
+                  </Link>
                 )
               })}
             </div>

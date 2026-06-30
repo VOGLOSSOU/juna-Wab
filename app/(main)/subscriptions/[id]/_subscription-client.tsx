@@ -139,7 +139,11 @@ export default function SubscriptionDetailClient() {
           </h2>
           <div className="flex gap-4 overflow-x-auto hide-scrollbar pb-2">
             {meals.map((meal) => (
-              <div key={meal.id} className="flex-shrink-0 w-36 flex flex-col gap-2">
+              <Link
+                key={meal.id}
+                href={`/meals/${meal.id}?subscriptionId=${id}`}
+                className="flex-shrink-0 w-36 flex flex-col gap-2 hover:opacity-90 transition-opacity"
+              >
                 <div className="relative h-24 rounded-xl overflow-hidden bg-surface-grey">
                   {meal.imageUrl ? (
                     <Image src={meal.imageUrl} alt={meal.name} fill sizes="144px" className="object-cover" />
@@ -153,7 +157,7 @@ export default function SubscriptionDetailClient() {
                 {meal.description && (
                   <p className="text-xs text-text-secondary line-clamp-2">{meal.description}</p>
                 )}
-              </div>
+              </Link>
             ))}
           </div>
         </div>

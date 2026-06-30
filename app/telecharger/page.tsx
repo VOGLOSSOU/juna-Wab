@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Télécharger Juna',
+  title: "Télécharger l'application",
   description: 'Abonne-toi aux meilleurs prestataires repas autour de toi. Disponible sur Android, bientôt sur iOS.',
   keywords: 'télécharger Juna, app Juna, Juna Android, Juna Play Store, application repas, abonnement repas mobile, Junaeats app',
   openGraph: {

@@ -4,7 +4,7 @@ import { BreadcrumbJsonLd } from '@/components/seo/breadcrumb-jsonld'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: "Juna - Conditions Générales d'Utilisation",
+  title: "Conditions Générales d'Utilisation",
   description: "Consultez les conditions générales d'utilisation de Juna. Droits, obligations et règles d'utilisation de la plateforme d'abonnements repas.",
   keywords: "CGU Juna, conditions d'utilisation, règles d'utilisation, abonnement repas, conditions générales",
   openGraph: {

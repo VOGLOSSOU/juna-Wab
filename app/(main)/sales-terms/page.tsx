@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import { BreadcrumbJsonLd } from '@/components/seo/breadcrumb-jsonld'
 
 export const metadata: Metadata = {
-  title: 'Juna - Conditions Générales de Vente',
+  title: 'Conditions Générales de Vente',
   description: 'Consultez les conditions générales de vente de Juna : processus de commande, paiement Mobile Money, activation et politique de remboursement.',
   keywords: 'CGV Juna, conditions de vente, paiement Mobile Money, commande repas, abonnement repas, remboursement',
   openGraph: {

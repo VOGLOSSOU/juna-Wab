@@ -4,7 +4,7 @@ import ExplorerClient from './_explorer-client'
 import { BreadcrumbJsonLd } from '@/components/seo/breadcrumb-jsonld'
 
 export const metadata: Metadata = {
-  title: 'Explorer les abonnements repas - Juna',
+  title: 'Explorer les abonnements repas',
   description: 'Parcourez tous les abonnements repas disponibles près de chez vous. Filtrez par type, durée, catégorie. Petit-déjeuner, déjeuner, dîner — trouvez ce qui vous convient.',
   keywords: 'abonnement repas, nourriture locale, livraison repas, traiteur, Juna, Junaeats, repas à domicile, food delivery, traiteur local, repas du jour, explorer abonnements, filtrer abonnements, petit-déjeuner, déjeuner, dîner',
   openGraph: {

@@ -16,18 +16,18 @@ async function getProvider(id: string) {
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const p = await getProvider(params.id)
   if (!p) return {
-    title: 'Prestataire - Juna',
+    title: 'Prestataire',
     description: 'Découvrez ce prestataire repas sur Juna et abonnez-vous.',
   }
-  const title = `${p.businessName} - Juna`
+  const ogTitle = `${p.businessName} - Juna`
   const description = (p.description ?? `Découvrez les abonnements repas de ${p.businessName} sur Juna.`).slice(0, 160)
   const url = `https://junaeats.com/providers/${params.id}`
   return {
-    title,
+    title: p.businessName,
     description,
     keywords: `${p.businessName}, abonnement repas, prestataire Juna, ${p.city?.name ?? ''}, traiteur, repas livraison`,
     openGraph: {
-      title,
+      title: ogTitle,
       description,
       url,
       siteName: 'Juna',

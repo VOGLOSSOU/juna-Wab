@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import { BreadcrumbJsonLd } from '@/components/seo/breadcrumb-jsonld'
 
 export const metadata: Metadata = {
-  title: 'Juna - Mentions légales',
+  title: 'Mentions légales',
   description: "Mentions légales de Juna — éditeur, hébergement, propriété intellectuelle et informations légales de la plateforme d'abonnements repas.",
   keywords: 'mentions légales Juna, éditeur, hébergement, ExternaLux6, informations légales',
   openGraph: {
