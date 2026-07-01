@@ -56,7 +56,7 @@ export default function TelechargerPage() {
             <span style={{ color: '#4ade80' }}>quotidiennement.</span>
           </h1>
           <p className="text-white/55 text-sm leading-relaxed max-w-[280px] mx-auto">
-            Découvrir et souscrire à des repas préparés par des prestataires près de chez vous.
+            Abonnez-vous aux meilleurs cuisiniers près de chez vous, ou proposez votre propre formule sur mesure.
           </p>
         </div>
 

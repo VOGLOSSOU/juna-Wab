@@ -9,7 +9,7 @@ export function Footer() {
           <div className="flex flex-col gap-4">
             <Image src="/juna-logo.png" alt="Juna Eats" width={48} height={48} className="object-contain" />
             <p className="text-sm text-text-secondary">
-              Découvrir et souscrire à des repas préparés par des prestataires près de chez vous
+              Abonnez-vous aux meilleurs cuisiniers près de chez vous, ou proposez votre propre formule sur mesure.
             </p>
             <a
               href="https://play.google.com/store/apps/details?id=com.junaeats.app"
