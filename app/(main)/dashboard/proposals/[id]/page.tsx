@@ -412,34 +412,81 @@ export default function DashboardProposalDetailPage() {
             )}
           </div>
 
-          <label className="flex items-center gap-2 text-sm text-text-secondary cursor-pointer">
-            <input type="checkbox" checked={adjustMeals} onChange={(e) => setAdjustMeals(e.target.checked)} />
-            Ajuster les plats avant publication
-          </label>
-
-          {adjustMeals && (
-            <div className="flex flex-col gap-2 max-h-72 overflow-y-auto border border-border rounded-lg p-2">
-              {myMeals.map((meal) => {
-                const sel = selectedMeals.find((m) => m.mealId === meal.id)
-                return (
-                  <div key={meal.id} className={`flex items-center gap-3 p-2 rounded-lg ${sel ? 'bg-primary-surface' : ''}`}>
-                    <input type="checkbox" checked={!!sel} onChange={() => toggleMeal(meal.id)} />
-                    <span className="flex-1 min-w-0 text-sm truncate">{meal.name}</span>
-                    <span className="text-xs text-text-light">{mealDisplayPrice(meal)}</span>
-                    {sel && (
-                      <input
-                        type="number"
-                        min={1}
-                        value={sel.quantity}
-                        onChange={(e) => setQuantity(meal.id, Number(e.target.value))}
-                        className="w-14 h-8 text-sm text-center rounded border border-border"
-                      />
-                    )}
-                  </div>
-                )
-              })}
+          {/* Plats inclus */}
+          <div className="flex flex-col gap-3 p-4 rounded-xl bg-surface-grey border border-border">
+            <div>
+              <p className="text-sm font-semibold text-text-primary">Plats inclus dans l'abonnement</p>
+              <p className="text-xs text-text-secondary mt-1">
+                Par défaut, l'abonnement publié reprend exactement les plats demandés par le client.
+                Activez l'option ci-dessous pour modifier cette liste avant publication.
+              </p>
             </div>
-          )}
+
+            <button
+              type="button"
+              onClick={() => setAdjustMeals(!adjustMeals)}
+              className={`flex items-center gap-4 p-3 rounded-xl border-2 text-left transition-all ${
+                adjustMeals ? 'border-primary bg-primary-surface' : 'border-border bg-white hover:bg-surface-grey'
+              }`}
+            >
+              <div className={`w-5 h-5 rounded border-2 flex-shrink-0 flex items-center justify-center transition-colors ${adjustMeals ? 'border-primary bg-primary' : 'border-border bg-white'}`}>
+                {adjustMeals && <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>}
+              </div>
+              <div>
+                <p className={`text-sm font-semibold ${adjustMeals ? 'text-primary' : 'text-text-primary'}`}>
+                  Modifier la liste des plats
+                </p>
+                <p className="text-xs text-text-secondary mt-0.5">
+                  Choisissez quels plats de votre catalogue inclure, et en quelle quantité
+                </p>
+              </div>
+            </button>
+
+            {adjustMeals && (
+              <div className="flex flex-col gap-2 max-h-80 overflow-y-auto">
+                {myMeals.map((meal) => {
+                  const sel = selectedMeals.find((m) => m.mealId === meal.id)
+                  return (
+                    <button
+                      key={meal.id}
+                      type="button"
+                      onClick={() => toggleMeal(meal.id)}
+                      className={`flex items-center gap-3 p-3 rounded-xl border-2 text-left transition-all ${
+                        sel ? 'border-primary bg-primary-surface' : 'border-border bg-white hover:bg-surface-grey'
+                      }`}
+                    >
+                      <div className="relative w-11 h-11 rounded-lg bg-surface-grey flex-shrink-0 overflow-hidden">
+                        {meal.imageUrl ? (
+                          <Image src={meal.imageUrl} alt={meal.name} fill sizes="44px" className="object-cover" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-text-light">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className={`text-sm font-semibold truncate ${sel ? 'text-primary' : 'text-text-primary'}`}>{meal.name}</p>
+                        <p className="text-xs text-text-secondary mt-0.5">{mealDisplayPrice(meal)}</p>
+                      </div>
+                      <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-colors ${sel ? 'border-primary bg-primary' : 'border-border'}`}>
+                        {sel && <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>}
+                      </div>
+                      {sel && (
+                        <input
+                          type="number"
+                          min={1}
+                          value={sel.quantity}
+                          onClick={(e) => e.stopPropagation()}
+                          onChange={(e) => { e.stopPropagation(); setQuantity(meal.id, Number(e.target.value)) }}
+                          className="w-14 h-8 text-sm text-center rounded-lg border border-border bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 ml-1"
+                        />
+                      )}
+                    </button>
+                  )
+                })}
+              </div>
+            )}
+          </div>
 
           <div className="flex gap-3 mt-2">
             <Button variant="primary" className="flex-1" loading={submitting} onClick={handleApprove}>Publier l'abonnement</Button>
