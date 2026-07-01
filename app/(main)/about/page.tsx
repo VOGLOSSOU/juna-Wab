@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: 'Juna Eats connecte les Africains de l\'Ouest à des traiteurs locaux via des abonnements repas. Fini le stress du "qu\'est-ce que je mange ?". Mangez bien, sans se donner de la peine.',
   keywords: 'à propos Juna Eats, mission Juna Eats, abonnement repas, traiteur local, Junaeats, Bénin, Côte d\'Ivoire, food delivery, budget repas, gain de temps',
   openGraph: {
-    title: 'À propos de Juna Eats — Mangez bien, sans se donner de la peine',
+    title: 'À propos de Juna Eats - Mangez bien, sans se donner de la peine',
     description: 'Juna Eats connecte les Africains de l\'Ouest à des traiteurs locaux via des abonnements repas.',
     url: 'https://junaeats.com/about',
     siteName: 'Juna Eats',

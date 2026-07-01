@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: "Demandez la suppression définitive de votre compte Juna Eats et de toutes vos données personnelles. Procédure simple par email.",
   keywords: 'suppression compte Juna Eats, supprimer données personnelles, droit à l\'oubli, Juna Eats RGPD, désinscrire Juna Eats',
   openGraph: {
-    title: 'Juna Eats — Suppression de compte et de données',
+    title: 'Juna Eats - Suppression de compte et de données',
     description: 'Demandez la suppression définitive de votre compte Juna Eats et de vos données personnelles.',
     url: 'https://junaeats.com/suppression-compte',
     siteName: 'Juna Eats',

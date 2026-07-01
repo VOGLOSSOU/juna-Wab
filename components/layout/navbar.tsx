@@ -31,7 +31,9 @@ export function Navbar() {
         ...(!isProvider ? [
           { href: '/profile/subscriptions', label: 'Mes abonnements' },
           { href: '/profile/proposals', label: 'Mes propositions' },
-        ] : []),
+        ] : [
+          { href: '/dashboard/proposals', label: 'Propositions reçues' },
+        ]),
         { href: '/about', label: 'À propos' },
       ]
     : [
