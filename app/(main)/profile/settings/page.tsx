@@ -42,7 +42,7 @@ export default function SettingsPage() {
             <Link href="/dashboard"
               className="bg-white rounded-xl border border-border shadow-sm p-5 flex items-center gap-4 hover:shadow-md hover:border-primary/20 transition-all">
               <div className="w-12 h-12 rounded-xl bg-primary-surface flex items-center justify-center flex-shrink-0">
-                <Image src="/juna-logo.png" alt="JUNA EATS" width={36} height={36} className="object-contain" />
+                <Image src="/juna-logo.png" alt="Juna Eats" width={36} height={36} className="object-contain" />
               </div>
               <div className="flex-1">
                 <p className="font-semibold text-text-primary">Accéder au dashboard</p>
@@ -62,7 +62,7 @@ export default function SettingsPage() {
                 <div className="relative flex items-start justify-between gap-4">
                   <div className="flex flex-col gap-3">
                     <div className="bg-white rounded-xl p-1.5 w-fit">
-                      <Image src="/juna-logo.png" alt="JUNA EATS" width={40} height={40} className="object-contain" />
+                      <Image src="/juna-logo.png" alt="Juna Eats" width={40} height={40} className="object-contain" />
                     </div>
                     <div>
                       <h3 className="text-white font-bold text-xl leading-tight">Devenez prestataire</h3>

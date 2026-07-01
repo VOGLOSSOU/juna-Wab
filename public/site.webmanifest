@@ -1,6 +1,6 @@
 {
-  "name": "JUNA EATS — Vos repas, livrés par abonnement",
-  "short_name": "JUNA EATS",
+  "name": "Juna Eats — Vos repas, livrés par abonnement",
+  "short_name": "Juna Eats",
   "description": "Abonnements repas livrés par les meilleurs traiteurs d'Afrique de l'Ouest.",
   "start_url": "/",
   "display": "standalone",

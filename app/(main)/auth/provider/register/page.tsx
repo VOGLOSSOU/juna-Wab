@@ -269,7 +269,7 @@ export default function ProviderRegisterPage() {
         <div>
           <h2 className="text-2xl font-bold text-text-primary">Demande envoyée !</h2>
           <p className="text-text-secondary mt-2 leading-relaxed">
-            Votre dossier prestataire est en cours d&apos;examen. L&apos;équipe JUNA EATS vous contactera après validation.
+            Votre dossier prestataire est en cours d&apos;examen. L&apos;équipe Juna Eats vous contactera après validation.
           </p>
         </div>
 
@@ -331,7 +331,7 @@ export default function ProviderRegisterPage() {
     <div className="max-w-2xl mx-auto px-4 py-10">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-text-primary">Devenir prestataire</h1>
-        <p className="text-text-secondary text-sm mt-1">Proposez vos repas par abonnement sur JUNA EATS.</p>
+        <p className="text-text-secondary text-sm mt-1">Proposez vos repas par abonnement sur Juna Eats.</p>
       </div>
 
       <StepIndicator current={step} total={4} />
@@ -487,7 +487,7 @@ export default function ProviderRegisterPage() {
 
               {/* Landmarks */}
               {selectedCity && (
-                <Field label="Points de retrait / zones de présence" hint="Ces points permettent à JUNA EATS d'afficher votre établissement dans les recherches de votre ville.">
+                <Field label="Points de retrait / zones de présence" hint="Ces points permettent à Juna Eats d'afficher votre établissement dans les recherches de votre ville.">
                   {loadingLandmarks ? (
                     <div className="flex gap-2">
                       {[...Array(3)].map((_, i) => <div key={i} className="h-10 w-28 bg-surface-grey rounded-xl animate-pulse" />)}
@@ -691,7 +691,7 @@ export default function ProviderRegisterPage() {
               <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
             </svg>
             <p className="text-sm text-amber-800">
-              Votre compte passera en <strong>attente de validation</strong>. Une fois approuvé par l&apos;équipe JUNA EATS, reconnectez-vous pour accéder à votre dashboard.
+              Votre compte passera en <strong>attente de validation</strong>. Une fois approuvé par l&apos;équipe Juna Eats, reconnectez-vous pour accéder à votre dashboard.
             </p>
           </div>
 

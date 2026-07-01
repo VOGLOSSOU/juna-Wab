@@ -36,7 +36,7 @@ export function SubscriberCard({ sub, daysLeft }: Props) {
 
         {/* ── Header ── */}
         <div className="flex items-center justify-between">
-          <Image src="/juna-logo.png" alt="JUNA EATS" width={32} height={32} className="object-contain" priority />
+          <Image src="/juna-logo.png" alt="Juna Eats" width={32} height={32} className="object-contain" priority />
           <div className="flex items-center gap-1.5">
             <span className={`w-2 h-2 rounded-full flex-shrink-0 ${expiring ? 'bg-orange-400' : 'bg-green-500'}`} />
             <span className={`text-xs font-bold uppercase tracking-widest ${expiring ? 'text-orange-500' : 'text-primary'}`}>
@@ -112,7 +112,7 @@ export function SubscriberCard({ sub, daysLeft }: Props) {
             </div>
 
             <div className="text-right">
-              <p className="text-xs font-bold text-primary">✓ JUNA EATS</p>
+              <p className="text-xs font-bold text-primary">✓ Juna Eats</p>
             </div>
 
           </div>

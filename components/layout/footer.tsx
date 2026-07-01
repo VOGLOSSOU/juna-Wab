@@ -7,7 +7,7 @@ export function Footer() {
       <div className="max-w-content mx-auto px-6 py-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="flex flex-col gap-4">
-            <Image src="/juna-logo.png" alt="JUNA EATS" width={48} height={48} className="object-contain" />
+            <Image src="/juna-logo.png" alt="Juna Eats" width={48} height={48} className="object-contain" />
             <p className="text-sm text-text-secondary">
               Découvrir et souscrire à des repas préparés par des prestataires près de chez vous
             </p>
@@ -46,7 +46,7 @@ export function Footer() {
         </div>
 
         <div className="border-t border-divider mt-8 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-text-light">© {new Date().getFullYear()} JUNA EATS. Tous droits réservés.</p>
+          <p className="text-xs text-text-light">© {new Date().getFullYear()} Juna Eats. Tous droits réservés.</p>
         </div>
       </div>
     </footer>

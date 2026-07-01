@@ -58,9 +58,9 @@ function LoginForm() {
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md bg-white rounded-xl shadow-md p-8 flex flex-col gap-6">
         <div className="flex flex-col items-center gap-3">
-          <Image src="/juna-logo.png" alt="JUNA EATS" width={64} height={64} className="object-contain" />
+          <Image src="/juna-logo.png" alt="Juna Eats" width={64} height={64} className="object-contain" />
           <h1 className="text-headline-large font-semibold text-text-primary">Se connecter</h1>
-          <p className="text-text-secondary text-sm">Bon retour sur JUNA EATS !</p>
+          <p className="text-text-secondary text-sm">Bon retour sur Juna Eats !</p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">

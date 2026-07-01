@@ -142,7 +142,7 @@ export default function TelechargerPage() {
 
         {/* Footer */}
         <p className="text-white/20 text-[11px] tracking-wide">
-          © 2026 JUNA EATS · junaeats.com
+          © 2026 Juna Eats · junaeats.com
         </p>
 
       </div>

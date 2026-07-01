@@ -81,7 +81,7 @@ export default function AboutPage() {
           />
         </div>
         <div className="relative z-10 flex flex-col items-center text-center gap-6 px-6 py-24 max-w-3xl mx-auto">
-          <p className="text-[11px] font-bold uppercase tracking-widest text-accent">À propos de JUNA EATS</p>
+          <p className="text-[11px] font-bold uppercase tracking-widest text-accent">À propos de Juna Eats</p>
           <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight tracking-tight">
             On a résolu<br />un problème quotidien.
           </h1>
@@ -147,12 +147,12 @@ export default function AboutPage() {
             <div className="flex flex-col gap-6">
               <SectionLabel>Notre réponse</SectionLabel>
               <h2 className="text-3xl md:text-4xl font-bold text-text-primary leading-tight">
-                JUNA EATS, c&apos;est votre<br />cuisine du quartier.<br />
+                Juna Eats, c&apos;est votre<br />cuisine du quartier.<br />
                 <span className="text-primary">Sans la cuisine.</span>
               </h2>
               <div className="flex flex-col gap-4 text-text-secondary text-base leading-relaxed">
                 <p>
-                  JUNA EATS connecte des particuliers à des cuisiniers, traiteurs et restaurateurs
+                  Juna Eats connecte des particuliers à des cuisiniers, traiteurs et restaurateurs
                   locaux via un système d&apos;abonnement repas. Vous choisissez un prestataire
                   près de chez vous, vous choisissez une formule —
                   petit-déjeuner, déjeuner, dîner, ou tout ça — et c&apos;est réglé.
@@ -170,7 +170,7 @@ export default function AboutPage() {
             <div className="relative h-80 lg:h-[420px] rounded-2xl overflow-hidden bg-[#0d2e18]">
               <Image
                 src="/plat-1.png"
-                alt="Un repas préparé par un prestataire JUNA EATS"
+                alt="Un repas préparé par un prestataire Juna Eats"
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover opacity-80"
@@ -222,7 +222,7 @@ export default function AboutPage() {
           <div className="text-center mb-12">
             <SectionLabel center>La valeur</SectionLabel>
             <h2 className="text-3xl font-bold text-text-primary">
-              Ce que vous gagnez vraiment avec JUNA EATS.
+              Ce que vous gagnez vraiment avec Juna Eats.
             </h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -271,7 +271,7 @@ export default function AboutPage() {
             <p className="text-text-secondary text-base leading-relaxed max-w-2xl">
               Trouver un bon repas chaque jour, c&apos;est une vraie friction : décider quoi manger,
               trouver où l&apos;acheter, se déplacer, gérer le budget, recommencer le lendemain.
-              Cette charge mentale quotidienne, silencieuse mais réelle, épuise — et JUNA EATS existe pour la supprimer.
+              Cette charge mentale quotidienne, silencieuse mais réelle, épuise — et Juna Eats existe pour la supprimer.
             </p>
             <p className="text-text-secondary text-base leading-relaxed max-w-2xl">
               Notre mission : rendre les bons repas accessibles à tous, sans friction, sans galère, sans se donner de la peine.
@@ -281,7 +281,7 @@ export default function AboutPage() {
               En même temps, nous croyons que les talents culinaires locaux méritent
               une vraie plateforme. Des femmes et des hommes qui savent cuisiner,
               qui ont du savoir-faire, et qui n&apos;avaient pas les outils pour en vivre dignement.
-              JUNA EATS leur donne cette plateforme.
+              Juna Eats leur donne cette plateforme.
             </p>
             <div className="grid grid-cols-3 gap-4 pt-4 w-full">
               {[
@@ -306,7 +306,7 @@ export default function AboutPage() {
         </div>
         <div className="relative z-10 max-w-content mx-auto px-6 flex flex-col items-center text-center gap-8">
           <div className="flex flex-col items-center gap-4">
-            <p className="text-[11px] font-bold uppercase tracking-widest text-accent">Rejoindre JUNA EATS</p>
+            <p className="text-[11px] font-bold uppercase tracking-widest text-accent">Rejoindre Juna Eats</p>
             <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight">
               Prêt à manger mieux,<br />sans se donner de la peine ?
             </h2>
