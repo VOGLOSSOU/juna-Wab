@@ -535,6 +535,13 @@ export default function ProfilePage() {
             onClick={() => router.push('/profile/subscriptions')}
             icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>}
           />
+          {storeUser?.role !== 'PROVIDER' && (
+            <NavItem
+              label="Mes propositions"
+              onClick={() => router.push('/profile/proposals')}
+              icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>}
+            />
+          )}
           {storeUser?.role === 'PROVIDER' && (
             <button
               onClick={() => router.push('/dashboard')}
