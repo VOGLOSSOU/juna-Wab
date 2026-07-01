@@ -158,6 +158,11 @@ export default function AboutPage() {
                   petit-déjeuner, déjeuner, dîner, ou tout ça — et c&apos;est réglé.
                 </p>
                 <p>
+                  Vous ne trouvez pas la formule idéale ? Proposez la vôtre directement
+                  au prestataire de votre choix. Vous décrivez vos préférences, choisissez
+                  vos plats et la durée — le prestataire valide, et c&apos;est parti.
+                </p>
+                <p>
                   Vous ne réfléchissez plus. Votre repas vous attend, préparé par
                   quelqu&apos;un qui sait cuisiner, chaque jour. Livré chez vous
                   ou disponible à récupérer sur place — vous choisissez.
@@ -203,8 +208,8 @@ export default function AboutPage() {
               />
               <Step
                 number="2"
-                title="Souscrivez à un abonnement"
-                text="Choisissez la formule qui vous correspond — petit-déjeuner, déjeuner, dîner ou journée complète. Pour 1 jour, une semaine, ou un mois entier. Vous payez une fois."
+                title="Souscrivez ou créez votre formule"
+                text="Choisissez une formule existante — petit-déjeuner, déjeuner, dîner ou journée complète. Ou proposez directement votre propre abonnement sur mesure à un prestataire : vous choisissez les plats, la durée, la fréquence. Il valide en quelques clics."
               />
               <Step
                 number="3"

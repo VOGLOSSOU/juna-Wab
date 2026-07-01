@@ -225,14 +225,14 @@ export default function HomeClient() {
             <div className="flex flex-col items-center text-center gap-4">
               <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center flex-shrink-0 shadow-md">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-                  <rect x="5" y="2" width="14" height="20" rx="2"/>
-                  <path d="M12 18h.01M9 7h6M9 11h4"/>
+                  <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
                 </svg>
               </div>
               <div>
                 <div className="text-xs font-bold text-primary uppercase tracking-widest mb-1">{"Étape 2"}</div>
-                <h3 className="font-semibold text-text-primary mb-2">{"Souscrivez à un abonnement"}</h3>
-                <p className="text-sm text-text-secondary leading-relaxed">{"Choisissez votre formule (petit-déjeuner, déjeuner, dîner) et payez en quelques secondes via Mobile Money."}</p>
+                <h3 className="font-semibold text-text-primary mb-2">{"Souscrivez ou créez votre formule"}</h3>
+                <p className="text-sm text-text-secondary leading-relaxed">{"Choisissez un abonnement existant, ou proposez votre propre formule sur mesure directement au prestataire. Vous décidez des plats, de la durée et du mode de livraison."}</p>
               </div>
             </div>
             <div className="flex flex-col items-center text-center gap-4">
@@ -244,8 +244,8 @@ export default function HomeClient() {
               </div>
               <div>
                 <div className="text-xs font-bold text-primary uppercase tracking-widest mb-1">{"Étape 3"}</div>
-                <h3 className="font-semibold text-text-primary mb-2">{"Recevez vos repas"}</h3>
-                <p className="text-sm text-text-secondary leading-relaxed">{"Livraison à domicile ou retrait sur place — votre prestataire prépare vos repas chaque jour."}</p>
+                <h3 className="font-semibold text-text-primary mb-2">{"Recevez vos repas, chaque jour"}</h3>
+                <p className="text-sm text-text-secondary leading-relaxed">{"Livraison à domicile ou retrait sur place — votre prestataire prépare vos repas quotidiennement. Payez via Mobile Money en quelques secondes."}</p>
               </div>
             </div>
           </div>
@@ -264,8 +264,8 @@ export default function HomeClient() {
                 </svg>
               </div>
               <div>
-                <h3 className="font-semibold text-text-primary mb-1">{"Prestataires locaux"}</h3>
-                <p className="text-sm text-text-secondary leading-relaxed">{"Des cuisiniers et traiteurs de votre quartier. Repas faits maison, vrais ingrédients, saveurs locales."}</p>
+                <h3 className="font-semibold text-text-primary mb-1">{"Prestataires locaux vérifiés"}</h3>
+                <p className="text-sm text-text-secondary leading-relaxed">{"Des cuisiniers et traiteurs certifiés de votre quartier. Repas faits maison, vrais ingrédients, saveurs locales."}</p>
               </div>
             </div>
             <div className="flex flex-col gap-4 p-6 rounded-2xl border border-border bg-white hover:shadow-md transition-shadow">
@@ -284,13 +284,13 @@ export default function HomeClient() {
             <div className="flex flex-col gap-4 p-6 rounded-2xl border border-border bg-white hover:shadow-md transition-shadow">
               <div className="w-12 h-12 rounded-xl bg-primary-surface flex items-center justify-center">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A5C2A" strokeWidth="1.8">
-                  <circle cx="12" cy="12" r="10"/>
-                  <polyline points="12 6 12 12 16 14"/>
+                  <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
                 </svg>
               </div>
               <div>
-                <h3 className="font-semibold text-text-primary mb-1">{"Abonnez-vous une fois"}</h3>
-                <p className="text-sm text-text-secondary leading-relaxed">{"Livraison à domicile ou retrait sur place, vous choisissez. Souscrivez une fois, mangez bien tous les jours."}</p>
+                <h3 className="font-semibold text-text-primary mb-1">{"Formules entièrement sur mesure"}</h3>
+                <p className="text-sm text-text-secondary leading-relaxed">{"Vous ne trouvez pas l'abonnement idéal ? Proposez votre propre formule au prestataire de votre choix : les plats, la fréquence, la durée — il approuve en quelques clics."}</p>
               </div>
             </div>
           </div>

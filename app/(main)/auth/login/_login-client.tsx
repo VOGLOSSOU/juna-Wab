@@ -48,7 +48,8 @@ function LoginForm() {
       }
       getUserProfile().then(updateUser).catch(() => {})
       toast.success('Connexion réussie !')
-      router.push(redirect)
+      const defaultRoute = result.user.role === 'PROVIDER' ? '/dashboard' : '/profile'
+      router.push(redirect === '/' ? defaultRoute : redirect)
     } catch (err: unknown) {
       showApiError(err)
     }

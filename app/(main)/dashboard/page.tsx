@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useAuthGuard } from '@/lib/hooks/use-auth-guard'
+import { useAuthStore } from '@/lib/store/auth'
 import { getProviderProfile } from '@/lib/api/auth'
 import { getProviderOrders } from '@/lib/api/orders'
 import { getProviderSubscriptions } from '@/lib/api/subscriptions'
@@ -14,6 +16,8 @@ import type { Provider, Order, Subscription, Meal, SubscriptionProposal } from '
 
 export default function DashboardPage() {
   const { isAuthenticated, hydrated } = useAuthGuard('/auth/login')
+  const { isProvider } = useAuthStore()
+  const router = useRouter()
   const [provider, setProvider] = useState<Provider | null>(null)
   const [orders, setOrders] = useState<Order[]>([])
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([])
@@ -23,20 +27,24 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (!hydrated || !isAuthenticated) return
+    if (!isProvider) {
+      router.replace('/profile')
+      return
+    }
     Promise.all([
-      getProviderProfile(),
-      getProviderOrders(),
-      getProviderSubscriptions(),
-      getMyMeals(),
+      getProviderProfile().catch(() => null),
+      getProviderOrders().catch(() => []),
+      getProviderSubscriptions().catch(() => []),
+      getMyMeals().catch(() => []),
       getReceivedProposals('PENDING').catch(() => []),
     ]).then(([prov, ords, subs, mls, props]) => {
       setProvider(prov)
-      setOrders(ords)
-      setSubscriptions(subs)
-      setMeals(mls)
-      setProposals(props)
-    }).catch(console.error).finally(() => setLoading(false))
-  }, [hydrated, isAuthenticated])
+      setOrders(ords as Order[])
+      setSubscriptions(subs as Subscription[])
+      setMeals(mls as Meal[])
+      setProposals(props as SubscriptionProposal[])
+    }).finally(() => setLoading(false))
+  }, [hydrated, isAuthenticated, isProvider, router])
 
   if (!hydrated || !isAuthenticated || loading) {
     return (

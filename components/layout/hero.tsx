@@ -90,8 +90,8 @@ export function Hero({ searchValue, onSearchChange }: HeroProps = {}) {
             Fini le <span className="text-accent">&ldquo;qu&apos;est-ce que<br className="hidden md:block" /> je mange aujourd&apos;hui ?&rdquo;</span>
           </h1>
           <p className="text-white/85 text-lg md:text-xl max-w-2xl leading-relaxed drop-shadow">
-            Abonnez-vous aux meilleurs cuisiniers et traiteurs autour de vous.
-            Livraison à domicile ou retrait sur place, vous choisissez.
+            Abonnez-vous aux meilleurs cuisiniers et traiteurs autour de vous,
+            ou proposez votre propre formule sur mesure. Livraison ou retrait, vous choisissez.
           </p>
         </div>
 

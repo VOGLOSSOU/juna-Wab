@@ -256,7 +256,7 @@ export default function RegisterClient() {
       } catch {
         toast.error('Votre ville n\'a pas pu être enregistrée. Vous pourrez la définir depuis votre profil.')
       }
-      router.push('/')
+      router.push('/profile')
     } catch (err: unknown) {
       if (getApiErrorCode(err) === 'TOKEN_EXPIRED') setStep('email')
       showApiError(err)
