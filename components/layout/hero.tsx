@@ -1,14 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useCityStore } from '@/lib/store/city'
 
-const SLIDES = [
-  { src: '/plat-2.png', alt: 'Repas africain 2' },
-  { src: '/plat-3.png', alt: 'Repas africain 3' },
-]
+const HERO_IMAGE = { src: '/plat-2.png', alt: 'Repas africain' }
 
 interface HeroProps {
   searchValue?: string
@@ -16,7 +13,6 @@ interface HeroProps {
 }
 
 export function Hero({ searchValue, onSearchChange }: HeroProps = {}) {
-  const [current, setCurrent] = useState(0)
   const [internalSearch, setInternalSearch] = useState('')
   const router = useRouter()
   const { selectedCity } = useCityStore()
@@ -24,13 +20,6 @@ export function Hero({ searchValue, onSearchChange }: HeroProps = {}) {
   const isControlled = onSearchChange !== undefined
   const search = isControlled ? (searchValue ?? '') : internalSearch
   const setSearch = isControlled ? onSearchChange : setInternalSearch
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % SLIDES.length)
-    }, 4000)
-    return () => clearInterval(interval)
-  }, [])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -49,23 +38,17 @@ export function Hero({ searchValue, onSearchChange }: HeroProps = {}) {
 
   return (
     <section id="hero-section" className="relative h-[600px] md:h-[680px] overflow-hidden">
-      {/* Slideshow background */}
-      {SLIDES.map((slide, i) => (
-        <div
-          key={slide.src}
-          className="absolute inset-0 transition-opacity duration-1000"
-          style={{ opacity: i === current ? 1 : 0 }}
-        >
-          <Image
-            src={slide.src}
-            alt={slide.alt}
-            fill
-            priority={i === 0}
-            className="object-cover object-center"
-            sizes="100vw"
-          />
-        </div>
-      ))}
+      {/* Background */}
+      <div className="absolute inset-0">
+        <Image
+          src={HERO_IMAGE.src}
+          alt={HERO_IMAGE.alt}
+          fill
+          priority
+          className="object-cover object-center"
+          sizes="100vw"
+        />
+      </div>
 
       {/* Overlay dégradé — sombre en bas, semi-transparent en haut */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/75" />
