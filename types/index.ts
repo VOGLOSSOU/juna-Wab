@@ -171,6 +171,7 @@ export interface Meal {
   isActive?: boolean
   providerId?: string
   provider?: { id: string; businessName: string; logo?: string | null; isVerified?: boolean }
+  subscriptions?: { id: string; name: string }[]
   createdAt?: string
 }
 

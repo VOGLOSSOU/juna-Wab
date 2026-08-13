@@ -141,7 +141,7 @@ export default function SubscriptionDetailClient() {
             {meals.map((meal) => (
               <Link
                 key={meal.id}
-                href={`/meals/${meal.id}?subscriptionId=${id}`}
+                href={`/meals/${meal.id}`}
                 className="flex-shrink-0 w-36 flex flex-col gap-2 hover:opacity-90 transition-opacity"
               >
                 <div className="relative h-24 rounded-xl overflow-hidden bg-surface-grey">

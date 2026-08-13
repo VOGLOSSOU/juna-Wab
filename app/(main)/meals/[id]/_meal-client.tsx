@@ -2,11 +2,11 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useParams, useRouter, useSearchParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { mealDisplayPrice, MEAL_TYPE_LABELS, formatPrice, getInitials } from '@/lib/utils'
-import type { Meal, Subscription } from '@/types'
+import type { Meal } from '@/types'
 
 const API_URL = 'https://juna-app.up.railway.app/api/v1'
 
@@ -32,17 +32,6 @@ async function fetchProviderMeals(providerId: string): Promise<Meal[]> {
   }
 }
 
-async function fetchSubscription(id: string): Promise<Subscription | null> {
-  try {
-    const res = await fetch(`${API_URL}/subscriptions/${id}`)
-    if (!res.ok) return null
-    const json = await res.json()
-    return json?.data ?? null
-  } catch {
-    return null
-  }
-}
-
 function MealSkeleton() {
   return (
     <div className="animate-pulse max-w-content mx-auto px-6 pt-8">
@@ -57,12 +46,9 @@ function MealSkeleton() {
 export default function MealDetailClient() {
   const { id } = useParams<{ id: string }>()
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const subscriptionId = searchParams.get('subscriptionId')
 
   const [meal, setMeal] = useState<Meal | null>(null)
   const [otherMeals, setOtherMeals] = useState<Meal[]>([])
-  const [subscription, setSubscription] = useState<Subscription | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -81,11 +67,6 @@ export default function MealDetailClient() {
       }
     })
   }, [id, router])
-
-  useEffect(() => {
-    if (!subscriptionId) return
-    fetchSubscription(subscriptionId).then(setSubscription)
-  }, [subscriptionId])
 
   if (loading) return <MealSkeleton />
   if (!meal) return null
@@ -148,21 +129,26 @@ export default function MealDetailClient() {
           )}
         </div>
 
-        {/* ── Abonnement lié ── */}
-        {subscription && (
-          <Link
-            href={`/subscriptions/${subscription.id}`}
-            className="flex items-center gap-3 bg-primary-surface border border-primary/15 rounded-2xl px-5 py-4 hover:border-primary/30 transition-colors"
-          >
-            <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center flex-shrink-0">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A5C2A" strokeWidth="2"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
-            </div>
-            <div className="flex flex-col min-w-0 flex-1">
-              <span className="text-xs text-text-secondary">Ce plat fait partie de l'abonnement</span>
-              <span className="text-sm font-semibold text-text-primary line-clamp-1">{subscription.name}</span>
-            </div>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className="flex-shrink-0 text-text-light"><polyline points="9 18 15 12 9 6"/></svg>
-          </Link>
+        {/* ── Abonnements liés ── */}
+        {meal.subscriptions && meal.subscriptions.length > 0 && (
+          <div className="flex flex-col gap-2">
+            {meal.subscriptions.map((sub) => (
+              <Link
+                key={sub.id}
+                href={`/subscriptions/${sub.id}`}
+                className="flex items-center gap-3 bg-primary-surface border border-primary/15 rounded-2xl px-5 py-4 hover:border-primary/30 transition-colors"
+              >
+                <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center flex-shrink-0">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A5C2A" strokeWidth="2"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+                </div>
+                <div className="flex flex-col min-w-0 flex-1">
+                  <span className="text-xs text-text-secondary">Ce plat fait partie de l'abonnement</span>
+                  <span className="text-sm font-semibold text-text-primary line-clamp-1">{sub.name}</span>
+                </div>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className="flex-shrink-0 text-text-light"><polyline points="9 18 15 12 9 6"/></svg>
+              </Link>
+            ))}
+          </div>
         )}
 
         {/* ── Prestataire ── */}
