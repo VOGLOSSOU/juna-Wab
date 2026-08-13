@@ -14,13 +14,12 @@ import { useAuthStore } from '@/lib/store/auth'
 import { formatPrice, SUBSCRIPTION_TYPE_LABELS, SUBSCRIPTION_DURATION_LABELS, SUBSCRIPTION_CATEGORY_LABELS, SUBSCRIPTION_TYPE_DESCRIPTIONS, SUBSCRIPTION_DURATION_DESCRIPTIONS, SUBSCRIPTION_CATEGORY_DESCRIPTIONS, getInitials } from '@/lib/utils'
 import type { Subscription } from '@/types'
 
-function InfoAccordion({ label, value, description, defaultOpen = false }: { label: string; value: string; description: string; defaultOpen?: boolean }) {
-  const [open, setOpen] = useState(defaultOpen)
+function InfoAccordion({ label, value, description, open, onToggle }: { label: string; value: string; description: string; open: boolean; onToggle: () => void }) {
   return (
     <div className="bg-surface-grey rounded-xl overflow-hidden">
       <button
         type="button"
-        onClick={() => setOpen((o) => !o)}
+        onClick={onToggle}
         className="w-full flex items-center justify-between gap-3 p-4 text-left"
       >
         <div className="flex flex-col gap-1">
@@ -50,6 +49,7 @@ export default function SubscriptionDetailClient() {
   const [subscription, setSubscription] = useState<Subscription | null>(null)
   const [loading, setLoading] = useState(true)
   const [currentImage, setCurrentImage] = useState(0)
+  const [openAccordion, setOpenAccordion] = useState<string | null>(null)
 
   useEffect(() => {
     getSubscription(id)
@@ -100,7 +100,7 @@ export default function SubscriptionDetailClient() {
           {provider && (
             <Link
               href={`/providers/${provider.id}`}
-              className="absolute bottom-3 left-3 flex items-center gap-2 bg-white/95 backdrop-blur-sm rounded-full pl-1.5 pr-3 py-1.5 shadow-md hover:bg-white transition-colors max-w-[80%]"
+              className="absolute bottom-3 right-3 flex items-center gap-2 bg-white/95 backdrop-blur-sm rounded-full pl-1.5 pr-3 py-1.5 shadow-md hover:bg-white transition-colors max-w-[80%]"
             >
               <div className="w-7 h-7 rounded-full bg-primary-surface flex items-center justify-center text-primary font-bold text-[10px] overflow-hidden flex-shrink-0">
                 {provider.logo ? (
@@ -156,9 +156,18 @@ export default function SubscriptionDetailClient() {
 
         {/* Détails repliables */}
         <div className="flex flex-col gap-2">
-          <InfoAccordion label="Type" value={SUBSCRIPTION_TYPE_LABELS[type]} description={SUBSCRIPTION_TYPE_DESCRIPTIONS[type]} />
-          <InfoAccordion label="Durée" value={SUBSCRIPTION_DURATION_LABELS[duration]} description={SUBSCRIPTION_DURATION_DESCRIPTIONS[duration]} />
-          <InfoAccordion label="Catégorie" value={SUBSCRIPTION_CATEGORY_LABELS[category]} description={SUBSCRIPTION_CATEGORY_DESCRIPTIONS[category]} />
+          <InfoAccordion
+            label="Type" value={SUBSCRIPTION_TYPE_LABELS[type]} description={SUBSCRIPTION_TYPE_DESCRIPTIONS[type]}
+            open={openAccordion === 'type'} onToggle={() => setOpenAccordion((o) => (o === 'type' ? null : 'type'))}
+          />
+          <InfoAccordion
+            label="Durée" value={SUBSCRIPTION_DURATION_LABELS[duration]} description={SUBSCRIPTION_DURATION_DESCRIPTIONS[duration]}
+            open={openAccordion === 'duration'} onToggle={() => setOpenAccordion((o) => (o === 'duration' ? null : 'duration'))}
+          />
+          <InfoAccordion
+            label="Catégorie" value={SUBSCRIPTION_CATEGORY_LABELS[category]} description={SUBSCRIPTION_CATEGORY_DESCRIPTIONS[category]}
+            open={openAccordion === 'category'} onToggle={() => setOpenAccordion((o) => (o === 'category' ? null : 'category'))}
+          />
         </div>
       </div>
 
