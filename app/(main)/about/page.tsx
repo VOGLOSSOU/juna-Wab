@@ -104,18 +104,28 @@ export default function AboutPage() {
       </section>
 
       {/* ── NOTRE HISTOIRE ── */}
-      <section className="bg-surface-grey py-24">
+      <section aria-labelledby="our-story-title" className="bg-[#F7F5EF] py-16 md:py-24 lg:py-32">
         <div className="max-w-content mx-auto px-6">
-          <div className="max-w-3xl mx-auto flex flex-col items-center text-center gap-6">
-            <SectionLabel center>Notre histoire</SectionLabel>
-            <h2 className="text-3xl md:text-4xl font-bold text-text-primary leading-tight">
-              L&apos;histoire derrière Juna Eats
-            </h2>
-            <p className="text-sm text-text-secondary">
-              Racontée par Nathan VOGLOSSOU, cofondateur de Juna Eats
-            </p>
-            <div className="flex flex-col gap-4 text-text-secondary text-base leading-relaxed text-left">
-              <p>
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.5fr)] lg:gap-20 items-start">
+            <div className="lg:sticky lg:top-28">
+              <SectionLabel>Notre histoire</SectionLabel>
+              <h2 id="our-story-title" className="max-w-md text-4xl md:text-5xl font-bold text-text-primary leading-[1.15] tracking-tight">
+                L&apos;histoire derrière{' '}
+                <span className="font-serif font-normal italic text-primary">Juna Eats.</span>
+              </h2>
+              <p className="mt-6 max-w-xs text-sm leading-7 text-text-secondary">
+                Un voyage à préparer. Une idée dans un cahier. Et une aventure à deux.
+              </p>
+              <p className="mt-8 text-xs font-medium uppercase tracking-[0.18em] text-primary">
+                Par Nathan VOGLOSSOU
+              </p>
+            </div>
+            <figure className="min-w-0">
+              <span aria-hidden="true" className="block h-20 select-none font-serif text-[140px] leading-none text-primary/25 md:h-24 md:text-[180px]">
+                &ldquo;
+              </span>
+              <blockquote className="flex flex-col gap-6 text-[#55584F] text-[15px] leading-7 md:text-base md:leading-8">
+              <p className="text-lg leading-8 text-text-primary md:text-xl md:leading-9">
                 Junior AZONNOUDO et moi nous sommes rencontrés à l&apos;université. Depuis,
                 nous avons toujours aimé travailler ensemble et porter des projets communs.
                 Notre projet de fin d&apos;études en informatique s&apos;appelait déjà{' '}
@@ -132,12 +142,12 @@ export default function AboutPage() {
                 C&apos;est au cours de cette discussion que l&apos;idée m&apos;est venue,
                 comme une évidence :
               </p>
-              <blockquote className="border-l-4 border-primary pl-5 py-2 text-lg font-medium text-text-primary leading-relaxed">
+              <p className="py-4 font-serif text-2xl italic text-primary leading-relaxed md:py-6 md:text-3xl md:leading-relaxed">
                 &ldquo;Junior, j&apos;ai une idée ! Et si on créait une application qui nous
                 permettrait, une fois sur place, de découvrir des abonnements repas et
                 d&apos;y souscrire depuis notre logement ? Ensuite, on choisirait d&apos;aller
                 chercher nos repas ou de se faire livrer !&rdquo;
-              </blockquote>
+              </p>
               <p>
                 J&apos;ai couru chercher un cahier pour noter l&apos;idée telle qu&apos;elle venait
                 de m&apos;apparaître. Puis j&apos;ai dit à Junior que, comme pour nos précédents
@@ -167,7 +177,20 @@ export default function AboutPage() {
                 jour, avec elles. Tout est parti d&apos;une conversation entre Junior et moi,
                 d&apos;un voyage que nous préparions et d&apos;une idée notée dans un cahier.
               </p>
-            </div>
+              </blockquote>
+              <span aria-hidden="true" className="mt-2 block h-16 select-none text-right font-serif text-[120px] leading-none text-primary/25">
+                &rdquo;
+              </span>
+              <figcaption className="mt-8 flex items-center gap-4">
+                <span aria-hidden="true" className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary font-serif text-lg text-white">
+                  NV
+                </span>
+                <div>
+                  <p className="font-semibold text-text-primary">Nathan VOGLOSSOU</p>
+                  <p className="mt-1 text-sm text-text-secondary">Cofondateur de Juna Eats, avec Junior AZONNOUDO</p>
+                </div>
+              </figcaption>
+            </figure>
           </div>
         </div>
       </section>
