@@ -2,6 +2,9 @@ import Link from 'next/link'
 import Image from 'next/image'
 import type { Metadata } from 'next'
 import { BreadcrumbJsonLd } from '@/components/seo/breadcrumb-jsonld'
+import nathanPortrait from '@/team/nathan.jpg'
+import juniorPortrait from '@/team/junior.jpg'
+import frepelPortrait from '@/team/frepel.jpg'
 
 export const metadata: Metadata = {
   title: 'À propos',
@@ -388,6 +391,106 @@ export default function AboutPage() {
                   <span className="text-xs text-text-secondary text-center font-medium">{label}</span>
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── L'ÉQUIPE ── */}
+      <section aria-labelledby="team-title" className="bg-[#F7F5EF] py-16 md:py-24 lg:py-32">
+        <div className="max-w-content mx-auto px-6">
+          <div className="grid gap-8 lg:grid-cols-2 lg:gap-20 items-start mb-12 md:mb-16">
+            <div>
+              <SectionLabel>L&apos;équipe actuelle</SectionLabel>
+              <h2 id="team-title" className="max-w-lg text-4xl md:text-5xl font-bold text-text-primary leading-[1.15] tracking-tight">
+                Les visages derrière{' '}
+                <span className="font-serif font-normal italic text-primary">Juna Eats.</span>
+              </h2>
+            </div>
+            <div className="flex flex-col gap-4 text-text-secondary text-base leading-8">
+              <p>
+                L&apos;idée était là, mais il fallait d&apos;abord terminer notre projet de fin
+                d&apos;études et passer la soutenance. Ensuite, Junior et moi pouvions enfin
+                nous attaquer à ce qu&apos;on appelait entre nous le &ldquo;vrai Juna&rdquo;.
+              </p>
+              <p>
+                Nous étions tous les deux développeurs. J&apos;avais aussi des compétences
+                en communication, en marketing et en vente, mais nous ne savions pas tout
+                faire. L&apos;équipe s&apos;est donc construite au fil des besoins et des rencontres.
+                Aujourd&apos;hui, nous sommes trois à faire avancer Juna Eats au quotidien,
+                avec Uriel qui reste dans l&apos;équipe pour des interventions ponctuelles.
+              </p>
+              <p className="text-xs font-medium uppercase tracking-[0.18em] text-primary">
+                L&apos;équipe racontée par Nathan
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-6 lg:gap-10">
+            {[
+              {
+                name: 'Nathan VOGLOSSOU',
+                role: 'Cofondateur & CEO',
+                specialty: 'Direction · Développement · Vente',
+                portrait: nathanPortrait,
+                text: 'Je porte la vision de Juna Eats et je développe le produit avec Junior. Je m’investis aussi dans la communication, le marketing et la vente. Aller à la rencontre des utilisateurs et comprendre ce dont ils ont besoin fait partie intégrante de mon travail.',
+              },
+              {
+                name: 'Junior AZONNOUDO',
+                role: 'Cofondateur & CTO',
+                specialty: 'Direction technique · Développement',
+                portrait: juniorPortrait,
+                text: 'Junior, c’est mon partenaire de projets depuis l’université. Il était là quand l’idée est née et nous avons choisi de la construire ensemble. Il pilote le développement technique de Juna Eats ; au quotidien, nous travaillons tous les deux sur le produit.',
+              },
+              {
+                name: 'Frepel ASSAN',
+                role: 'CMO · Responsable marketing',
+                specialty: 'Communication · Réseaux sociaux',
+                portrait: frepelPortrait,
+                text: 'En avançant, nous avons ressenti le besoin d’une expertise plus poussée en communication sur les réseaux sociaux. J’ai invité Frepel, étudiant en intelligence artificielle et en communication, à nous rejoindre. Il s’occupe de nos stratégies de communication et de marketing.',
+              },
+            ].map(({ name, role, specialty, portrait, text }) => (
+              <article key={name} className="min-w-0">
+                <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-[#E9E5DC]">
+                  <Image
+                    src={portrait}
+                    alt={`Portrait de ${name}`}
+                    fill
+                    placeholder="blur"
+                    sizes="(min-width: 1280px) 384px, (min-width: 768px) 33vw, 100vw"
+                    className="object-cover object-top"
+                  />
+                </div>
+                <div className="pt-6">
+                  <h3 className="text-xl lg:text-2xl font-semibold tracking-tight text-text-primary">{name}</h3>
+                  <p className="mt-2 text-sm font-semibold text-primary">{role}</p>
+                  <p className="mt-2 text-xs leading-5 text-text-secondary">{specialty}</p>
+                  <p className="mt-5 text-sm leading-7 text-text-secondary">{text}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          <div className="mt-16 md:mt-20 grid gap-6 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.5fr)] lg:gap-20">
+            <div>
+              <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-primary">Il fait aussi partie de l&apos;aventure</p>
+              <h3 className="font-serif text-3xl text-text-primary">Uriel LISSAN</h3>
+              <p className="mt-2 text-sm text-text-secondary">Design · Contributions ponctuelles</p>
+            </div>
+            <div className="flex flex-col gap-4 text-sm leading-7 text-text-secondary">
+              <p>
+                Pour les interfaces, le logo et l&apos;identité visuelle, j&apos;ai fait appel à
+                Uriel, dont j&apos;apprécie les compétences en design. Il a accepté de nous
+                rejoindre et a notamment réalisé le logo et deux pages d&apos;authentification.
+              </p>
+              <p>
+                Dans mon récit de l&apos;équipe, je le taquine en l&apos;appelant notre
+                &ldquo;fantôme&rdquo; : sa présence est discrète et ponctuelle. Nous avons
+                attendu des interfaces, puis Junior et moi avons repris la main pour continuer
+                à avancer. Uriel reste dans l&apos;équipe, et nous pouvons faire appel à lui
+                pour des tâches précises. C&apos;est aussi ça, notre équipe telle qu&apos;elle est
+                aujourd&apos;hui : des personnes avec des disponibilités et des implications différentes.
+              </p>
             </div>
           </div>
         </div>
