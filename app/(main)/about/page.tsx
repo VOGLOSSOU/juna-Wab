@@ -103,6 +103,39 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* ── NOTRE HISTOIRE ── */}
+      <section className="bg-surface-grey py-24">
+        <div className="max-w-content mx-auto px-6">
+          <div className="max-w-3xl mx-auto flex flex-col items-center text-center gap-6">
+            <SectionLabel center>Notre histoire</SectionLabel>
+            <h2 className="text-3xl md:text-4xl font-bold text-text-primary leading-tight">
+              L&apos;histoire derrière Juna Eats
+            </h2>
+            <div className="flex flex-col gap-4 text-text-secondary text-base leading-relaxed text-left">
+              <p>
+                Tout a commencé par un voyage à Lomé. Nathan VOGLOSSOU et Junior AZONNOUDO,
+                alors binômes de soutenance, voulaient voyager léger : pas de casseroles,
+                pas d&apos;ustensiles à transporter. Mais une fois sur place, une question
+                s&apos;est imposée : <strong className="text-text-primary">&ldquo;Où est-ce qu&apos;on va manger ?&rdquo;</strong>
+              </p>
+              <p>
+                De ce besoin est née une idée : pouvoir découvrir les cuisiniers et restaurants
+                à proximité, choisir une formule adaptée à son séjour et s&apos;abonner à leurs
+                repas. Et si aucune formule ne convenait, pouvoir composer la sienne.
+              </p>
+              <p>
+                Ce qui répondait d&apos;abord à un besoin de voyage portait une ambition plus
+                large : simplifier les repas du quotidien pour laisser davantage de place
+                au travail, aux études, aux voyages et à la vie.
+              </p>
+              <p>
+                C&apos;est ainsi qu&apos;est né <strong className="text-text-primary">Juna Eats</strong>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── LE PROBLÈME ── */}
       <section className="bg-white py-24">
         <div className="max-w-content mx-auto px-6">
