@@ -148,6 +148,15 @@ export default function AboutPage() {
                 d&apos;y souscrire depuis notre logement ? Ensuite, on choisirait d&apos;aller
                 chercher nos repas ou de se faire livrer !&rdquo;
               </p>
+              <details className="group">
+                <summary className="flex min-h-12 w-fit cursor-pointer list-none items-center gap-3 rounded-full bg-primary/5 px-5 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary [&::-webkit-details-marker]:hidden">
+                  <span className="group-open:hidden">Lire la suite de notre histoire</span>
+                  <span className="hidden group-open:inline">Réduire le récit</span>
+                  <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 transition-transform group-open:rotate-180 motion-reduce:transition-none">
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </summary>
+                <div className="mt-8 flex flex-col gap-6">
               <p>
                 J&apos;ai couru chercher un cahier pour noter l&apos;idée telle qu&apos;elle venait
                 de m&apos;apparaître. Puis j&apos;ai dit à Junior que, comme pour nos précédents
@@ -177,6 +186,8 @@ export default function AboutPage() {
                 jour, avec elles. Tout est parti d&apos;une conversation entre Junior et moi,
                 d&apos;un voyage que nous préparions et d&apos;une idée notée dans un cahier.
               </p>
+                </div>
+              </details>
               </blockquote>
               <span aria-hidden="true" className="mt-2 block h-16 select-none text-right font-serif text-[120px] leading-none text-primary/25">
                 &rdquo;
