@@ -114,7 +114,7 @@ export default function AboutPage() {
                 <span className="font-serif font-normal italic text-primary">Juna Eats.</span>
               </h2>
               <p className="mt-6 max-w-xs text-sm leading-7 text-text-secondary">
-                Un voyage à préparer. Une idée dans un cahier. Et une aventure à deux.
+                Un voyage à préparer. Une idée dans un cahier.
               </p>
               <p className="mt-8 text-xs font-medium uppercase tracking-[0.18em] text-primary">
                 Par Nathan VOGLOSSOU
@@ -181,51 +181,37 @@ export default function AboutPage() {
               <span aria-hidden="true" className="mt-2 block h-16 select-none text-right font-serif text-[120px] leading-none text-primary/25">
                 &rdquo;
               </span>
-              <figcaption className="mt-8 flex items-center gap-4">
-                <span aria-hidden="true" className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary font-serif text-lg text-white">
-                  NV
-                </span>
-                <div>
-                  <p className="font-semibold text-text-primary">Nathan VOGLOSSOU</p>
-                  <p className="mt-1 text-sm text-text-secondary">Cofondateur de Juna Eats, avec Junior AZONNOUDO</p>
-                </div>
-              </figcaption>
             </figure>
           </div>
         </div>
       </section>
 
-      {/* ── LE PROBLÈME ── */}
+      {/* ── UN BESOIN PARTAGÉ ── */}
       <section className="bg-white py-24">
         <div className="max-w-content mx-auto px-6">
           <div className="max-w-3xl mx-auto flex flex-col items-center text-center gap-6">
-            <SectionLabel center>Le problème</SectionLabel>
+            <SectionLabel center>Un besoin partagé</SectionLabel>
             <h2 className="text-3xl md:text-4xl font-bold text-text-primary leading-tight">
-              &ldquo;Qu&apos;est-ce que je mange ?&rdquo;<br />
-              <span className="text-text-secondary font-normal">C&apos;est une question de tous les jours.</span>
+              Notre question était aussi<br />
+              <span className="text-primary">celle de beaucoup d&apos;autres.</span>
             </h2>
             <div className="flex flex-col gap-4 text-text-secondary text-base leading-relaxed text-left">
               <p>
-                Vous vous levez le matin. Avant même de commencer votre journée,
-                votre cerveau commence à tourner : <strong className="text-text-primary">qu&apos;est-ce que je vais manger ce midi ?
-                Ce soir ? Demain ?</strong> Vous sortez acheter quelque chose de rapide,
-                pas forcément bon. Vous dépensez plus que prévu. Vous mangez mal.
-                Et vous recommencez le lendemain.
+                Au fil de nos échanges avec les utilisateurs, nous avons compris que ce besoin
+                dépassait largement notre projet de voyage. Beaucoup souhaitaient pouvoir{' '}
+                <strong className="text-text-primary">s&apos;abonner aux repas de leur vendeur préféré</strong>,
+                au lieu de commander au jour le jour.
               </p>
               <p>
-                Ce n&apos;est pas un manque de volonté. C&apos;est simplement que personne
-                n&apos;a pensé à rendre la chose facile. Les restaurants coûtent cher.
-                Cuisiner prend du temps. Les apps de livraison sont pratiques mais
-                onéreuses et aléatoires. Et à la fin de la semaine,
-                vous avez <strong className="text-text-primary">dépensé trop, mangé n&apos;importe comment,
-                et pensé à ça chaque jour.</strong>
+                Pour un étudiant entre les cours et les révisions, un stagiaire loin de chez lui
+                ou un professionnel pris par son travail, organiser ses repas demande du temps
+                et un budget à anticiper. Même lorsqu&apos;on sait où bien manger, il reste
+                à s&apos;organiser chaque jour.
               </p>
               <p>
-                En Afrique de l&apos;Ouest, ce problème est encore plus marqué.
-                Les cuisiniers et traiteurs locaux de qualité existent — ils sont nombreux,
-                talentueux, accessibles. Mais il n&apos;existait pas de moyen simple
-                de s&apos;y abonner, de leur faire confiance, de planifier ses repas
-                avec eux sur la durée.
+                Les cuisiniers sont là. Les habitudes et les préférences aussi. Ce qui manquait
+                aux personnes rencontrées, c&apos;était un moyen simple de prévoir leurs repas
+                auprès de ceux qu&apos;elles choisissent.
               </p>
             </div>
           </div>
