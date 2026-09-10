@@ -416,9 +416,41 @@ export default function AboutPage() {
               <p>
                 Nous étions tous les deux développeurs. J&apos;avais aussi des compétences
                 en communication, en marketing et en vente, mais nous ne savions pas tout
-                faire. L&apos;équipe s&apos;est donc construite au fil des besoins et des rencontres.
-                Aujourd&apos;hui, nous sommes trois à faire avancer Juna Eats au quotidien,
-                avec Uriel qui reste dans l&apos;équipe pour des interventions ponctuelles.
+                faire. Pour les interfaces de l&apos;application, le logo et la charte graphique,
+                il nous fallait un designer. J&apos;ai donc fait appel à Uriel LISSAN,
+                très bon dans ce domaine, qui a accepté de rejoindre l&apos;aventure.
+              </p>
+              <p>
+                Seulement voilà : Uriel, c&apos;est un peu notre fantôme dans l&apos;équipe
+                (rires). Il disparaît, puis réapparaît quand on arrive à le joindre.
+                Il peut passer des mois sans donner de nouvelles, manquer les réunions
+                et laisser les messages du groupe sans réponse. Pour l&apos;avoir au téléphone,
+                il faut parfois plusieurs tentatives. Son talent est bien là ; sa disponibilité,
+                elle, joue à cache-cache.
+              </p>
+              <p>
+                Et cela a eu un effet très concret : le développement a pris du retard,
+                parce que nous attendions les interfaces pour avancer. Uriel a réalisé
+                le logo et quelques pages basiques, dont nous nous sommes inspirés pour
+                la suite du développement. Puis Junior et moi avons repris les choses
+                en main et continué le travail. Il fait toujours partie de l&apos;équipe :
+                pour des tâches précises, nous pouvons faire appel à lui. Mais au quotidien,
+                il garde pour l&apos;instant sa casquette de fantôme.
+              </p>
+              <p>
+                En avançant, un autre besoin s&apos;est imposé : la communication sur les
+                réseaux sociaux. Malgré mes compétences, il nous fallait une expertise
+                supplémentaire sur ce sujet. J&apos;ai invité Frepel ASSAN, étudiant en
+                intelligence artificielle et en communication, à nous rejoindre. Il est
+                devenu notre CMO, notre responsable marketing, et s&apos;occupe des stratégies
+                de communication et de marketing.
+              </p>
+              <p>
+                Aujourd&apos;hui, nous sommes donc trois membres permanents : Junior,
+                cofondateur et CTO, qui pilote la technique ; Frepel, à la communication
+                et au marketing ; et moi, cofondateur et CEO, au développement avec Junior,
+                à la direction du projet et à la vente. Et Uriel reste des nôtres,
+                à son rythme. Voilà notre équipe, telle qu&apos;elle est réellement.
               </p>
               <p className="text-xs font-medium uppercase tracking-[0.18em] text-primary">
                 L&apos;équipe racontée par Nathan
@@ -433,23 +465,20 @@ export default function AboutPage() {
                 role: 'Cofondateur & CEO',
                 specialty: 'Direction · Développement · Vente',
                 portrait: nathanPortrait,
-                text: 'Je porte la vision de Juna Eats et je développe le produit avec Junior. Je m’investis aussi dans la communication, le marketing et la vente. Aller à la rencontre des utilisateurs et comprendre ce dont ils ont besoin fait partie intégrante de mon travail.',
               },
               {
                 name: 'Junior AZONNOUDO',
                 role: 'Cofondateur & CTO',
                 specialty: 'Direction technique · Développement',
                 portrait: juniorPortrait,
-                text: 'Junior, c’est mon partenaire de projets depuis l’université. Il était là quand l’idée est née et nous avons choisi de la construire ensemble. Il pilote le développement technique de Juna Eats ; au quotidien, nous travaillons tous les deux sur le produit.',
               },
               {
                 name: 'Frepel ASSAN',
                 role: 'CMO · Responsable marketing',
                 specialty: 'Communication · Réseaux sociaux',
                 portrait: frepelPortrait,
-                text: 'En avançant, nous avons ressenti le besoin d’une expertise plus poussée en communication sur les réseaux sociaux. J’ai invité Frepel, étudiant en intelligence artificielle et en communication, à nous rejoindre. Il s’occupe de nos stratégies de communication et de marketing.',
               },
-            ].map(({ name, role, specialty, portrait, text }) => (
+            ].map(({ name, role, specialty, portrait }) => (
               <article key={name} className="min-w-0">
                 <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-[#E9E5DC]">
                   <Image
@@ -465,34 +494,17 @@ export default function AboutPage() {
                   <h3 className="text-xl lg:text-2xl font-semibold tracking-tight text-text-primary">{name}</h3>
                   <p className="mt-2 text-sm font-semibold text-primary">{role}</p>
                   <p className="mt-2 text-xs leading-5 text-text-secondary">{specialty}</p>
-                  <p className="mt-5 text-sm leading-7 text-text-secondary">{text}</p>
                 </div>
               </article>
             ))}
           </div>
 
-          <div className="mt-16 md:mt-20 grid gap-6 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.5fr)] lg:gap-20">
-            <div>
-              <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-primary">Il fait aussi partie de l&apos;aventure</p>
-              <h3 className="font-serif text-3xl text-text-primary">Uriel LISSAN</h3>
-              <p className="mt-2 text-sm text-text-secondary">Design · Contributions ponctuelles</p>
-            </div>
-            <div className="flex flex-col gap-4 text-sm leading-7 text-text-secondary">
-              <p>
-                Pour les interfaces, le logo et l&apos;identité visuelle, j&apos;ai fait appel à
-                Uriel, dont j&apos;apprécie les compétences en design. Il a accepté de nous
-                rejoindre et a notamment réalisé le logo et deux pages d&apos;authentification.
-              </p>
-              <p>
-                Dans mon récit de l&apos;équipe, je le taquine en l&apos;appelant notre
-                &ldquo;fantôme&rdquo; : sa présence est discrète et ponctuelle. Nous avons
-                attendu des interfaces, puis Junior et moi avons repris la main pour continuer
-                à avancer. Uriel reste dans l&apos;équipe, et nous pouvons faire appel à lui
-                pour des tâches précises. C&apos;est aussi ça, notre équipe telle qu&apos;elle est
-                aujourd&apos;hui : des personnes avec des disponibilités et des implications différentes.
-              </p>
-            </div>
-          </div>
+          <p className="mt-10 max-w-2xl mx-auto text-center font-serif text-lg italic leading-8 text-text-secondary">
+            Et Uriel sur les photos ? Je lui ai demandé la sienne, notamment pour nos dossiers
+            de candidature… elle se fait toujours attendre. Il est bien dans l&apos;équipe,
+            simplement pas encore dans la galerie. Tant mieux pour sa réputation de fantôme :
+            aucune photo ne vient le trahir !
+          </p>
         </div>
       </section>
 
