@@ -111,25 +111,61 @@ export default function AboutPage() {
             <h2 className="text-3xl md:text-4xl font-bold text-text-primary leading-tight">
               L&apos;histoire derrière Juna Eats
             </h2>
+            <p className="text-sm text-text-secondary">
+              Racontée par Nathan VOGLOSSOU, cofondateur de Juna Eats
+            </p>
             <div className="flex flex-col gap-4 text-text-secondary text-base leading-relaxed text-left">
               <p>
-                Tout a commencé par un voyage à Lomé. Nathan VOGLOSSOU et Junior AZONNOUDO,
-                alors binômes de soutenance, voulaient voyager léger : pas de casseroles,
-                pas d&apos;ustensiles à transporter. Mais une fois sur place, une question
-                s&apos;est imposée : <strong className="text-text-primary">&ldquo;Où est-ce qu&apos;on va manger ?&rdquo;</strong>
+                Junior AZONNOUDO et moi nous sommes rencontrés à l&apos;université. Depuis,
+                nous avons toujours aimé travailler ensemble et porter des projets communs.
+                Notre projet de fin d&apos;études en informatique s&apos;appelait déjà{' '}
+                <strong className="text-text-primary">Juna, pour Junior et Nathan.</strong>
               </p>
               <p>
-                De ce besoin est née une idée : pouvoir découvrir les cuisiniers et restaurants
-                à proximité, choisir une formule adaptée à son séjour et s&apos;abonner à leurs
-                repas. Et si aucune formule ne convenait, pouvoir composer la sienne.
+                Un matin, pendant notre stage de fin de formation, je lui ai proposé de partir
+                à Lomé. L&apos;idée était de nous retirer dans une autre ville pour nous consacrer
+                pleinement à ce projet. En lui expliquant mon plan, j&apos;ai précisé une chose :
+                je ne voulais surtout pas emporter de casseroles ni d&apos;ustensiles de cuisine.
+                Je voulais qu&apos;on voyage léger, avec seulement nos ordinateurs de travail.
               </p>
               <p>
-                Ce qui répondait d&apos;abord à un besoin de voyage portait une ambition plus
-                large : simplifier les repas du quotidien pour laisser davantage de place
-                au travail, aux études, aux voyages et à la vie.
+                C&apos;est au cours de cette discussion que l&apos;idée m&apos;est venue,
+                comme une évidence :
+              </p>
+              <blockquote className="border-l-4 border-primary pl-5 py-2 text-lg font-medium text-text-primary leading-relaxed">
+                &ldquo;Junior, j&apos;ai une idée ! Et si on créait une application qui nous
+                permettrait, une fois sur place, de découvrir des abonnements repas et
+                d&apos;y souscrire depuis notre logement ? Ensuite, on choisirait d&apos;aller
+                chercher nos repas ou de se faire livrer !&rdquo;
+              </blockquote>
+              <p>
+                J&apos;ai couru chercher un cahier pour noter l&apos;idée telle qu&apos;elle venait
+                de m&apos;apparaître. Puis j&apos;ai dit à Junior que, comme pour nos précédents
+                projets, je voulais construire celui-ci avec lui. Et je voulais l&apos;appeler
+                Juna. Nous savions que notre projet de fin d&apos;études ne se poursuivrait pas
+                après la formation ; ce nom allait désormais porter une nouvelle aventure.
+                C&apos;est ainsi qu&apos;est né le concept de base de Juna Eats.
               </p>
               <p>
-                C&apos;est ainsi qu&apos;est né <strong className="text-text-primary">Juna Eats</strong>.
+                La possibilité de composer son propre abonnement est arrivée plus tard,
+                pendant le développement : si un utilisateur ne trouvait pas la formule
+                qui lui convenait, il pourrait en proposer une et la soumettre au prestataire.
+                Nous avons continué à construire le produit en échangeant directement avec
+                ses futurs utilisateurs et en intégrant leurs retours au fur et à mesure.
+              </p>
+              <p>
+                Pour me consacrer entièrement à Juna Eats, j&apos;ai choisi de reporter
+                d&apos;un an mes études de master. J&apos;ai aussi fait des voyages spécialement
+                pour rencontrer les utilisateurs sur le terrain, discuter avec eux et
+                comprendre leurs habitudes. Ces échanges nous ont appris que beaucoup
+                auraient aimé pouvoir s&apos;abonner aux repas de leur vendeur de nourriture
+                préféré.
+              </p>
+              <p>
+                Aujourd&apos;hui, Juna Eats est un produit que des personnes utilisent pour
+                répondre à un vrai besoin du quotidien. Il continue de grandir, jour après
+                jour, avec elles. Tout est parti d&apos;une conversation entre Junior et moi,
+                d&apos;un voyage que nous préparions et d&apos;une idée notée dans un cahier.
               </p>
             </div>
           </div>
