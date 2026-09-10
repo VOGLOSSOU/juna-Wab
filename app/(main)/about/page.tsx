@@ -399,13 +399,16 @@ export default function AboutPage() {
       {/* ── L'ÉQUIPE ── */}
       <section aria-labelledby="team-title" className="bg-[#F7F5EF] py-16 md:py-24 lg:py-32">
         <div className="max-w-content mx-auto px-6">
-          <div className="grid gap-8 lg:grid-cols-2 lg:gap-20 items-start mb-12 md:mb-16">
-            <div>
-              <SectionLabel>L&apos;équipe actuelle</SectionLabel>
-              <h2 id="team-title" className="max-w-lg text-4xl md:text-5xl font-bold text-text-primary leading-[1.15] tracking-tight">
+          <div className="max-w-3xl mx-auto flex flex-col gap-8 md:gap-10 mb-12 md:mb-16">
+            <div className="text-center">
+              <SectionLabel center>L&apos;équipe actuelle</SectionLabel>
+              <h2 id="team-title" className="text-4xl md:text-5xl font-bold text-text-primary leading-[1.15] tracking-tight">
                 Les visages derrière{' '}
                 <span className="font-serif font-normal italic text-primary">Juna Eats.</span>
               </h2>
+              <p className="mt-5 text-xs font-medium uppercase tracking-[0.18em] text-primary">
+                L&apos;équipe racontée par Nathan
+              </p>
             </div>
             <div className="flex flex-col gap-4 text-text-secondary text-base leading-8">
               <p>
@@ -420,6 +423,15 @@ export default function AboutPage() {
                 il nous fallait un designer. J&apos;ai donc fait appel à Uriel LISSAN,
                 très bon dans ce domaine, qui a accepté de rejoindre l&apos;aventure.
               </p>
+              <details className="group">
+                <summary className="flex min-h-12 w-fit cursor-pointer list-none items-center gap-3 rounded-full bg-primary/5 px-5 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary [&::-webkit-details-marker]:hidden">
+                  <span className="group-open:hidden">Lire la suite</span>
+                  <span className="hidden group-open:inline">Réduire le récit</span>
+                  <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 transition-transform group-open:rotate-180 motion-reduce:transition-none">
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </summary>
+                <div className="mt-6 flex flex-col gap-4">
               <p>
                 Seulement voilà : Uriel, c&apos;est un peu notre fantôme dans l&apos;équipe
                 (rires). Il disparaît, puis réapparaît quand on arrive à le joindre.
@@ -452,9 +464,8 @@ export default function AboutPage() {
                 à la direction du projet et à la vente. Et Uriel reste des nôtres,
                 à son rythme. Voilà notre équipe, telle qu&apos;elle est réellement.
               </p>
-              <p className="text-xs font-medium uppercase tracking-[0.18em] text-primary">
-                L&apos;équipe racontée par Nathan
-              </p>
+                </div>
+              </details>
             </div>
           </div>
 
@@ -505,6 +516,75 @@ export default function AboutPage() {
             simplement pas encore dans la galerie. Tant mieux pour sa réputation de fantôme :
             aucune photo ne vient le trahir !
           </p>
+        </div>
+      </section>
+
+      {/* ── CONTACT DIRECT ── */}
+      <section aria-labelledby="founder-contact-title" className="bg-white py-16 md:py-24">
+        <div className="max-w-content mx-auto px-6">
+          <div className="max-w-3xl mx-auto text-center">
+            <SectionLabel center>On en parle ?</SectionLabel>
+            <h2 id="founder-contact-title" className="text-3xl md:text-5xl font-bold text-text-primary leading-tight tracking-tight">
+              Parlons de{' '}
+              <span className="font-serif font-normal italic text-primary">Juna Eats.</span>
+            </h2>
+            <p className="mt-6 max-w-xl mx-auto text-base leading-8 text-text-secondary">
+              Une question, une idée, une envie de contribuer à l&apos;aventure ?
+              Vous pouvez m&apos;appeler ou m&apos;écrire directement. C&apos;est moi qui vous réponds.
+            </p>
+            <div className="mt-7 inline-flex items-center gap-3 text-left">
+              <Image src={nathanPortrait} alt="Nathan VOGLOSSOU" width={48} height={48} className="h-12 w-12 rounded-full object-cover object-top" />
+              <div>
+                <p className="text-sm font-semibold text-text-primary">Nathan VOGLOSSOU</p>
+                <p className="mt-1 text-xs text-text-secondary">Cofondateur & CEO de Juna Eats</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-10 md:mt-12 grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
+            {[
+              {
+                label: 'Appelez-moi',
+                value: '+229 01 52 20 26 28',
+                action: 'Passer un appel',
+                href: 'tel:+2290152202628',
+                external: false,
+                icon: <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.96.35 1.9.69 2.79a2 2 0 0 1-.45 2.11L8.08 9.89a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.89.34 1.83.57 2.79.69A2 2 0 0 1 22 16.92z" /></svg>,
+              },
+              {
+                label: 'Sur WhatsApp',
+                value: '+229 01 52 20 26 28',
+                action: 'Ouvrir la discussion',
+                href: 'https://wa.me/2290152202628',
+                external: true,
+                icon: <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.48A11.89 11.89 0 0 0 12.05 0C5.47 0 .11 5.35.1 11.94a11.9 11.9 0 0 0 1.6 5.97L0 24l6.24-1.64a11.96 11.96 0 0 0 5.8 1.48h.01c6.59 0 11.95-5.36 11.95-11.95a11.87 11.87 0 0 0-3.48-8.41zM12.05 21.82a9.9 9.9 0 0 1-5.05-1.38l-.36-.21-3.7.97.99-3.61-.24-.37a9.88 9.88 0 0 1-1.52-5.28c0-5.47 4.45-9.92 9.93-9.92a9.86 9.86 0 0 1 7.02 2.91 9.87 9.87 0 0 1 2.9 7.02c0 5.48-4.45 9.93-9.97 9.87zm5.44-7.44c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.18.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.49s1.07 2.89 1.22 3.09c.15.2 2.1 3.2 5.09 4.49.71.3 1.27.48 1.71.62.72.23 1.37.2 1.89.12.58-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.13-.27-.2-.57-.35z" /></svg>,
+              },
+              {
+                label: 'Par e-mail',
+                value: 'n969601@gmail.com',
+                action: 'Écrivez-moi',
+                href: 'mailto:n969601@gmail.com',
+                external: false,
+                icon: <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="14" rx="3" /><path d="m3 7 9 6 9-6" /></svg>,
+              },
+            ].map(({ label, value, action, href, external, icon }) => (
+              <a
+                key={href}
+                href={href}
+                target={external ? '_blank' : undefined}
+                rel={external ? 'noopener noreferrer' : undefined}
+                className="group min-w-0 rounded-2xl bg-primary-surface p-6 lg:p-8 transition-colors hover:bg-[#E2EEE5] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+              >
+                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-primary">{icon}</span>
+                <h3 className="mt-6 text-lg font-semibold text-text-primary">{label}</h3>
+                <p className="mt-2 break-words text-sm text-text-secondary">{value}</p>
+                <span className="mt-7 flex items-center justify-between gap-3 text-sm font-semibold text-primary">
+                  {action}
+                  <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 transition-transform group-hover:translate-x-1 motion-reduce:transition-none"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
+                </span>
+              </a>
+            ))}
+          </div>
         </div>
       </section>
 
