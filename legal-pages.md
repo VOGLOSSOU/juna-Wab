@@ -93,6 +93,7 @@ Date de lancement                 :
 #### 2.3 Comptes prestataires
 - Processus de validation par JUNA avant activation
 - Obligations du prestataire (qualité, respect des commandes, disponibilité)
+- Commission Juna Eats fixe de 10 %, renvoi vers les CGV pour le reversement
 - JUNA se réserve le droit de suspendre un prestataire en cas de manquement
 
 #### 2.4 Responsabilités
@@ -145,12 +146,18 @@ Date de lancement                 :
 - Paiement sécurisé via PawaPay (MTN MoMo, Moov Money, Orange Money, Wave)
 - Paiement en espèces possible selon le prestataire
 - Frais de livraison : négociés directement avec le prestataire (non inclus dans le prix affiché)
+- Le prix affiché inclut la commission Juna Eats de 10 %
 - La commande n'est confirmée qu'après validation du paiement
 
 #### 3.4 Activation de la commande
 - Après confirmation du paiement, l'utilisateur doit activer sa commande
 - L'activation signifie que l'utilisateur confirme avoir reçu ou être prêt à démarrer le service
-- Le paiement est versé au prestataire après activation
+- L'activation est la condition préalable au reversement au prestataire
+
+#### 3.4 bis Commission et rémunération du prestataire
+- Commission fixe de 10 % du prix payé par le client, identique pour tous les prestataires
+- Le prestataire fixe ce qu'il veut recevoir ; prix client = prix prestataire / 0,9
+- Reversement au prestataire : manuel à ce jour (pas de disbursement automatique PawaPay). Mettre à jour les CGV quand le reversement automatique sera en place
 
 #### 3.5 Annulation et remboursement
 - Annulation possible avant activation de la commande

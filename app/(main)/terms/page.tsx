@@ -26,7 +26,7 @@ export default function TermsPage() {
 
       <div className="flex flex-col gap-3">
         <h1 className="text-3xl font-bold text-text-primary">{"Conditions Générales d'Utilisation"}</h1>
-        <p className="text-sm text-text-secondary">Dernière mise à jour : avril 2025</p>
+        <p className="text-sm text-text-secondary">Dernière mise à jour : septembre 2026</p>
       </div>
 
       <Section title="1. Objet">
@@ -69,6 +69,7 @@ export default function TermsPage() {
         <ul>
           <li><strong>Validation préalable</strong> — tout compte prestataire est examiné par l'équipe Juna Eats avant activation. Juna Eats se réserve le droit de refuser ou de suspendre un compte sans avoir à s'en justifier.</li>
           <li><strong>Obligations du prestataire</strong> — le prestataire s'engage à honorer les commandes confirmées, à respecter la qualité et la description des repas publiés, et à maintenir ses informations (disponibilité, tarifs, zones de livraison) à jour.</li>
+          <li><strong>Commission</strong> — Juna Eats perçoit une commission fixe de <strong>10 %</strong> sur le prix payé par l'utilisateur pour chaque abonnement vendu, identique pour tous les prestataires. Le prestataire fixe le montant qu'il souhaite percevoir ; la commission s'ajoute à ce montant dans le prix affiché au client. Les modalités de reversement sont précisées dans les <Link href="/sales-terms" className="text-primary underline">Conditions Générales de Vente</Link>.</li>
           <li><strong>Suspension</strong> — en cas de manquement grave (non-respect des commandes, fausses informations, avis suspects), Juna Eats peut suspendre ou supprimer le compte prestataire sans préavis.</li>
           <li>Le prestataire reconnaît être <strong>seul responsable</strong> des repas qu'il prépare, de leur qualité et de leur livraison.</li>
         </ul>

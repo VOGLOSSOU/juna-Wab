@@ -12,6 +12,17 @@ export function formatPrice(amount: number, currency = 'XOF'): string {
   return `${amount.toLocaleString('fr-FR')} ${currency}`
 }
 
+// Commission Juna Eats fixée côté serveur, ajoutée par-dessus le prix du prestataire
+export const JUNA_COMMISSION_RATE = 0.10
+
+export function clientPriceFromProviderPrice(providerPrice: number): number {
+  return Math.round(providerPrice / (1 - JUNA_COMMISSION_RATE))
+}
+
+export function providerPriceFromClientPrice(clientPrice: number): number {
+  return Math.round(clientPrice * (1 - JUNA_COMMISSION_RATE))
+}
+
 export const MEAL_TYPE_LABELS: Record<MealType, string> = {
   BREAKFAST: 'Petit-déjeuner',
   LUNCH: 'Déjeuner',

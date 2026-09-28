@@ -8,6 +8,8 @@ import { getMyMeals } from '@/lib/api/meals'
 import { uploadImage } from '@/lib/api/upload'
 import toast from 'react-hot-toast'
 import { showApiError } from '@/lib/utils/api-error'
+import { clientPriceFromProviderPrice, providerPriceFromClientPrice } from '@/lib/utils'
+import { PriceBreakdown } from '@/components/ui/price-breakdown'
 import type { Meal, Subscription, SubscriptionType, SubscriptionDuration, SubscriptionCategory } from '@/types'
 
 const TYPE_LABELS: Record<SubscriptionType, string> = {
@@ -107,7 +109,7 @@ export default function EditSubscriptionPage() {
         setMeals(mls)
         setName(sub.name)
         setDescription(sub.description ?? '')
-        setPrice(String(sub.price))
+        setPrice(String(providerPriceFromClientPrice(Number(sub.price))))
         setType(sub.type)
         setDuration(sub.duration)
         setCategory(sub.category)
@@ -176,11 +178,13 @@ export default function EditSubscriptionPage() {
     e.preventDefault()
     if (!canSubmit()) return
     setSubmitting(true)
+    // Prix inchangé : on ne renvoie rien pour éviter un écart d'arrondi sur le prix client existant
+    const priceChanged = subscription && Number(price) !== providerPriceFromClientPrice(Number(subscription.price))
     try {
       await updateSubscription(id, {
         name: name.trim(),
         description: description.trim(),
-        price: Number(price),
+        ...(priceChanged ? { price: clientPriceFromProviderPrice(Number(price)) } : {}),
         type,
         category,
         duration,
@@ -250,12 +254,14 @@ export default function EditSubscriptionPage() {
             <p className="text-xs text-[var(--color-text-light)] text-right -mt-1">{description.length}/1000</p>
           </Field>
 
-          <Field label="Prix (XOF)" required hint="Minimum 100 XOF">
+          <Field label="Votre prix de référence (XOF)" required hint="Le montant que vous souhaitez recevoir. Minimum 100 XOF.">
             <div className="relative">
               <input type="number" value={price} onChange={(e) => setPrice(e.target.value)} className={`${inputClass} pr-14`} min={100} />
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-[var(--color-text-light)] font-medium">XOF</span>
             </div>
           </Field>
+
+          <PriceBreakdown providerPrice={Number(price)} />
         </div>
 
         {/* Caractéristiques */}

@@ -256,7 +256,6 @@ export interface ApproveProposalForm {
   description: string
   price: number
   imageUrl: string
-  junaCommissionPercent?: number
   preparationHours?: number
   isImmediate?: boolean
   type?: SubscriptionType

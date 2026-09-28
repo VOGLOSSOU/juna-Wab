@@ -25,7 +25,7 @@ export default function SalesTermsPage() {
 
       <div className="flex flex-col gap-3">
         <h1 className="text-3xl font-bold text-text-primary">Conditions Générales de Vente</h1>
-        <p className="text-sm text-text-secondary">Dernière mise à jour : avril 2025</p>
+        <p className="text-sm text-text-secondary">Dernière mise à jour : septembre 2026</p>
       </div>
 
       <Section title="1. Objet">
@@ -48,13 +48,14 @@ export default function SalesTermsPage() {
           <li><strong>Paiement</strong> — règlement en ligne via Mobile Money (ou en espèces selon le prestataire).</li>
           <li><strong>Confirmation de commande</strong> — la commande est confirmée après validation du paiement. Un récapitulatif est accessible depuis le profil de l'utilisateur.</li>
           <li><strong>Activation par l'utilisateur</strong> — l'utilisateur active sa commande une fois qu'il confirme avoir reçu son premier repas ou être prêt à démarrer l'abonnement.</li>
-          <li><strong>Démarrage de l'abonnement</strong> — l'abonnement est actif et le prestataire reçoit le paiement.</li>
+          <li><strong>Démarrage de l'abonnement</strong> — l'abonnement est actif et le prestataire assure la fourniture des repas.</li>
         </ol>
       </Section>
 
       <Section title="3. Prix et paiement">
         <ul>
           <li>Les prix sont affichés en <strong>Francs CFA (XOF)</strong>, toutes taxes comprises.</li>
+          <li>Le prix affiché inclut la <strong>commission de service Juna Eats de 10 %</strong> (voir article 5).</li>
           <li>
             Le paiement s'effectue de manière sécurisée via <strong>PawaPay</strong>, qui prend en charge
             les opérateurs Mobile Money suivants : MTN MoMo, Moov Money, Orange Money, Wave.
@@ -75,15 +76,36 @@ export default function SalesTermsPage() {
         </p>
         <p>
           L'activation signifie que l'utilisateur confirme avoir reçu son premier repas ou être prêt
-          à démarrer l'abonnement. C'est à ce moment que le paiement est versé au prestataire.
+          à démarrer l'abonnement. Elle constitue la condition préalable au reversement au prestataire
+          des sommes qui lui reviennent.
         </p>
         <p>
-          Tant que la commande n'est pas activée, le prestataire n'a pas encore perçu le paiement.
+          Tant que la commande n'est pas activée, aucun reversement n'est effectué au prestataire.
           Ce mécanisme protège l'utilisateur en lui laissant le contrôle du démarrage effectif de l'abonnement.
         </p>
       </Section>
 
-      <Section title="5. Annulation et remboursement">
+      <Section title="5. Commission et rémunération du prestataire">
+        <p>
+          Juna Eats perçoit une <strong>commission fixe de 10 %</strong> sur le prix payé par l'utilisateur
+          pour chaque abonnement vendu via la plateforme. Ce taux est identique pour tous les prestataires
+          et n'est pas négociable depuis l'application.
+        </p>
+        <p>
+          Le prestataire fixe le montant qu'il souhaite percevoir pour un abonnement. Le prix affiché à
+          l'utilisateur est calculé à partir de ce montant de sorte que la commission représente 10 % du
+          prix payé. Le prestataire a donc vocation à recevoir l'intégralité du montant qu'il a fixé,
+          soit 90 % du prix payé par l'utilisateur.
+        </p>
+        <p>
+          <strong>À ce jour, le reversement au prestataire n'est pas automatisé.</strong> Il est traité
+          manuellement par Juna Eats, après activation de la commande, selon les modalités communiquées
+          au prestataire. Un mécanisme de reversement automatique sera mis en place ultérieurement ; les
+          présentes CGV seront mises à jour à cette occasion.
+        </p>
+      </Section>
+
+      <Section title="6. Annulation et remboursement">
         <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 flex gap-3">
           <svg className="flex-shrink-0 mt-0.5 text-amber-500" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
@@ -104,7 +126,7 @@ export default function SalesTermsPage() {
         </p>
       </Section>
 
-      <Section title="6. Litiges">
+      <Section title="7. Litiges">
         <p>
           En cas de litige avec un prestataire (repas non conforme, non-livraison, qualité insuffisante),
           nous vous invitons à contacter Juna Eats en premier lieu à <strong>externalux6@gmail.com</strong>.
@@ -116,7 +138,7 @@ export default function SalesTermsPage() {
         </p>
       </Section>
 
-      <Section title="7. Force majeure">
+      <Section title="8. Force majeure">
         <p>
           Juna Eats ne peut être tenu responsable de tout retard ou inexécution résultant d'un événement
           imprévisible et indépendant de sa volonté, notamment :

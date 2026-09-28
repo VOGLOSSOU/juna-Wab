@@ -12,9 +12,10 @@ import { uploadImage } from '@/lib/api/upload'
 import { ProposalStatusBadge } from '@/components/ui/proposal-status-badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { PriceBreakdown } from '@/components/ui/price-breakdown'
 import { showApiError } from '@/lib/utils/api-error'
 import {
-  formatDate, formatPrice, getInitials, mealDisplayPrice,
+  formatDate, formatPrice, getInitials, mealDisplayPrice, clientPriceFromProviderPrice,
   SUBSCRIPTION_TYPE_LABELS, SUBSCRIPTION_DURATION_LABELS, SUBSCRIPTION_CATEGORY_LABELS,
 } from '@/lib/utils'
 import toast from 'react-hot-toast'
@@ -45,8 +46,6 @@ export default function DashboardProposalDetailPage() {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [price, setPrice] = useState('')
-  const [commissionPercent, setCommissionPercent] = useState('10')
-  const [commissionMode, setCommissionMode] = useState<'deduct' | 'add'>('deduct')
   const [imageUrl, setImageUrl] = useState('')
   const [uploading, setUploading] = useState(false)
   const [isImmediate, setIsImmediate] = useState(true)
@@ -98,30 +97,6 @@ export default function DashboardProposalDetailPage() {
     setSelectedMeals((prev) => prev.map((m) => (m.mealId === mealId ? { ...m, quantity: Math.max(1, quantity) } : m)))
   }
 
-  function computedPrice() {
-    const base = Number(price)
-    const commission = Number(commissionPercent)
-    if (!base || isNaN(base)) return 0
-    if (commissionMode === 'deduct') return base
-    return Math.round(base / (1 - commission / 100))
-  }
-
-  function providerReceives() {
-    const base = Number(price)
-    const commission = Number(commissionPercent)
-    if (!base || isNaN(base)) return 0
-    if (commissionMode === 'deduct') return Math.round(base * (1 - commission / 100))
-    return base
-  }
-
-  function providerModeLabel(mode: 'deduct' | 'add') {
-    const base = Number(price)
-    const commission = Number(commissionPercent)
-    if (!base || isNaN(base)) return '0'
-    if (mode === 'deduct') return Math.round(base * (1 - commission / 100)).toLocaleString('fr-FR')
-    return Math.round(base / (1 - commission / 100)).toLocaleString('fr-FR')
-  }
-
   async function handleApprove() {
     if (!name.trim() || !description.trim() || !price || !imageUrl) {
       toast.error('Nom, description, prix et image sont requis.')
@@ -136,9 +111,8 @@ export default function DashboardProposalDetailPage() {
       await approveProposal(id, {
         name: name.trim(),
         description: description.trim(),
-        price: computedPrice(),
+        price: clientPriceFromProviderPrice(Number(price)),
         imageUrl,
-        junaCommissionPercent: Number(commissionPercent),
         isImmediate,
         preparationHours: !isImmediate ? Number(preparationHours) : undefined,
         meals: adjustMeals ? selectedMeals : undefined,
@@ -281,81 +255,9 @@ export default function DashboardProposalDetailPage() {
               placeholder="Repas chaud chaque midi du lundi au vendredi"
             />
           </div>
-          <Input label="Prix final (FCFA)" required type="number" min={0} value={price} onChange={(e) => setPrice(e.target.value)} placeholder="27000" />
+          <Input label="Votre prix (XOF)" required type="number" min={100} value={price} onChange={(e) => setPrice(e.target.value)} placeholder="27000" />
 
-          {/* Commission */}
-          <div className="flex flex-col gap-3 p-4 rounded-xl bg-surface-grey border border-border">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <p className="text-sm font-semibold text-text-primary">Commission Juna Eats</p>
-                <p className="text-xs text-text-secondary mt-0.5">
-                  Juna Eats prélève un pourcentage sur chaque vente réalisée via la plateforme.
-                </p>
-              </div>
-              <div className="relative flex-shrink-0">
-                <input
-                  type="number"
-                  value={commissionPercent}
-                  onChange={(e) => setCommissionPercent(String(Math.min(100, Math.max(0, Number(e.target.value)))))}
-                  className="w-20 h-9 px-3 pr-7 rounded-lg border border-border bg-white text-sm text-center font-semibold focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
-                  min={0}
-                  max={100}
-                />
-                <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-text-light">%</span>
-              </div>
-            </div>
-
-            {Number(price) >= 100 && (
-              <>
-                <div className="h-px bg-border" />
-                <p className="text-xs font-medium text-text-secondary">Qui supporte la commission ?</p>
-                <div className="flex flex-col gap-2">
-                  {([
-                    {
-                      mode: 'deduct' as const,
-                      label: "Je l'accepte sur mon prix",
-                      detail: `Vous recevez ${providerModeLabel('deduct')} XOF · Le client paie ${Number(price).toLocaleString('fr-FR')} XOF`,
-                    },
-                    {
-                      mode: 'add' as const,
-                      label: "Je l'ajoute par-dessus",
-                      detail: `Vous recevez ${Number(price).toLocaleString('fr-FR')} XOF · Le client paie ${providerModeLabel('add')} XOF`,
-                    },
-                  ] as const).map(({ mode, label, detail }) => (
-                    <button
-                      key={mode}
-                      type="button"
-                      onClick={() => setCommissionMode(mode)}
-                      className={`flex items-start gap-3 p-3 rounded-xl border-2 text-left transition-all ${
-                        commissionMode === mode
-                          ? 'border-primary bg-primary-surface'
-                          : 'border-border bg-white hover:bg-surface-grey'
-                      }`}
-                    >
-                      <div className={`w-4 h-4 rounded-full border-2 flex-shrink-0 mt-0.5 flex items-center justify-center ${commissionMode === mode ? 'border-primary bg-primary' : 'border-border'}`}>
-                        {commissionMode === mode && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
-                      </div>
-                      <div>
-                        <p className={`text-sm font-semibold ${commissionMode === mode ? 'text-primary' : 'text-text-primary'}`}>{label}</p>
-                        <p className="text-xs text-text-secondary mt-0.5">{detail}</p>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-                <div className="flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl bg-white border border-border">
-                  <div className="text-center flex-1">
-                    <p className="text-xs text-text-light">Prix affiché aux clients</p>
-                    <p className="text-base font-bold text-text-primary mt-0.5">{computedPrice().toLocaleString('fr-FR')} XOF</p>
-                  </div>
-                  <div className="w-px h-8 bg-border" />
-                  <div className="text-center flex-1">
-                    <p className="text-xs text-text-light">Vous recevez</p>
-                    <p className="text-base font-bold text-primary mt-0.5">{providerReceives().toLocaleString('fr-FR')} XOF</p>
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
+          <PriceBreakdown providerPrice={Number(price)} />
 
           {/* Disponibilité */}
           <div className="flex flex-col gap-3">
