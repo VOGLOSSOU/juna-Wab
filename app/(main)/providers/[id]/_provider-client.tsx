@@ -7,6 +7,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { StarRating } from '@/components/ui/star-rating'
 import { formatPrice, getInitials, mealDisplayPrice } from '@/lib/utils'
+import { ProviderName } from '@/components/ui/provider-name'
 import type { PublicProviderProfile } from '@/types'
 
 const API_URL = 'https://juna-app.up.railway.app/api/v1'
@@ -170,15 +171,9 @@ export default function ProviderProfileClient() {
           </div>
 
           <div className="flex-1 min-w-0 pt-9">
-            <div className="flex items-center gap-1.5 min-w-0">
-              <h1 className="text-xl font-bold text-text-primary leading-tight truncate">{provider.businessName}</h1>
-              {provider.isVerified && (
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" className="flex-shrink-0">
-                  <circle cx="12" cy="12" r="10" fill="#3B82F6"/>
-                  <polyline points="8 12 11 15 16 9" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              )}
-            </div>
+            <h1 className="text-xl font-bold text-text-primary leading-tight break-words">
+              <ProviderName name={provider.businessName} isVerified={provider.isVerified} badgeSize={17} />
+            </h1>
 
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1.5 text-xs text-text-secondary">
               {rating > 0 && reviewCount > 0 && (

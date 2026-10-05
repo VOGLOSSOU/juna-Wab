@@ -6,6 +6,7 @@ import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { mealDisplayPrice, MEAL_TYPE_LABELS, formatPrice, getInitials } from '@/lib/utils'
+import { ProviderName } from '@/components/ui/provider-name'
 import type { Meal } from '@/types'
 
 const API_URL = 'https://juna-app.up.railway.app/api/v1'
@@ -166,14 +167,8 @@ export default function MealDetailClient() {
             </div>
             <div className="flex flex-col min-w-0 flex-1">
               <span className="text-xs text-text-light uppercase tracking-widest">Proposé par</span>
-              <span className="flex items-center gap-1 text-sm font-semibold text-text-primary">
-                <span className="truncate">{meal.provider.businessName}</span>
-                {meal.provider.isVerified && (
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="flex-shrink-0">
-                    <circle cx="12" cy="12" r="10" fill="#3B82F6"/>
-                    <polyline points="8 12 11 15 16 9" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                )}
+              <span className="text-sm font-semibold text-text-primary break-words">
+                <ProviderName name={meal.provider.businessName} isVerified={meal.provider.isVerified} />
               </span>
             </div>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className="flex-shrink-0 text-text-light"><polyline points="9 18 15 12 9 6"/></svg>

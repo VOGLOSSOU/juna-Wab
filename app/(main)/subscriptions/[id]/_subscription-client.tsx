@@ -12,6 +12,7 @@ import { SubscriptionCard } from '@/components/cards/subscription-card'
 import { SkeletonCard } from '@/components/ui/skeleton'
 import { useAuthStore } from '@/lib/store/auth'
 import { formatPrice, SUBSCRIPTION_TYPE_LABELS, SUBSCRIPTION_DURATION_LABELS, SUBSCRIPTION_CATEGORY_LABELS, SUBSCRIPTION_TYPE_DESCRIPTIONS, SUBSCRIPTION_DURATION_DESCRIPTIONS, SUBSCRIPTION_CATEGORY_DESCRIPTIONS, getInitials } from '@/lib/utils'
+import { ProviderName } from '@/components/ui/provider-name'
 import type { Subscription } from '@/types'
 
 function InfoAccordion({ label, value, description, open, onToggle }: { label: string; value: string; description: string; open: boolean; onToggle: () => void }) {
@@ -109,13 +110,9 @@ export default function SubscriptionDetailClient() {
                   getInitials(provider.name)
                 )}
               </div>
-              <span className="text-xs font-semibold text-text-primary truncate">{provider.name}</span>
-              {provider.isVerified && (
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" className="flex-shrink-0">
-                  <circle cx="12" cy="12" r="10" fill="#3B82F6"/>
-                  <polyline points="8 12 11 15 16 9" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              )}
+              <span className="min-w-0 flex-1 text-xs font-semibold text-text-primary leading-tight break-words">
+                <ProviderName name={provider.name} isVerified={provider.isVerified} badgeSize={13} />
+              </span>
             </Link>
           )}
         </div>

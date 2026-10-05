@@ -161,7 +161,7 @@ export default function OrdersPage() {
                 <p className="font-semibold text-sm text-text-primary truncate">
                   {order.subscription?.name ?? 'Abonnement'}
                 </p>
-                <p className="text-xs text-text-secondary truncate mt-0.5">
+                <p className="text-xs text-text-secondary break-words mt-0.5">
                   {order.subscription?.provider?.businessName ?? order.subscription?.provider?.name ?? '—'}
                 </p>
                 <p className="text-xs text-text-light mt-0.5">{formatDate(order.createdAt)}</p>

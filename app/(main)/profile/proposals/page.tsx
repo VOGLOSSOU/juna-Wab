@@ -54,7 +54,7 @@ export default function MyProposalsPage() {
           {proposals.map((proposal) => (
             <div key={proposal.id} className="bg-white rounded-xl border border-border p-5 flex flex-col gap-2">
               <div className="flex items-center justify-between gap-2">
-                <p className="font-semibold text-sm">{proposal.provider?.businessName ?? 'Prestataire'}</p>
+                <p className="min-w-0 flex-1 font-semibold text-sm break-words">{proposal.provider?.businessName ?? 'Prestataire'}</p>
                 <ProposalStatusBadge status={proposal.status} />
               </div>
               <p className="text-xs text-text-secondary">

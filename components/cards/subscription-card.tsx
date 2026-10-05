@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { Badge } from '@/components/ui/badge'
 import { StarRating } from '@/components/ui/star-rating'
 import { formatPrice, SUBSCRIPTION_TYPE_LABELS, SUBSCRIPTION_DURATION_LABELS } from '@/lib/utils'
+import { ProviderName } from '@/components/ui/provider-name'
 import type { Subscription } from '@/types'
 
 interface SubscriptionCardProps {
@@ -30,7 +31,7 @@ export function SubscriptionCard({ subscription, variant = 'compact' }: Subscrip
         </div>
         <div className="flex flex-col gap-1 flex-1 min-w-0">
           <h3 className="font-semibold text-text-primary text-sm line-clamp-1">{name}</h3>
-          {provider && <p className="text-xs text-text-secondary line-clamp-1">{provider.name}</p>}
+          {provider && <p className="text-xs text-text-secondary break-words"><ProviderName name={provider.name} isVerified={provider.isVerified} badgeSize={13} /></p>}
           <div className="flex items-center gap-1 mt-auto">
             <span className="font-bold text-primary text-sm">{formatPrice(price, currency)}</span>
           </div>
@@ -69,12 +70,8 @@ export function SubscriptionCard({ subscription, variant = 'compact' }: Subscrip
         <h3 className="font-semibold text-text-primary text-sm line-clamp-2 leading-snug">{name}</h3>
 
         {provider && (
-          <p className="text-xs text-text-secondary line-clamp-1 flex items-center gap-1">
-            {provider.name}
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" className="flex-shrink-0">
-              <circle cx="12" cy="12" r="10" fill="#3B82F6"/>
-              <polyline points="8 12 11 15 16 9" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+          <p className="text-xs text-text-secondary break-words">
+            <ProviderName name={provider.name} isVerified={provider.isVerified} badgeSize={13} />
           </p>
         )}
 

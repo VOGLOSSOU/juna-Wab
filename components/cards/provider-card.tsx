@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { StarRating } from '@/components/ui/star-rating'
 import { getInitials } from '@/lib/utils'
+import { ProviderName } from '@/components/ui/provider-name'
 import type { ProviderSummary } from '@/types'
 
 interface ProviderCardProps {
@@ -26,15 +27,9 @@ export function ProviderCard({ provider, variant = 'row' }: ProviderCardProps) {
           )}
         </div>
         <div className="flex flex-col items-center gap-1.5 text-center w-full">
-          <div className="flex items-center justify-center gap-1">
-            <h3 className="font-semibold text-text-primary text-xs leading-tight line-clamp-2">{name}</h3>
-            {isVerified && (
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" className="flex-shrink-0">
-                <circle cx="12" cy="12" r="10" fill="#3B82F6"/>
-                <polyline points="8 12 11 15 16 9" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            )}
-          </div>
+          <h3 className="w-full font-semibold text-text-primary text-xs leading-tight line-clamp-3 break-words">
+            <ProviderName name={name} isVerified={isVerified} badgeSize={13} />
+          </h3>
           {rating !== undefined && (reviewCount ?? 0) > 0 && (
             <div className="flex items-center gap-1">
               <StarRating value={rating} size={10} readOnly />
@@ -61,15 +56,9 @@ export function ProviderCard({ provider, variant = 'row' }: ProviderCardProps) {
       </div>
 
       <div className="flex flex-col gap-1 flex-1 min-w-0">
-        <div className="flex items-center gap-2">
-          <h3 className="font-semibold text-text-primary text-sm truncate">{name}</h3>
-          {isVerified && (
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="flex-shrink-0">
-              <circle cx="12" cy="12" r="10" fill="#3B82F6"/>
-              <polyline points="8 12 11 15 16 9" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          )}
-        </div>
+        <h3 className="font-semibold text-text-primary text-sm break-words">
+          <ProviderName name={name} isVerified={isVerified} badgeSize={16} />
+        </h3>
 
         {city && <p className="text-xs text-text-secondary">{typeof city === 'string' ? city : city.name}</p>}
 

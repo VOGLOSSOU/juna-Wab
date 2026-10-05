@@ -85,7 +85,7 @@ export function SubscriberCard({ sub, daysLeft }: Props) {
             {/* Fournisseur */}
             <div>
               <p className="text-[10px] font-semibold text-text-light uppercase tracking-widest leading-none mb-1">Fournisseur</p>
-              <p className="text-xs font-bold text-text-primary truncate leading-tight">{sub.subscription.provider.businessName}</p>
+              <p className="text-xs font-bold text-text-primary break-words leading-tight">{sub.subscription.provider.businessName}</p>
             </div>
 
           </div>
