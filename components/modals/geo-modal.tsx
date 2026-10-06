@@ -16,12 +16,21 @@ export function GeoModal() {
   const [cities, setCities] = useState<City[]>([])
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null)
   const [loading, setLoading] = useState(false)
+  const [countriesLoading, setCountriesLoading] = useState(true)
+  const [countriesError, setCountriesError] = useState(false)
   const [search, setSearch] = useState('')
 
+  const loadCountries = () => {
+    setCountriesLoading(true)
+    setCountriesError(false)
+    getCountries()
+      .then(setCountries)
+      .catch(() => setCountriesError(true))
+      .finally(() => setCountriesLoading(false))
+  }
+
   useEffect(() => {
-    if (!hasChosen) {
-      getCountries().then(setCountries).catch(console.error)
-    }
+    if (!hasChosen) loadCountries()
   }, [hasChosen])
 
   if (hasChosen) return null
@@ -116,11 +125,24 @@ export function GeoModal() {
           </div>
 
           {/* Liste */}
-          {loading ? (
-            <div className="flex flex-col gap-2 py-2">
+          {loading || (step === 'country' && countriesLoading) ? (
+            <div className="flex flex-col gap-1 py-1" aria-busy="true" aria-label="Chargement">
               {[...Array(4)].map((_, i) => (
-                <div key={i} className="h-12 bg-surface-grey rounded-xl animate-pulse" />
+                <div key={i} className="flex items-center justify-between px-4 py-3">
+                  <div className="h-4 bg-surface-grey rounded-md animate-pulse" style={{ width: `${[45, 60, 38, 52][i]}%` }} />
+                  <div className="h-3.5 w-3.5 bg-surface-grey rounded animate-pulse" />
+                </div>
               ))}
+            </div>
+          ) : step === 'country' && countriesError ? (
+            <div className="flex flex-col items-center gap-3 py-8">
+              <p className="text-center text-text-secondary text-sm">Impossible de charger les pays.</p>
+              <button
+                onClick={loadCountries}
+                className="h-9 px-4 rounded-lg border border-border text-sm font-medium text-text-primary hover:bg-surface-grey transition-colors"
+              >
+                Réessayer
+              </button>
             </div>
           ) : step === 'country' ? (
             filteredCountries.length === 0 ? (
