@@ -3,9 +3,10 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useAuthStore } from '@/lib/store/auth'
 import { useCityStore } from '@/lib/store/city'
+import { GeoModal } from '@/components/modals/geo-modal'
 import { Button } from '@/components/ui/button'
 import { cn, getInitials } from '@/lib/utils'
 import { getUserProfile } from '@/lib/api/auth'
@@ -13,8 +14,14 @@ import { getUserProfile } from '@/lib/api/auth'
 export function Navbar() {
   const pathname = usePathname()
   const { user, isAuthenticated, logout, updateUser } = useAuthStore()
-  const { selectedCity } = useCityStore()
+  const { selectedCity, hasChosen } = useCityStore()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  const [cityModalOpen, setCityModalOpen] = useState(false)
+  const [hydrated, setHydrated] = useState(false)
+  const closeCityModal = useCallback(() => setCityModalOpen(false), [])
+
+  useEffect(() => { setHydrated(true) }, [])
 
   useEffect(() => {
     if (!isAuthenticated) return
@@ -45,6 +52,7 @@ export function Navbar() {
   const avatar = user?.avatarUrl ?? user?.profile?.avatar ?? null
 
   return (
+    <>
     <nav className="fixed top-0 left-0 right-0 z-50 h-16 bg-white shadow-sm border-b border-border">
       <div className="max-w-content mx-auto h-full px-6 flex items-center justify-between gap-6">
 
@@ -61,7 +69,7 @@ export function Navbar() {
         </Link>
 
         {/* Nav links — desktop */}
-        <div className="hidden md:flex items-center gap-1">
+        <div className="hidden xl:flex items-center gap-1">
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -80,16 +88,21 @@ export function Navbar() {
 
         {/* Right side */}
         <div className="flex items-center gap-3">
-          {/* City selector — desktop */}
-          {isAuthenticated && selectedCity && (
-            <button className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-sm text-text-secondary hover:bg-surface-grey transition-colors">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
-              {selectedCity.name}
-            </button>
-          )}
+          {/* City selector — available to everyone, on every screen */}
+          <button
+            type="button"
+            onClick={() => { setMobileMenuOpen(false); setCityModalOpen(true) }}
+            aria-label={hydrated && selectedCity ? `Changer de ville, ville actuelle : ${selectedCity.name}` : 'Choisir une ville'}
+            aria-haspopup="dialog"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-border text-sm text-text-secondary hover:bg-surface-grey transition-colors min-w-0"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0" aria-hidden="true">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg>
+            <span className="max-w-[120px] truncate">{hydrated && selectedCity ? selectedCity.name : 'Choisir une ville'}</span>
+            <span aria-hidden="true">⌄</span>
+          </button>
 
           {/* Avatar — direct link to profile */}
           {isAuthenticated ? (
@@ -117,7 +130,7 @@ export function Navbar() {
           {/* Hamburger — mobile */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden flex items-center justify-center w-9 h-9 rounded-lg hover:bg-surface-grey transition-colors text-text-primary"
+            className="xl:hidden flex items-center justify-center w-9 h-9 rounded-lg hover:bg-surface-grey transition-colors text-text-primary"
             aria-label="Menu"
           >
             {mobileMenuOpen ? (
@@ -158,16 +171,6 @@ export function Navbar() {
                 </Link>
               ))}
 
-              {selectedCity && (
-                <div className="flex items-center gap-2 px-6 py-3 text-sm text-text-secondary border-t border-divider mt-1">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
-                    <circle cx="12" cy="10" r="3" />
-                  </svg>
-                  {selectedCity.name}
-                </div>
-              )}
-
               {!isAuthenticated && (
                 <div className="flex flex-col gap-2 px-6 py-4 border-t border-divider mt-1">
                   <Link href="/auth/login" onClick={() => setMobileMenuOpen(false)}>
@@ -183,5 +186,9 @@ export function Navbar() {
         </>
       )}
     </nav>
+    {hydrated && (cityModalOpen || (pathname === '/' && !hasChosen)) && (
+      <GeoModal onClose={closeCityModal} />
+    )}
+    </>
   )
 }

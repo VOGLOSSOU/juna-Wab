@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { GeoModal } from '@/components/modals/geo-modal'
 import { Hero } from '@/components/layout/hero'
 import { SubscriptionCard } from '@/components/cards/subscription-card'
 import { ProviderCard } from '@/components/cards/provider-card'
@@ -51,7 +50,6 @@ export default function HomeClient() {
 
   return (
     <>
-      <GeoModal />
 
       <Hero searchValue={search} onSearchChange={setSearch} />
 

@@ -1,7 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { getCountries, getCities } from '@/lib/api/geo'
+import { updateLocation } from '@/lib/api/auth'
+import { useAuthStore } from '@/lib/store/auth'
+import { showApiError } from '@/lib/utils/api-error'
 import { useCityStore } from '@/lib/store/city'
 import type { Country, City } from '@/types'
 
@@ -9,8 +12,12 @@ function countryName(c: Country): string {
   return c.translations?.fr ?? c.translations?.en ?? c.code
 }
 
-export function GeoModal() {
+export function GeoModal({ onClose }: { onClose: () => void }) {
   const { hasChosen, setCity } = useCityStore()
+  const savingRef = useRef(false)
+  const [saving, setSaving] = useState(false)
+  const dialogRef = useRef<HTMLDivElement>(null)
+  const [citiesError, setCitiesError] = useState(false)
   const [step, setStep] = useState<'country' | 'city'>('country')
   const [countries, setCountries] = useState<Country[]>([])
   const [cities, setCities] = useState<City[]>([])
@@ -30,28 +37,81 @@ export function GeoModal() {
   }
 
   useEffect(() => {
-    if (!hasChosen) loadCountries()
-  }, [hasChosen])
+    loadCountries()
+  }, [])
 
-  if (hasChosen) return null
+  useEffect(() => {
+    const previousFocus = document.activeElement as HTMLElement | null
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    dialogRef.current?.querySelector<HTMLInputElement>('input')?.focus()
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && hasChosen && !savingRef.current) onClose()
+      if (event.key !== 'Tab') return
+      const elements = dialogRef.current?.querySelectorAll<HTMLElement>('button:not(:disabled), input:not(:disabled)')
+      if (!elements?.length) return
+      const first = elements[0]
+      const last = elements[elements.length - 1]
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault()
+        first.focus()
+      }
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.body.style.overflow = previousOverflow
+      document.removeEventListener('keydown', handleKeyDown)
+      previousFocus?.focus()
+    }
+  }, [hasChosen, onClose])
 
   const handleSelectCountry = async (country: Country) => {
     setSelectedCountry(country)
     setLoading(true)
     setSearch('')
+    setCitiesError(false)
+    setStep('city')
     try {
       const data = await getCities(country.code)
       setCities(data)
       setStep('city')
     } catch {
-      console.error('Erreur chargement villes')
+      setCitiesError(true)
     } finally {
       setLoading(false)
     }
   }
 
-  const handleSelectCity = (city: City) => {
-    if (selectedCountry) setCity(city, selectedCountry)
+  const handleSelectCity = async (city: City) => {
+    if (!selectedCountry || savingRef.current) return
+    savingRef.current = true
+    setSaving(true)
+    try {
+      const { isAuthenticated } = useAuthStore.getState()
+      if (isAuthenticated) {
+        await updateLocation(city.id)
+        const { user, updateUser } = useAuthStore.getState()
+        if (user) {
+          const profileCity = { ...city, country: selectedCountry }
+          updateUser({
+            ...user,
+            cityId: city.id,
+            city: profileCity,
+            profile: { ...user.profile, city: profileCity },
+          })
+        }
+      }
+      setCity(city, selectedCountry)
+      onClose()
+    } catch (error) {
+      showApiError(error, 'Impossible de mettre à jour votre ville. Réessayez.')
+    } finally {
+      savingRef.current = false
+      setSaving(false)
+    }
   }
 
   const filteredCountries = countries.filter((c) =>
@@ -63,8 +123,11 @@ export function GeoModal() {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-[2px] p-0 sm:p-4">
-      <div className="bg-white w-full sm:max-w-md rounded-t-3xl sm:rounded-2xl shadow-2xl overflow-hidden animate-slide-up sm:animate-none">
+      <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="city-dialog-title" className="relative bg-white w-full sm:max-w-md rounded-t-3xl sm:rounded-2xl shadow-2xl overflow-hidden animate-slide-up sm:animate-none">
 
+        {hasChosen && (
+          <button type="button" disabled={saving} onClick={onClose} aria-label="Fermer le choix de ville" className="absolute right-3 top-3 w-8 h-8 rounded-full hover:bg-surface-grey text-text-secondary">✕</button>
+        )}
         {/* Header avec icone */}
         <div className="px-6 pt-7 pb-5">
           {/* Poignée mobile */}
@@ -78,7 +141,7 @@ export function GeoModal() {
               </svg>
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-text-primary leading-snug">
+              <h2 id="city-dialog-title" className="text-lg font-semibold text-text-primary leading-snug">
                 {step === 'country' ? 'Où êtes-vous ?' : `Quelle ville en ${selectedCountry ? countryName(selectedCountry) : ''} ?`}
               </h2>
               <p className="text-text-secondary text-sm mt-1 leading-relaxed">
@@ -99,6 +162,7 @@ export function GeoModal() {
           {/* Retour */}
           {step === 'city' && (
             <button
+              disabled={loading || saving}
               onClick={() => { setStep('country'); setSearch('') }}
               className="flex items-center gap-1.5 text-sm text-text-secondary hover:text-primary transition-colors mb-4"
             >
@@ -144,6 +208,11 @@ export function GeoModal() {
                 Réessayer
               </button>
             </div>
+          ) : step === 'city' && citiesError ? (
+            <div className="flex flex-col items-center gap-3 py-8" role="alert">
+              <p className="text-center text-text-secondary text-sm">Impossible de charger les villes.</p>
+              <button type="button" onClick={() => selectedCountry && handleSelectCountry(selectedCountry)} className="h-9 px-4 rounded-lg border border-border text-sm hover:bg-surface-grey">Réessayer</button>
+            </div>
           ) : step === 'country' ? (
             filteredCountries.length === 0 ? (
               <p className="text-center text-text-secondary text-sm py-8">Aucun pays trouvé</p>
@@ -175,6 +244,7 @@ export function GeoModal() {
                 {filteredCities.map((city) => (
                   <li key={city.id}>
                     <button
+                      disabled={saving}
                       onClick={() => handleSelectCity(city)}
                       className="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-primary-surface text-left transition-colors group"
                     >
@@ -198,10 +268,11 @@ export function GeoModal() {
           )}
         </div>
 
+        {saving && <p role="status" className="px-6 pb-3 text-sm text-text-secondary text-center">Enregistrement de votre ville…</p>}
         {/* Footer discret */}
         <div className="px-6 pb-6 pt-1">
           <p className="text-xs text-text-light text-center">
-            Vous pourrez changer de ville à tout moment depuis votre profil.
+            Vous pouvez changer de ville à tout moment depuis la barre de navigation.
           </p>
         </div>
       </div>
