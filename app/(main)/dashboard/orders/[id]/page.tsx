@@ -8,7 +8,7 @@ import { useAuthGuard } from '@/lib/hooks/use-auth-guard'
 import { getOrder } from '@/lib/api/orders'
 import { StatusBadge } from '@/components/ui/status-badge'
 import { Button } from '@/components/ui/button'
-import { formatPrice, formatDate, ORDER_STATUS_LABELS } from '@/lib/utils'
+import { providerAmountFromOrder, formatPrice, formatDate, ORDER_STATUS_LABELS } from '@/lib/utils'
 import toast from 'react-hot-toast'
 import type { Order } from '@/types'
 
@@ -45,7 +45,7 @@ export default function DashboardOrderDetailPage() {
   if (!order) return null
 
   const orderNumber = order.orderNumber ?? `#${order.id.slice(0, 8).toUpperCase()}`
-  const amount = order.amount ?? order.totalAmount ?? 0
+  const amount = providerAmountFromOrder(order)
   const stepIndex = STATUS_STEPS.indexOf(order.status as typeof STATUS_STEPS[number])
 
   return (
@@ -113,7 +113,7 @@ export default function DashboardOrderDetailPage() {
         <div className="divide-y divide-border">
           <Row label="Abonnement" value={order.subscription?.name ?? '—'} />
           <Row label="Client" value={order.user?.name ?? '—'} />
-          <Row label="Montant" value={formatPrice(amount, order.currency)} bold />
+          <Row label="Votre part hors livraison" value={formatPrice(amount, order.currency)} bold />
           <Row
             label="Livraison"
             value={order.deliveryMethod === 'DELIVERY' ? 'Livraison à domicile' : 'Retrait sur place'}

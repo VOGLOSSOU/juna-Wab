@@ -11,7 +11,7 @@ import { getProviderSubscriptions } from '@/lib/api/subscriptions'
 import { getMyMeals } from '@/lib/api/meals'
 import { getReceivedProposals } from '@/lib/api/proposals'
 import { StatusBadge } from '@/components/ui/status-badge'
-import { formatPrice, formatDate } from '@/lib/utils'
+import { providerAmountFromOrder, formatPrice, formatDate } from '@/lib/utils'
 import type { Provider, Order, Subscription, Meal, SubscriptionProposal } from '@/types'
 
 export default function DashboardPage() {
@@ -118,7 +118,7 @@ export default function DashboardPage() {
                   <p className="text-xs text-text-secondary mt-0.5">{order.user?.name ?? '—'} • {formatDate(order.createdAt)}</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="font-semibold text-sm text-primary">{formatPrice(order.amount ?? order.totalAmount ?? 0, order.currency)}</span>
+                  <div className="text-right"><p className="text-xs text-text-secondary">Votre part hors livraison</p><span className="font-semibold text-sm text-primary">{formatPrice(providerAmountFromOrder(order), order.currency)}</span></div>
                   <StatusBadge status={order.status} />
                 </div>
               </Link>

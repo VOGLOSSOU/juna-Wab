@@ -2,7 +2,7 @@ import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { formatDistanceToNow, format } from 'date-fns'
 import { fr } from 'date-fns/locale'
-import type { SubscriptionType, SubscriptionDuration, SubscriptionCategory, OrderStatus, ProposalStatus, MealType, Meal } from '@/types'
+import type { SubscriptionType, SubscriptionDuration, SubscriptionCategory, OrderStatus, ProposalStatus, MealType, Meal, Order } from '@/types'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -21,6 +21,12 @@ export function clientPriceFromProviderPrice(providerPrice: number): number {
 
 export function providerPriceFromClientPrice(clientPrice: number): number {
   return Math.round(clientPrice * (1 - JUNA_COMMISSION_RATE))
+}
+
+// La commission concerne l'abonnement, pas les éventuels frais de livraison.
+export function providerAmountFromOrder(order: Pick<Order, 'amount' | 'totalAmount' | 'deliveryCost'>): number {
+  const subscriptionAmount = Math.max(0, (order.amount ?? order.totalAmount ?? 0) - (order.deliveryCost ?? 0))
+  return providerPriceFromClientPrice(subscriptionAmount)
 }
 
 export const MEAL_TYPE_LABELS: Record<MealType, string> = {

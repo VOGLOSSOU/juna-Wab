@@ -8,7 +8,7 @@ import { getProviderSubscriptions, toggleSubscriptionActive, toggleSubscriptionP
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { StarRating } from '@/components/ui/star-rating'
-import { formatPrice, SUBSCRIPTION_TYPE_LABELS, SUBSCRIPTION_DURATION_LABELS } from '@/lib/utils'
+import { providerPriceFromClientPrice, formatPrice, SUBSCRIPTION_TYPE_LABELS, SUBSCRIPTION_DURATION_LABELS } from '@/lib/utils'
 import toast from 'react-hot-toast'
 import { showApiError } from '@/lib/utils/api-error'
 import type { Subscription } from '@/types'
@@ -195,7 +195,8 @@ export default function DashboardSubscriptionsPage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="flex flex-col items-end gap-1">
-                      <span className="font-bold text-primary">{formatPrice(sub.price, sub.currency)}</span>
+                      <span className="text-xs text-text-secondary">Votre prix</span>
+                      <span className="font-bold text-primary">{formatPrice(providerPriceFromClientPrice(Number(sub.price)), sub.currency)}</span>
                       {sub.rating !== undefined && (
                         <div className="flex items-center gap-1">
                           <StarRating value={sub.rating} size={12} readOnly />

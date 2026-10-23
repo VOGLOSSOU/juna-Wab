@@ -7,7 +7,7 @@ import { useAuthGuard } from '@/lib/hooks/use-auth-guard'
 import { getProviderOrders } from '@/lib/api/orders'
 import { StatusBadge } from '@/components/ui/status-badge'
 import { Button } from '@/components/ui/button'
-import { formatPrice, formatDate, ORDER_STATUS_LABELS } from '@/lib/utils'
+import { providerAmountFromOrder, formatPrice, formatDate, ORDER_STATUS_LABELS } from '@/lib/utils'
 import toast from 'react-hot-toast'
 import type { Order, OrderStatus } from '@/types'
 
@@ -91,7 +91,7 @@ export default function DashboardOrdersPage() {
                 <p className="text-xs text-text-light mt-0.5">{order.subscription?.name} • {formatDate(order.createdAt)}</p>
               </div>
               <div className="flex items-center gap-3">
-                <span className="font-bold text-primary">{formatPrice(order.amount ?? order.totalAmount ?? 0, order.currency)}</span>
+                <div className="text-right"><p className="text-xs text-text-secondary">Votre part hors livraison</p><span className="font-bold text-primary">{formatPrice(providerAmountFromOrder(order), order.currency)}</span></div>
                 <Link href={`/dashboard/orders/${order.id}`}>
                   <Button size="sm" variant="ghost">Détail</Button>
                 </Link>

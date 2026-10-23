@@ -5,7 +5,7 @@ import { useAuthGuard } from '@/lib/hooks/use-auth-guard'
 import { getProviderOrders } from '@/lib/api/orders'
 import { getProviderSubscriptions } from '@/lib/api/subscriptions'
 import { getMyMeals } from '@/lib/api/meals'
-import { formatPrice } from '@/lib/utils'
+import { providerAmountFromOrder, providerPriceFromClientPrice, formatPrice } from '@/lib/utils'
 import type { Order, Subscription, Meal, OrderStatus } from '@/types'
 
 const COMPLETED_STATUSES: OrderStatus[] = ['COMPLETED']
@@ -68,7 +68,7 @@ export default function DashboardStatsPage() {
   const completedOrders = orders.filter(o => COMPLETED_STATUSES.includes(o.status))
   const cancelledOrders = orders.filter(o => o.status === 'CANCELLED')
   const pendingOrders = orders.filter(o => o.status === 'PENDING')
-  const revenue = completedOrders.reduce((sum, o) => sum + (o.amount ?? o.totalAmount ?? 0), 0)
+  const revenue = completedOrders.reduce((sum, o) => sum + providerAmountFromOrder(o), 0)
   const activeSubscriptions = subscriptions.filter(s => s.isActive)
   const completionRate = orders.length > 0
     ? Math.round((completedOrders.length / orders.length) * 100)
@@ -113,9 +113,9 @@ export default function DashboardStatsPage() {
       {/* KPIs */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
-          label="Chiffre d&apos;affaires"
+          label="Revenus hors commission"
           value={formatPrice(revenue)}
-          sub="Commandes terminées"
+          sub="Commandes terminées, hors livraison"
           color="text-primary"
           icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>}
         />
@@ -221,7 +221,7 @@ export default function DashboardStatsPage() {
                 </div>
                 <div className="flex items-center gap-3 flex-shrink-0">
                   <span className={`w-2 h-2 rounded-full ${sub.isActive ? 'bg-green-500' : 'bg-surface-grey border border-border'}`} />
-                  <span className="font-semibold text-sm text-primary">{formatPrice(sub.price, sub.currency)}</span>
+                  <div className="text-right"><p className="text-xs text-text-secondary">Votre prix</p><span className="font-semibold text-sm text-primary">{formatPrice(providerPriceFromClientPrice(Number(sub.price)), sub.currency)}</span></div>
                 </div>
               </div>
             ))}
