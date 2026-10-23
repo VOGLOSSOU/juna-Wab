@@ -7,6 +7,7 @@ import { getSubscription, updateSubscription } from '@/lib/api/subscriptions'
 import { getMyMeals } from '@/lib/api/meals'
 import { uploadImage } from '@/lib/api/upload'
 import toast from 'react-hot-toast'
+import { SubscriptionInstructionsField } from '@/components/ui/subscription-instructions'
 import { showApiError } from '@/lib/utils/api-error'
 import { clientPriceFromProviderPrice, providerPriceFromClientPrice } from '@/lib/utils'
 import { PriceBreakdown } from '@/components/ui/price-breakdown'
@@ -90,6 +91,7 @@ export default function EditSubscriptionPage() {
 
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
+  const [instructions, setInstructions] = useState('')
   const [price, setPrice] = useState('')
   const [type, setType] = useState<SubscriptionType>('LUNCH')
   const [duration, setDuration] = useState<SubscriptionDuration>('WORK_WEEK')
@@ -109,6 +111,7 @@ export default function EditSubscriptionPage() {
         setMeals(mls)
         setName(sub.name)
         setDescription(sub.description ?? '')
+        setInstructions(sub.instructions ?? '')
         setPrice(String(providerPriceFromClientPrice(Number(sub.price))))
         setType(sub.type)
         setDuration(sub.duration)
@@ -184,6 +187,7 @@ export default function EditSubscriptionPage() {
       await updateSubscription(id, {
         name: name.trim(),
         description: description.trim(),
+        instructions: instructions.trim() || null,
         ...(priceChanged ? { price: clientPriceFromProviderPrice(Number(price)) } : {}),
         type,
         category,
@@ -253,6 +257,8 @@ export default function EditSubscriptionPage() {
               className="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] bg-white text-sm text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/30 focus:border-[var(--color-primary)] transition-colors resize-none" />
             <p className="text-xs text-[var(--color-text-light)] text-right -mt-1">{description.length}/1000</p>
           </Field>
+
+          <SubscriptionInstructionsField value={instructions} onChange={setInstructions} />
 
           <Field label="Votre prix de référence (XOF)" required hint="Le montant que vous souhaitez recevoir. Minimum 100 XOF.">
             <div className="relative">

@@ -19,6 +19,7 @@ import {
   SUBSCRIPTION_TYPE_LABELS, SUBSCRIPTION_DURATION_LABELS, SUBSCRIPTION_CATEGORY_LABELS,
 } from '@/lib/utils'
 import toast from 'react-hot-toast'
+import { SubscriptionInstructionsField } from '@/components/ui/subscription-instructions'
 import type { SubscriptionProposal, Meal } from '@/types'
 
 function Skeleton() {
@@ -45,6 +46,7 @@ export default function DashboardProposalDetailPage() {
   // ── Formulaire d'approbation ──
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
+  const [instructions, setInstructions] = useState('')
   const [price, setPrice] = useState('')
   const [imageUrl, setImageUrl] = useState('')
   const [uploading, setUploading] = useState(false)
@@ -111,6 +113,7 @@ export default function DashboardProposalDetailPage() {
       await approveProposal(id, {
         name: name.trim(),
         description: description.trim(),
+        instructions: instructions.trim() || null,
         price: clientPriceFromProviderPrice(Number(price)),
         imageUrl,
         isImmediate,
@@ -255,6 +258,8 @@ export default function DashboardProposalDetailPage() {
               placeholder="Repas chaud chaque midi du lundi au vendredi"
             />
           </div>
+          <SubscriptionInstructionsField value={instructions} onChange={setInstructions} />
+
           <Input label="Votre prix (XOF)" required type="number" min={100} value={price} onChange={(e) => setPrice(e.target.value)} placeholder="27000" />
 
           <PriceBreakdown providerPrice={Number(price)} />

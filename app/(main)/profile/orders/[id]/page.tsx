@@ -1,6 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 'use client'
 
+import { SubscriptionInstructions } from '@/components/ui/subscription-instructions'
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -99,6 +100,7 @@ export default function OrderDetailPage() {
             </Link>
           )}
         </div>
+        <SubscriptionInstructions instructions={order.subscription?.instructions} />
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
             <p className="text-text-secondary">Date</p>

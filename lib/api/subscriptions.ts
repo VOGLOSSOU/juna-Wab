@@ -55,6 +55,7 @@ export async function getProviderSubscriptions(): Promise<Subscription[]> {
 export async function createSubscription(data: {
   name: string
   description: string
+  instructions?: string | null
   price: number
   type: string
   category: string
@@ -72,6 +73,7 @@ export async function createSubscription(data: {
 export async function updateSubscription(id: string, data: Partial<{
   name: string
   description: string
+  instructions?: string | null
   price: number
   type: string
   category: string

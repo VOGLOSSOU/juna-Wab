@@ -1,5 +1,6 @@
 'use client'
 
+import { SubscriptionInstructions } from '@/components/ui/subscription-instructions'
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -101,6 +102,8 @@ export default function DashboardOrderDetailPage() {
           </div>
         </div>
       )}
+
+      <SubscriptionInstructions instructions={order.subscription?.instructions} />
 
       {/* Infos commande */}
       <div className="bg-white rounded-xl border border-border overflow-hidden">

@@ -176,6 +176,7 @@ export interface Meal {
 }
 
 export interface Subscription {
+  instructions?: string | null
   id: string
   name: string
   description?: string
@@ -252,6 +253,7 @@ export interface CreateProposalForm {
 }
 
 export interface ApproveProposalForm {
+  instructions?: string | null
   name: string
   description: string
   price: number
@@ -269,6 +271,7 @@ export interface Order {
   orderNumber?: string
   subscriptionId?: string
   subscription?: {
+    instructions?: string | null
     id: string
     name: string
     provider?: { id: string; businessName?: string; name?: string }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -15,27 +15,30 @@ import { formatPrice, SUBSCRIPTION_TYPE_LABELS, SUBSCRIPTION_DURATION_LABELS, SU
 import { ProviderName } from '@/components/ui/provider-name'
 import type { Subscription } from '@/types'
 
-function InfoAccordion({ label, value, description, open, onToggle }: { label: string; value: string; description: string; open: boolean; onToggle: () => void }) {
+function InfoAccordion({ label, value, description, open, onToggle }: { label: string; value?: string; description: string; open: boolean; onToggle: () => void }) {
+  const contentId = useId()
   return (
     <div className="bg-surface-grey rounded-xl overflow-hidden">
       <button
         type="button"
         onClick={onToggle}
+        aria-expanded={open}
+        aria-controls={contentId}
         className="w-full flex items-center justify-between gap-3 p-4 text-left"
       >
         <div className="flex flex-col gap-1">
           <p className="text-[10px] font-bold text-text-light uppercase tracking-widest">{label}</p>
-          <p className="text-sm font-semibold text-text-primary">{value}</p>
+          {value && <p className="text-sm font-semibold text-text-primary">{value}</p>}
         </div>
         <svg
-          width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"
+          aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"
           className={`flex-shrink-0 text-text-light transition-transform ${open ? 'rotate-180' : ''}`}
         >
           <polyline points="6 9 12 15 18 9" />
         </svg>
       </button>
       {open && (
-        <p className="px-4 pb-4 text-xs text-text-secondary leading-relaxed">{description}</p>
+        <p id={contentId} className="px-4 pb-4 text-xs text-text-secondary leading-relaxed whitespace-pre-wrap break-words">{description}</p>
       )}
     </div>
   )
@@ -153,6 +156,12 @@ export default function SubscriptionDetailClient() {
 
         {/* Détails repliables */}
         <div className="flex flex-col gap-2">
+          {subscription.instructions?.trim() && (
+            <InfoAccordion label="Instructions" description={subscription.instructions}
+              open={openAccordion === 'instructions'}
+              onToggle={() => setOpenAccordion((current) => current === 'instructions' ? null : 'instructions')}
+            />
+          )}
           <InfoAccordion
             label="Type" value={SUBSCRIPTION_TYPE_LABELS[type]} description={SUBSCRIPTION_TYPE_DESCRIPTIONS[type]}
             open={openAccordion === 'type'} onToggle={() => setOpenAccordion((o) => (o === 'type' ? null : 'type'))}

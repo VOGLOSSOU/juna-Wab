@@ -7,6 +7,7 @@ import { createSubscription } from '@/lib/api/subscriptions'
 import { getMyMeals } from '@/lib/api/meals'
 import { uploadImage } from '@/lib/api/upload'
 import toast from 'react-hot-toast'
+import { SubscriptionInstructionsField } from '@/components/ui/subscription-instructions'
 import { showApiError } from '@/lib/utils/api-error'
 import { clientPriceFromProviderPrice } from '@/lib/utils'
 import { PriceBreakdown } from '@/components/ui/price-breakdown'
@@ -119,6 +120,7 @@ export default function NewSubscriptionPage() {
   // Form fields
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
+  const [instructions, setInstructions] = useState('')
   const [price, setPrice] = useState('')
   const [type, setType] = useState<SubscriptionType>('LUNCH')
   const [duration, setDuration] = useState<SubscriptionDuration>('WORK_WEEK')
@@ -188,6 +190,7 @@ export default function NewSubscriptionPage() {
       await createSubscription({
         name: name.trim(),
         description: description.trim(),
+        instructions: instructions.trim() || null,
         price: clientPriceFromProviderPrice(Number(price)),
         type,
         category,
@@ -304,6 +307,8 @@ export default function NewSubscriptionPage() {
             />
             <p className="text-xs text-[var(--color-text-light)] text-right -mt-1">{description.length}/1000</p>
           </Field>
+
+          <SubscriptionInstructionsField value={instructions} onChange={setInstructions} />
 
           <Field label="Votre prix de référence (XOF)" required hint="Le montant que vous souhaitez pour cet abonnement. Minimum 100 XOF.">
             <div className="relative">

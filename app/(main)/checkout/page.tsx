@@ -1,5 +1,6 @@
 'use client'
 
+import { SubscriptionInstructions } from '@/components/ui/subscription-instructions'
 import { Suspense, useEffect, useRef, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
@@ -326,6 +327,8 @@ function CheckoutForm() {
           </div>
         </div>
 
+        <SubscriptionInstructions instructions={subscription.instructions} />
+
         <div className="bg-white rounded-xl border border-border p-5 flex flex-col gap-4">
           {/* Country selector */}
           <div className="flex flex-col gap-2">
@@ -401,6 +404,8 @@ function CheckoutForm() {
           <p className="font-bold text-primary mt-2">{formatPrice(subscription.price, subscription.currency)}</p>
         </div>
       </div>
+
+      <SubscriptionInstructions instructions={subscription.instructions} />
 
       {/* Mode de livraison */}
       <div className="bg-white rounded-xl border border-border p-5 flex flex-col gap-4">
