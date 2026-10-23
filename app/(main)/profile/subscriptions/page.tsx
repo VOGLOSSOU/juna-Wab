@@ -54,7 +54,10 @@ export default function ActiveSubscriptionsPage() {
           </Link>
         </div>
       ) : (
-        <div className="flex flex-col gap-10">
+        <div className="flex flex-col gap-6">
+          <p className="text-sm text-text-secondary bg-primary-surface rounded-xl px-4 py-3">
+            Cliquez sur votre carte d’abonné pour la retourner et lire les instructions de votre abonnement. Vous pouvez les présenter au prestataire avec votre carte.
+          </p>
           {subs.map((sub) => (
             <div key={sub.id} className="flex flex-col gap-4">
               <SubscriberCard sub={sub} daysLeft={daysLeft(sub.endsAt)} />

@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import { useState } from 'react'
 import { formatDate, SUBSCRIPTION_TYPE_LABELS, SUBSCRIPTION_DURATION_LABELS, getInitials } from '@/lib/utils'
 import { useAuthStore } from '@/lib/store/auth'
 import type { ActiveSubscription } from '@/types'
@@ -12,6 +13,9 @@ interface Props {
 
 export function SubscriberCard({ sub, daysLeft }: Props) {
   const { user } = useAuthStore()
+  const [flipped, setFlipped] = useState(false)
+  const instructions = sub.subscription.instructions?.trim()
+  const toggleCard = () => setFlipped((current) => !current)
 
   const name  = user?.name  ?? sub.user?.name  ?? '—'
   const email = user?.email ?? sub.user?.email ?? null
@@ -26,8 +30,28 @@ export function SubscriberCard({ sub, daysLeft }: Props) {
 
   return (
     <div
-      className="relative w-full overflow-hidden rounded-2xl select-none"
-      style={{
+      role="button"
+      tabIndex={0}
+      aria-label={`${flipped ? 'Revenir au recto de la carte' : 'Retourner la carte pour lire les instructions'} : ${sub.subscription.name}`}
+      aria-pressed={flipped}
+      onClick={toggleCard}
+      onKeyDown={(event) => {
+        if (event.target !== event.currentTarget) return
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault()
+          toggleCard()
+        }
+      }}
+      className="relative w-full rounded-2xl cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 [perspective:1000px]"
+    >
+      <div
+        className="grid w-full rounded-2xl transition-transform duration-500 motion-reduce:transition-none [transform-style:preserve-3d]"
+        style={{ transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)' }}
+      >
+      <div
+        aria-hidden={flipped}
+        className={`relative w-full overflow-hidden rounded-2xl select-none [grid-area:1/1] [backface-visibility:hidden] ${flipped ? 'pointer-events-none' : ''}`}
+        style={{
         background: 'linear-gradient(135deg, rgba(26,92,42,0.07) 0%, rgba(26,92,42,0.13) 100%)',
         boxShadow: '0 4px 32px rgba(26,92,42,0.10)',
       }}
@@ -143,6 +167,33 @@ export function SubscriberCard({ sub, daysLeft }: Props) {
           </div>
         </div>
 
+      </div>
+      </div>
+      <div
+        aria-hidden={!flipped}
+        className={`flex flex-col gap-4 rounded-2xl border border-primary/15 bg-primary-surface p-5 [grid-area:1/1] [backface-visibility:hidden] [transform:rotateY(180deg)] ${!flipped ? 'pointer-events-none' : ''}`}
+      >
+        <div className="flex items-center justify-between gap-3">
+          <Image src="/juna-logo.png" alt="Juna Eats" width={32} height={32} className="object-contain" />
+          <span className="text-xs font-semibold text-primary">Instructions de l’abonnement</span>
+        </div>
+        <div className="border-b border-primary/10 pb-3">
+          <p className="font-bold text-sm text-text-primary break-words">{sub.subscription.name}</p>
+          <p className="text-xs text-text-secondary mt-1">{name}</p>
+          <p className="text-xs text-text-secondary mt-1 break-words">{sub.subscription.provider.businessName}</p>
+          <p className="text-xs font-mono text-text-secondary mt-1">Réf. {ref}</p>
+        </div>
+        <div
+          role="region"
+          aria-label="Instructions de votre abonnement"
+          tabIndex={flipped ? 0 : -1}
+          onClick={(event) => event.stopPropagation()}
+          className="max-h-56 overflow-y-auto overscroll-contain select-text cursor-text text-sm text-text-primary leading-relaxed whitespace-pre-wrap break-words focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
+        >
+          {instructions || 'Aucune instruction particulière pour cet abonnement.'}
+        </div>
+        <p className="mt-auto pt-2 text-xs text-primary text-center">Cliquez sur la carte pour revenir au recto</p>
+      </div>
       </div>
     </div>
   )

@@ -111,7 +111,7 @@ export const SUBSCRIPTION_DURATION_DESCRIPTIONS: Record<SubscriptionDuration, st
   DAY:         'Un abonnement d\'une seule journée. Idéal pour tester un prestataire ou pour un besoin ponctuel sans engagement.',
   THREE_DAYS:  'L\'abonnement court sur 3 jours consécutifs à partir de la date de début choisie. Pratique pour un début de semaine ou un premier essai prolongé.',
   WORK_WEEK:   'Une semaine de travail : du lundi au vendredi, soit 5 jours. Le week-end n\'est pas inclus. Parfait pour être bien nourri pendant la semaine active.',
-  WEEK:        'L\'abonnement s\'étend sur 7 jours complets, week-end inclus. Vous êtes couvert du lundi au dimanche, sans interruption.',
+  WEEK:        'Cet abonnement couvre tous les jours ouvrables du prestataire sur une semaine, selon ses jours d’ouverture.',
   TWO_WEEKS:   'Deux semaines complètes, soit 14 jours consécutifs, week-end inclus. Une bonne option pour tester un prestataire sur une durée significative.',
   WORK_WEEK_2: 'Deux semaines de travail consécutives, soit 10 jours ouvrés (lundi à vendredi, deux fois). Les week-ends sont exclus.',
   WORK_MONTH:  'Un mois entier de jours de travail : 20 jours ouvrés, 5 jours par semaine pendant 4 semaines. La formule idéale pour les actifs qui ne veulent pas payer les week-ends.',

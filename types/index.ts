@@ -318,6 +318,7 @@ export interface ActiveSubscription {
   endsAt: string
   duration: SubscriptionDuration
   subscription: {
+    instructions?: string | null
     id: string
     name: string
     category: SubscriptionCategory
