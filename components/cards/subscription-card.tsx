@@ -24,18 +24,18 @@ export function SubscriptionCard({ subscription: sub, variant = 'compact', showF
         aria-disabled={unavailable || undefined} tabIndex={unavailable ? -1 : undefined}
         onClick={event => { if (unavailable) event.preventDefault() }}
         className={`flex h-full flex-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary ${horizontal ? 'flex-row' : 'flex-col'}`}>
-        <div className={`relative shrink-0 overflow-hidden bg-primary-surface ${horizontal ? 'w-32 min-h-40' : variant === 'featured' ? 'aspect-[16/10]' : explorer ? 'aspect-[16/10] w-full' : 'aspect-[4/3]'}`}>
+        <div className={`relative shrink-0 overflow-hidden bg-primary-surface ${horizontal ? 'w-32 min-h-40' : variant === 'featured' ? 'aspect-[16/10]' : explorer ? 'aspect-[4/3] w-full sm:aspect-[16/10]' : 'aspect-[4/3]'}`}>
           {imageUrl ? <Image src={imageUrl} alt={sub.name} fill
-            sizes={horizontal ? '128px' : '(max-width: 640px) 70vw, (max-width: 1024px) 40vw, 25vw'}
+            sizes={horizontal ? '128px' : explorer ? '(max-width: 899px) 50vw, (max-width: 1199px) 33vw, 25vw' : '(max-width: 640px) 70vw, (max-width: 1024px) 40vw, 25vw'}
             className="object-cover transition-transform duration-300 group-hover:scale-[1.03] motion-reduce:transform-none" /> :
-            <div className="flex h-full min-h-32 items-center justify-center text-primary/50"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M4 3v6a3 3 0 006 0V3M7 3v18M19 3c-3 2-4 5-4 8h4m0-8v18" /></svg></div>}
-          <span className={`absolute left-3 top-3 max-w-[calc(100%-72px)] truncate rounded-lg bg-white/95 px-2.5 py-1.5 text-[10px] font-bold leading-tight text-primary shadow-sm ${horizontal ? 'max-w-[calc(100%-24px)]' : ''}`}>
+            <div className="absolute inset-0 flex items-center justify-center text-primary/50"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M4 3v6a3 3 0 006 0V3M7 3v18M19 3c-3 2-4 5-4 8h4m0-8v18" /></svg></div>}
+          <span className={`absolute left-3 top-3 max-w-[calc(100%-72px)] truncate rounded-lg bg-white/95 px-2.5 py-1.5 text-[10px] font-bold leading-tight text-primary shadow-sm ${horizontal ? 'max-w-[calc(100%-24px)]' : explorer ? '!left-2 !top-2 !max-w-[calc(100%-60px)] !whitespace-normal !px-2' : ''}`}>
             {SUBSCRIPTION_DURATION_LABELS[sub.duration]}
           </span>
           {unavailable && <span className="absolute bottom-3 left-3 rounded-lg bg-black/70 px-2 py-1 text-xs font-medium text-white">Indisponible</span>}
         </div>
-        <div className="flex min-w-0 flex-1 flex-col p-3.5">
-          <h3 className={`line-clamp-2 text-[15px] font-bold leading-snug text-text-primary [overflow-wrap:anywhere] ${explorer ? 'min-h-[2.75em]' : ''}`}>{sub.name}</h3>
+        <div className={`flex min-w-0 flex-1 flex-col ${explorer ? 'p-2.5 sm:p-3.5' : 'p-3.5'}`}>
+          <h3 className={`line-clamp-2 text-[15px] font-bold leading-snug text-text-primary [overflow-wrap:anywhere] ${explorer ? 'min-h-[2.75em] !text-[13px] sm:!text-[15px]' : ''}`}>{sub.name}</h3>
           {sub.provider && <div className={`mt-1.5 flex min-w-0 items-start gap-1 ${explorer ? 'min-h-[3em] text-xs' : ''}`}>
             <p className="line-clamp-2 min-w-0 text-xs leading-relaxed text-text-secondary [overflow-wrap:anywhere]">{sub.provider.name}</p>
             {sub.provider.isVerified && <svg width="14" height="14" viewBox="0 0 24 24" className="mt-0.5 shrink-0" aria-label="Prestataire vérifié"><circle cx="12" cy="12" r="10" fill="#3B82F6" /><path d="m8 12 3 3 5-6" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" /></svg>}
@@ -45,8 +45,8 @@ export function SubscriptionCard({ subscription: sub, variant = 'compact', showF
           </div>}
           {explorer && <div className="h-3 shrink-0" />}
           <div className={`${explorer ? 'mt-auto flex flex-wrap items-center gap-x-2 gap-y-1 pt-3' : 'mt-3 flex flex-wrap items-center justify-between gap-x-2 gap-y-1 pt-3'} border-t border-divider`}>
-            <span className="whitespace-nowrap text-lg font-extrabold leading-tight text-accent tabular-nums">{formatPrice(sub.price, sub.currency)}</span>
-            <span className={`text-right text-[10px] leading-tight text-text-secondary ${explorer ? 'ml-auto max-w-20' : ''}`}>pour toute la durée</span>
+            <span className={`whitespace-nowrap font-extrabold leading-tight text-accent tabular-nums ${explorer ? 'text-sm sm:text-lg' : 'text-lg'}`}>{formatPrice(sub.price, sub.currency)}</span>
+            <span className={`text-right text-[10px] leading-tight text-text-secondary ${explorer ? 'ml-auto max-w-[4.5rem] text-[9px] sm:max-w-20 sm:text-[10px]' : ''}`}>pour toute la durée</span>
           </div>
         </div>
       </Link>

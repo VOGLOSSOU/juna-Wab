@@ -247,13 +247,13 @@ export default function ExplorerClient() {
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 items-stretch gap-4 min-[540px]:grid-cols-2 min-[900px]:grid-cols-3 min-[1200px]:grid-cols-4">
+        <div className="grid grid-cols-2 items-stretch gap-3 sm:gap-4 min-[900px]:grid-cols-3 min-[1200px]:grid-cols-4">
           {subscriptions.map((sub) => (
             <SubscriptionCard key={sub.id} subscription={sub} variant="explorer" />
           ))}
           {loading && Array.from({ length: 8 }).map((_, i) => (
             <div key={`sk-${i}`} aria-hidden="true" className="overflow-hidden rounded-[18px] border border-[#e8ece6] bg-white">
-              <Skeleton className="aspect-[16/10] w-full rounded-none" />
+              <Skeleton className="aspect-[4/3] w-full rounded-none sm:aspect-[16/10]" />
               <div className="flex flex-col gap-3 p-3.5">
                 <Skeleton className="h-10 w-full" />
                 <Skeleton className="h-9 w-4/5" />
