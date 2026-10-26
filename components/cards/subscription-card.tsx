@@ -8,10 +8,11 @@ import type { Subscription } from '@/types'
 
 interface SubscriptionCardProps {
   subscription: Subscription
+  showFavorite?: boolean
   variant?: 'compact' | 'featured' | 'horizontal' | 'explorer'
 }
 
-export function SubscriptionCard({ subscription: sub, variant = 'compact' }: SubscriptionCardProps) {
+export function SubscriptionCard({ subscription: sub, variant = 'compact', showFavorite = true }: SubscriptionCardProps) {
   const imageUrl = sub.images?.[0] ?? sub.imageUrl
   const unavailable = sub.isAvailable === false || sub.isActive === false || sub.isPublic === false
   const reviews = sub.reviewCount ?? sub.totalReviews ?? 0
@@ -49,7 +50,7 @@ export function SubscriptionCard({ subscription: sub, variant = 'compact' }: Sub
           </div>
         </div>
       </Link>
-      <div className={`absolute right-2 top-2 ${horizontal ? 'right-3' : ''}`}><FavoriteButton subscription={sub} /></div>
+      {showFavorite && <div className={`absolute right-2 top-2 ${horizontal ? 'right-3' : ''}`}><FavoriteButton subscription={sub} /></div>}
     </article>
   )
 }

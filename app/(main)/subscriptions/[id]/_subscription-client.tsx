@@ -106,6 +106,9 @@ export default function SubscriptionDetailClient() {
               <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
             </div>
           )}
+          <div className="absolute right-3 top-3 z-10">
+            <FavoriteButton subscription={subscription} />
+          </div>
           {provider && (
             <Link
               href={`/providers/${provider.id}`}
@@ -143,7 +146,6 @@ export default function SubscriptionDetailClient() {
       <div className="flex flex-col gap-5">
         <div className="flex items-start justify-between gap-3">
           <h1 className="text-headline-large font-semibold">{name}</h1>
-          <FavoriteButton subscription={subscription} />
           <Badge variant={isActive ? 'success' : 'grey'} className="flex-shrink-0">
             {isActive ? 'Disponible' : 'Indisponible'}
           </Badge>
@@ -344,7 +346,7 @@ export default function SubscriptionDetailClient() {
           <div className="flex gap-4 overflow-x-auto hide-scrollbar pb-2">
             {providerSubscriptions.map((sub) => (
               <div key={sub.id} className="flex-shrink-0 w-48 h-[268px]">
-                <SubscriptionCard subscription={sub} variant="compact" />
+                <SubscriptionCard subscription={sub} variant="compact" showFavorite={false} />
               </div>
             ))}
           </div>
