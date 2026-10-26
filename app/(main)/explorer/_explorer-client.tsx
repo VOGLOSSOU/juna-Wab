@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { SubscriptionCard } from '@/components/cards/subscription-card'
-import { SkeletonCard } from '@/components/ui/skeleton'
+import { Skeleton } from '@/components/ui/skeleton'
 import { useCityStore } from '@/lib/store/city'
 import { useAuthStore } from '@/lib/store/auth'
 import { useFavoritesStore } from '@/lib/store/favorites'
@@ -247,14 +247,22 @@ export default function ExplorerClient() {
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 min-[440px]:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 items-stretch gap-4 min-[540px]:grid-cols-2 min-[900px]:grid-cols-3 min-[1200px]:grid-cols-4">
           {subscriptions.map((sub) => (
-            <div key={sub.id} className="h-full">
-              <SubscriptionCard subscription={sub} />
-            </div>
+            <SubscriptionCard key={sub.id} subscription={sub} variant="explorer" />
           ))}
           {loading && Array.from({ length: 8 }).map((_, i) => (
-            <div key={`sk-${i}`} className="h-[268px]"><SkeletonCard /></div>
+            <div key={`sk-${i}`} aria-hidden="true" className="overflow-hidden rounded-[18px] border border-[#e8ece6] bg-white">
+              <Skeleton className="aspect-[16/10] w-full rounded-none" />
+              <div className="flex flex-col gap-3 p-3.5">
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-9 w-4/5" />
+                <div className="flex items-center justify-between gap-2 border-t border-divider pt-3">
+                  <Skeleton className="h-6 w-28" />
+                  <Skeleton className="h-3 w-20" />
+                </div>
+              </div>
+            </div>
           ))}
         </div>
       )}

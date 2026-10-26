@@ -8,7 +8,7 @@ import type { Subscription } from '@/types'
 
 interface SubscriptionCardProps {
   subscription: Subscription
-  variant?: 'compact' | 'featured' | 'horizontal'
+  variant?: 'compact' | 'featured' | 'horizontal' | 'explorer'
 }
 
 export function SubscriptionCard({ subscription: sub, variant = 'compact' }: SubscriptionCardProps) {
@@ -16,13 +16,14 @@ export function SubscriptionCard({ subscription: sub, variant = 'compact' }: Sub
   const unavailable = sub.isAvailable === false || sub.isActive === false || sub.isPublic === false
   const reviews = sub.reviewCount ?? sub.totalReviews ?? 0
   const horizontal = variant === 'horizontal'
+  const explorer = variant === 'explorer'
   return (
-    <article className={`group relative h-full overflow-hidden rounded-[18px] border border-[#e8ece6] bg-white shadow-[0_4px_18px_rgba(26,92,42,0.04)] transition-shadow hover:shadow-md ${variant === 'featured' ? 'min-w-[280px]' : ''}`}>
+    <article className={`group relative flex h-full min-w-0 flex-col overflow-hidden rounded-[18px] border border-[#e8ece6] bg-white shadow-[0_4px_18px_rgba(26,92,42,0.04)] transition-shadow hover:shadow-md ${variant === 'featured' ? 'min-w-[280px]' : ''}`}>
       <Link href={`/subscriptions/${sub.id}`} aria-label={`Voir ${sub.name}`}
         aria-disabled={unavailable || undefined} tabIndex={unavailable ? -1 : undefined}
         onClick={event => { if (unavailable) event.preventDefault() }}
-        className={`flex h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary ${horizontal ? 'flex-row' : 'flex-col'}`}>
-        <div className={`relative shrink-0 overflow-hidden bg-primary-surface ${horizontal ? 'w-32 min-h-40' : variant === 'featured' ? 'aspect-[16/10]' : 'aspect-[4/3]'}`}>
+        className={`flex h-full flex-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary ${horizontal ? 'flex-row' : 'flex-col'}`}>
+        <div className={`relative shrink-0 overflow-hidden bg-primary-surface ${horizontal ? 'w-32 min-h-40' : variant === 'featured' ? 'aspect-[16/10]' : explorer ? 'aspect-[16/10] w-full' : 'aspect-[4/3]'}`}>
           {imageUrl ? <Image src={imageUrl} alt={sub.name} fill
             sizes={horizontal ? '128px' : '(max-width: 640px) 70vw, (max-width: 1024px) 40vw, 25vw'}
             className="object-cover transition-transform duration-300 group-hover:scale-[1.03] motion-reduce:transform-none" /> :
@@ -33,17 +34,18 @@ export function SubscriptionCard({ subscription: sub, variant = 'compact' }: Sub
           {unavailable && <span className="absolute bottom-3 left-3 rounded-lg bg-black/70 px-2 py-1 text-xs font-medium text-white">Indisponible</span>}
         </div>
         <div className="flex min-w-0 flex-1 flex-col p-3.5">
-          <h3 className="line-clamp-2 text-[15px] font-bold leading-snug text-text-primary [overflow-wrap:anywhere]">{sub.name}</h3>
-          {sub.provider && <div className="mt-1.5 flex min-w-0 items-start gap-1">
+          <h3 className={`line-clamp-2 text-[15px] font-bold leading-snug text-text-primary [overflow-wrap:anywhere] ${explorer ? 'min-h-[2.75em]' : ''}`}>{sub.name}</h3>
+          {sub.provider && <div className={`mt-1.5 flex min-w-0 items-start gap-1 ${explorer ? 'min-h-[3em] text-xs' : ''}`}>
             <p className="line-clamp-2 min-w-0 text-xs leading-relaxed text-text-secondary [overflow-wrap:anywhere]">{sub.provider.name}</p>
             {sub.provider.isVerified && <svg width="14" height="14" viewBox="0 0 24 24" className="mt-0.5 shrink-0" aria-label="Prestataire vérifié"><circle cx="12" cy="12" r="10" fill="#3B82F6" /><path d="m8 12 3 3 5-6" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" /></svg>}
           </div>}
           {reviews > 0 && sub.rating !== undefined && <div className="mt-2 flex items-center gap-1 text-xs text-text-secondary">
             <span aria-hidden="true" className="text-amber-500">★</span><span className="font-semibold text-text-primary">{sub.rating.toFixed(1)}</span><span>({reviews} avis)</span>
           </div>}
-          <div className="mt-3 flex flex-wrap items-center justify-between gap-x-2 gap-y-1 border-t border-divider pt-3">
+          {explorer && <div className="h-3 shrink-0" />}
+          <div className={`${explorer ? 'mt-auto flex flex-wrap items-center gap-x-2 gap-y-1 pt-3' : 'mt-3 flex flex-wrap items-center justify-between gap-x-2 gap-y-1 pt-3'} border-t border-divider`}>
             <span className="whitespace-nowrap text-lg font-extrabold leading-tight text-accent tabular-nums">{formatPrice(sub.price, sub.currency)}</span>
-            <span className="text-right text-[10px] leading-tight text-text-secondary">pour toute la durée</span>
+            <span className={`text-right text-[10px] leading-tight text-text-secondary ${explorer ? 'ml-auto max-w-20' : ''}`}>pour toute la durée</span>
           </div>
         </div>
       </Link>
