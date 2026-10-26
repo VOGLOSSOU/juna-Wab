@@ -24,11 +24,15 @@ export default function HomeClient() {
   const [searchResults, setSearchResults] = useState<Subscription[]>([])
   const [searchLoading, setSearchLoading] = useState(false)
   const searchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const feedScope = useRef<string | null>(null)
+  const searchScope = useRef<string | null>(null)
   const resultsRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     if (!selectedCity) return
-    setLoading(true)
+    const scope = `${selectedCity.id}:${userId ?? 'guest'}`
+    if (feedScope.current !== scope) setLoading(true)
+    feedScope.current = scope
     setError(false)
     let current = true
     getHome(selectedCity.id)
@@ -41,7 +45,9 @@ export default function HomeClient() {
   useEffect(() => {
     if (searchTimeout.current) clearTimeout(searchTimeout.current)
     if (!search.trim() || !selectedCity) { setSearchResults([]); return }
-    setSearchLoading(true)
+    const scope = `${selectedCity.id}:${userId ?? 'guest'}:${search}`
+    if (searchScope.current !== scope) setSearchLoading(true)
+    searchScope.current = scope
     searchTimeout.current = setTimeout(async () => {
       try {
         const res = await getSubscriptions({ search, cityId: selectedCity.id, limit: 20 })

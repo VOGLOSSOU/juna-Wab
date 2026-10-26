@@ -249,7 +249,7 @@ export default function ExplorerClient() {
       ) : (
         <div className="grid grid-cols-1 min-[440px]:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {subscriptions.map((sub) => (
-            <div key={sub.id} className="h-[268px]">
+            <div key={sub.id} className="h-full">
               <SubscriptionCard subscription={sub} />
             </div>
           ))}

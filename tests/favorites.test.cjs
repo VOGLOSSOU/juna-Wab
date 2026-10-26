@@ -177,3 +177,87 @@ test('cards show real reviews and mark unavailable favorites', () => {
   assert.match(html, /Indisponible/)
   assert.match(html, /aria-disabled="true"/)
 })
+
+function animatedButtonHarness({ saved = false, reduced = false } = {}) {
+  const state = setup()
+  state.auth.login('A')
+  const slots = []
+  let cursor = 0
+  function useState(initial) {
+    const i = cursor++
+    if (slots[i] === undefined) slots[i] = initial
+    return [slots[i], value => { slots[i] = typeof value === 'function' ? value(slots[i]) : value }]
+  }
+  const notices = []
+  const { FavoriteButton } = compile('components/ui/favorite-button.tsx', {
+    react: { ...React, useState,
+      useRef: initial => { const [ref] = useState({ current: initial }); return ref },
+      useEffect: callback => { const i = cursor++; if (!slots[i]) { slots[i] = true; callback() } },
+    },
+    'framer-motion': { motion: { span: 'motion-span' }, useReducedMotion: () => reduced },
+    'next/navigation': { useRouter: () => ({ push() {} }), usePathname: () => '/explorer' },
+    '@/lib/store/auth': { useAuthStore: Object.assign(selector => selector(state.auth.getState()), state.auth) },
+    '@/lib/store/favorites': { useFavoritesStore: Object.assign(selector => selector(state.store.getState()), { getState: state.store.getState }) },
+    '@/lib/utils/api-error': { showApiError: error => notices.push(error) },
+  })
+  const subscription = { id: 'sub', name: 'Formule test', isFavorite: saved,
+    favoriteAccountId: 'A', favoriteRevision: state.context.favoriteRevision() }
+  const render = () => { cursor = 0; return FavoriteButton({ subscription }) }
+  render() // Hydration effect.
+  return { ...state, notices, render }
+}
+
+function fallingHearts(element) {
+  if (!element || typeof element !== 'object') return []
+  return [...(element.props?.initial?.y === -26 ? [element] : []),
+    ...React.Children.toArray(element.props?.children).flatMap(fallingHearts)]
+}
+
+test('falling heart starts only after a confirmed addition, not while loading', async () => {
+  const state = animatedButtonHarness()
+  let resolve
+  state.block(new Promise(done => { resolve = done }))
+  const pending = state.render().props.onClick()
+  assert.equal(fallingHearts(state.render()).length, 0)
+  resolve(true)
+  await pending
+  const hearts = fallingHearts(state.render())
+  assert.equal(hearts.length, 1)
+  assert.equal(hearts[0].props['aria-hidden'], 'true')
+  hearts[0].props.onAnimationComplete()
+  assert.equal(fallingHearts(state.render()).length, 0)
+})
+
+test('an existing favorite and a successful removal do not trigger the animation', async () => {
+  const state = animatedButtonHarness({ saved: true })
+  assert.equal(fallingHearts(state.render()).length, 0)
+  await state.render().props.onClick()
+  assert.equal(state.store.getState().flags.sub, false)
+  assert.equal(fallingHearts(state.render()).length, 0)
+})
+
+test('failed addition never plays the confirmation animation', async () => {
+  const state = animatedButtonHarness()
+  state.fail()
+  await state.render().props.onClick()
+  assert.equal(fallingHearts(state.render()).length, 0)
+  assert.equal(state.notices.length, 1)
+})
+
+test('reduced motion disables animation but still saves the favorite', async () => {
+  const state = animatedButtonHarness({ reduced: true })
+  await state.render().props.onClick()
+  assert.equal(state.store.getState().flags.sub, true)
+  assert.equal(fallingHearts(state.render()).length, 0)
+})
+
+test('account changes cancel animation from a previous request', async () => {
+  const state = animatedButtonHarness()
+  let resolve
+  state.block(new Promise(done => { resolve = done }))
+  const pending = state.render().props.onClick()
+  state.auth.login('B')
+  resolve(true)
+  await pending
+  assert.equal(fallingHearts(state.render()).length, 0)
+})
