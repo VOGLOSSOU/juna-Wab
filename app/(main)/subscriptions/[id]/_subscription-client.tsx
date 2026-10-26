@@ -6,6 +6,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { getSubscription } from '@/lib/api/subscriptions'
 import { Button } from '@/components/ui/button'
+import { FavoriteButton } from '@/components/ui/favorite-button'
+import { useFavoritesStore } from '@/lib/store/favorites'
 import { Badge } from '@/components/ui/badge'
 import { StarRating } from '@/components/ui/star-rating'
 import { SubscriptionCard } from '@/components/cards/subscription-card'
@@ -49,6 +51,7 @@ export default function SubscriptionDetailClient() {
   const router = useRouter()
   const { isAuthenticated, user } = useAuthStore()
   const isProvider = user?.role === 'PROVIDER'
+  const favoriteRevision = useFavoritesStore(state => state.revision)
 
   const [subscription, setSubscription] = useState<Subscription | null>(null)
   const [loading, setLoading] = useState(true)
@@ -56,11 +59,13 @@ export default function SubscriptionDetailClient() {
   const [openAccordion, setOpenAccordion] = useState<string | null>(null)
 
   useEffect(() => {
+    let current = true
     getSubscription(id)
-      .then(setSubscription)
-      .catch(() => router.push('/not-found'))
-      .finally(() => setLoading(false))
-  }, [id, router])
+      .then(data => { if (current) setSubscription(data) })
+      .catch(() => { if (current) router.push('/not-found') })
+      .finally(() => { if (current) setLoading(false) })
+    return () => { current = false }
+  }, [id, router, user?.id, favoriteRevision])
 
   const handleSubscribe = () => {
     if (!isAuthenticated) {
@@ -138,6 +143,7 @@ export default function SubscriptionDetailClient() {
       <div className="flex flex-col gap-5">
         <div className="flex items-start justify-between gap-3">
           <h1 className="text-headline-large font-semibold">{name}</h1>
+          <FavoriteButton subscription={subscription} />
           <Badge variant={isActive ? 'success' : 'grey'} className="flex-shrink-0">
             {isActive ? 'Disponible' : 'Indisponible'}
           </Badge>

@@ -1,9 +1,14 @@
 import { apiClient } from './client'
+import { favoriteAccountId, favoriteRevision, tagFavoriteAccount } from './favorite-context'
 import type { Subscription, HomeResponse, ApiResponse, PaginatedResponse, SortOption, SubscriptionType, SubscriptionCategory, SubscriptionDuration } from '@/types'
 
 export async function getHome(cityId: string) {
+  const accountId = favoriteAccountId()
+  const requestRevision = favoriteRevision()
   const res = await apiClient.get<ApiResponse<HomeResponse>>(`/home?cityId=${cityId}&limit=10`)
-  return res.data.data
+  return { ...res.data.data,
+    popular: res.data.data.popular.map(sub => tagFavoriteAccount(sub, accountId, requestRevision)),
+    recent: res.data.data.recent.map(sub => tagFavoriteAccount(sub, accountId, requestRevision)) }
 }
 
 export interface GetSubscriptionsParams {
@@ -26,6 +31,8 @@ interface RawSubscriptionsResponse {
 }
 
 export async function getSubscriptions(params: GetSubscriptionsParams): Promise<PaginatedResponse<Subscription>> {
+  const accountId = favoriteAccountId()
+  const requestRevision = favoriteRevision()
   const query = new URLSearchParams()
   Object.entries(params).forEach(([key, value]) => {
     if (value !== undefined && value !== '') query.set(key, String(value))
@@ -33,7 +40,7 @@ export async function getSubscriptions(params: GetSubscriptionsParams): Promise<
   const res = await apiClient.get<ApiResponse<RawSubscriptionsResponse>>(`/subscriptions?${query}`)
   const { subscriptions, pagination } = res.data.data
   return {
-    items: subscriptions,
+    items: subscriptions.map(sub => tagFavoriteAccount(sub, accountId, requestRevision)),
     total: pagination.total,
     page: pagination.page,
     limit: pagination.limit,
@@ -43,8 +50,10 @@ export async function getSubscriptions(params: GetSubscriptionsParams): Promise<
 }
 
 export async function getSubscription(id: string) {
+  const accountId = favoriteAccountId()
+  const requestRevision = favoriteRevision()
   const res = await apiClient.get<ApiResponse<Subscription>>(`/subscriptions/${id}`)
-  return res.data.data
+  return tagFavoriteAccount(res.data.data, accountId, requestRevision)
 }
 
 export async function getProviderSubscriptions(): Promise<Subscription[]> {

@@ -1,9 +1,9 @@
+'use client'
+
 import Link from 'next/link'
 import Image from 'next/image'
-import { Badge } from '@/components/ui/badge'
-import { StarRating } from '@/components/ui/star-rating'
-import { formatPrice, SUBSCRIPTION_TYPE_LABELS, SUBSCRIPTION_DURATION_LABELS } from '@/lib/utils'
-import { ProviderName } from '@/components/ui/provider-name'
+import { FavoriteButton } from '@/components/ui/favorite-button'
+import { formatPrice, SUBSCRIPTION_DURATION_LABELS } from '@/lib/utils'
 import type { Subscription } from '@/types'
 
 interface SubscriptionCardProps {
@@ -11,86 +11,43 @@ interface SubscriptionCardProps {
   variant?: 'compact' | 'featured' | 'horizontal'
 }
 
-export function SubscriptionCard({ subscription, variant = 'compact' }: SubscriptionCardProps) {
-  const {
-    id, name, images, price, currency, type, duration, rating, reviewCount, provider, isActive,
-  } = subscription
-
-  const imageUrl = images?.[0] ?? subscription.imageUrl
-  const isUnavailable = isActive === false
-
-  if (variant === 'horizontal') {
-    return (
-      <Link href={`/subscriptions/${id}`} className="flex gap-4 bg-white rounded-lg p-3 shadow-sm border border-border hover:shadow-md transition-shadow">
-        <div className="relative w-24 h-24 flex-shrink-0 rounded-md overflow-hidden bg-surface-grey">
-          {imageUrl ? (
-            <Image src={imageUrl} alt={name} fill sizes="96px" className="object-cover" />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-text-light"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg></div>
-          )}
+export function SubscriptionCard({ subscription: sub, variant = 'compact' }: SubscriptionCardProps) {
+  const imageUrl = sub.images?.[0] ?? sub.imageUrl
+  const unavailable = sub.isAvailable === false || sub.isActive === false || sub.isPublic === false
+  const reviews = sub.reviewCount ?? sub.totalReviews ?? 0
+  const horizontal = variant === 'horizontal'
+  return (
+    <article className={`group relative h-full overflow-hidden rounded-[18px] border border-[#e8ece6] bg-white shadow-[0_4px_18px_rgba(26,92,42,0.04)] transition-shadow hover:shadow-md ${variant === 'featured' ? 'min-w-[280px]' : ''}`}>
+      <Link href={`/subscriptions/${sub.id}`} aria-label={`Voir ${sub.name}`}
+        aria-disabled={unavailable || undefined} tabIndex={unavailable ? -1 : undefined}
+        onClick={event => { if (unavailable) event.preventDefault() }}
+        className={`flex h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary ${horizontal ? 'flex-row' : 'flex-col'}`}>
+        <div className={`relative shrink-0 overflow-hidden bg-primary-surface ${horizontal ? 'w-32 min-h-40' : variant === 'featured' ? 'aspect-[16/10]' : 'aspect-[4/3]'}`}>
+          {imageUrl ? <Image src={imageUrl} alt={sub.name} fill
+            sizes={horizontal ? '128px' : '(max-width: 640px) 70vw, (max-width: 1024px) 40vw, 25vw'}
+            className="object-cover transition-transform duration-300 group-hover:scale-[1.03] motion-reduce:transform-none" /> :
+            <div className="flex h-full min-h-32 items-center justify-center text-primary/50"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M4 3v6a3 3 0 006 0V3M7 3v18M19 3c-3 2-4 5-4 8h4m0-8v18" /></svg></div>}
+          <span className={`absolute left-3 top-3 max-w-[calc(100%-72px)] truncate rounded-lg bg-white/95 px-2.5 py-1.5 text-[10px] font-bold leading-tight text-primary shadow-sm ${horizontal ? 'max-w-[calc(100%-24px)]' : ''}`}>
+            {SUBSCRIPTION_DURATION_LABELS[sub.duration]}
+          </span>
+          {unavailable && <span className="absolute bottom-3 left-3 rounded-lg bg-black/70 px-2 py-1 text-xs font-medium text-white">Indisponible</span>}
         </div>
-        <div className="flex flex-col gap-1 flex-1 min-w-0">
-          <h3 className="font-semibold text-text-primary text-sm line-clamp-1">{name}</h3>
-          {provider && <p className="text-xs text-text-secondary break-words"><ProviderName name={provider.name} isVerified={provider.isVerified} badgeSize={13} /></p>}
-          <div className="flex items-center gap-1 mt-auto">
-            <span className="font-bold text-primary text-sm">{formatPrice(price, currency)}</span>
+        <div className="flex min-w-0 flex-1 flex-col p-3.5">
+          <h3 className="line-clamp-2 text-[15px] font-bold leading-snug text-text-primary [overflow-wrap:anywhere]">{sub.name}</h3>
+          {sub.provider && <div className="mt-1.5 flex min-w-0 items-start gap-1">
+            <p className="line-clamp-2 min-w-0 text-xs leading-relaxed text-text-secondary [overflow-wrap:anywhere]">{sub.provider.name}</p>
+            {sub.provider.isVerified && <svg width="14" height="14" viewBox="0 0 24 24" className="mt-0.5 shrink-0" aria-label="Prestataire vérifié"><circle cx="12" cy="12" r="10" fill="#3B82F6" /><path d="m8 12 3 3 5-6" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" /></svg>}
+          </div>}
+          {reviews > 0 && sub.rating !== undefined && <div className="mt-2 flex items-center gap-1 text-xs text-text-secondary">
+            <span aria-hidden="true" className="text-amber-500">★</span><span className="font-semibold text-text-primary">{sub.rating.toFixed(1)}</span><span>({reviews} avis)</span>
+          </div>}
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-x-2 gap-y-1 border-t border-divider pt-3">
+            <span className="whitespace-nowrap text-lg font-extrabold leading-tight text-accent tabular-nums">{formatPrice(sub.price, sub.currency)}</span>
+            <span className="text-right text-[10px] leading-tight text-text-secondary">pour toute la durée</span>
           </div>
         </div>
       </Link>
-    )
-  }
-
-  return (
-    <Link
-      href={`/subscriptions/${id}`}
-      className={`group flex flex-col h-full bg-white rounded-lg overflow-hidden shadow-sm border border-border hover:shadow-md transition-all duration-200 ${
-        variant === 'featured' ? 'min-w-[280px]' : ''
-      }`}
-    >
-      <div className={`relative overflow-hidden bg-surface-grey ${variant === 'featured' ? 'h-52' : 'h-44'}`}>
-        {imageUrl ? (
-          <Image
-            src={imageUrl}
-            alt={name}
-            fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-text-light"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg></div>
-        )}
-        {isUnavailable && (
-          <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-            <Badge variant="grey" className="text-white bg-black/60">Indisponible</Badge>
-          </div>
-        )}
-      </div>
-
-      <div className="flex flex-col gap-2 p-3 flex-1">
-        <h3 className="font-semibold text-text-primary text-sm line-clamp-2 leading-snug">{name}</h3>
-
-        {provider && (
-          <p className="text-xs text-text-secondary break-words">
-            <ProviderName name={provider.name} isVerified={provider.isVerified} badgeSize={13} />
-          </p>
-        )}
-
-        <div className="flex flex-wrap gap-1">
-          <Badge variant="default" className="text-xs">{SUBSCRIPTION_TYPE_LABELS[type]}</Badge>
-          <Badge variant="grey" className="text-xs">{SUBSCRIPTION_DURATION_LABELS[duration]}</Badge>
-        </div>
-
-        {rating !== undefined && reviewCount !== undefined && reviewCount > 0 && (
-          <div className="flex items-center gap-1">
-            <StarRating value={rating} size={14} readOnly />
-            <span className="text-xs text-text-secondary">({reviewCount})</span>
-          </div>
-        )}
-
-        <div className="flex items-center justify-between mt-auto pt-1">
-          <span className="font-bold text-primary">{formatPrice(price, currency)}</span>
-        </div>
-      </div>
-    </Link>
+      <div className={`absolute right-2 top-2 ${horizontal ? 'right-3' : ''}`}><FavoriteButton subscription={sub} /></div>
+    </article>
   )
 }

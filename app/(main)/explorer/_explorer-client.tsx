@@ -5,6 +5,8 @@ import { useSearchParams } from 'next/navigation'
 import { SubscriptionCard } from '@/components/cards/subscription-card'
 import { SkeletonCard } from '@/components/ui/skeleton'
 import { useCityStore } from '@/lib/store/city'
+import { useAuthStore } from '@/lib/store/auth'
+import { useFavoritesStore } from '@/lib/store/favorites'
 import { getSubscriptions } from '@/lib/api/subscriptions'
 import {
   SUBSCRIPTION_TYPE_LABELS,
@@ -23,6 +25,8 @@ const SORT_OPTIONS: { label: string; value: SortOption }[] = [
 
 export default function ExplorerClient() {
   const { selectedCity, hasChosen } = useCityStore()
+  const userId = useAuthStore(state => state.user?.id)
+  const favoriteRevision = useFavoritesStore(state => state.revision)
   const searchParams = useSearchParams()
 
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([])
@@ -76,13 +80,13 @@ export default function ExplorerClient() {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [selectedCity, sort, category, type, duration, search]
+    [selectedCity, sort, category, type, duration, search, userId, favoriteRevision]
   )
 
   useEffect(() => {
     if (selectedCity) fetchSubscriptions(true)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedCity, sort, category, type, duration])
+  }, [selectedCity, sort, category, type, duration, userId, favoriteRevision])
 
   useEffect(() => {
     if (searchTimeout.current) clearTimeout(searchTimeout.current)
@@ -243,7 +247,7 @@ export default function ExplorerClient() {
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 min-[440px]:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {subscriptions.map((sub) => (
             <div key={sub.id} className="h-[268px]">
               <SubscriptionCard subscription={sub} />

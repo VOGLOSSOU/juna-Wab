@@ -176,6 +176,10 @@ export interface Meal {
 }
 
 export interface Subscription {
+  isFavorite?: boolean
+  isAvailable?: boolean
+  favoriteAccountId?: string | null
+  favoriteRevision?: number
   instructions?: string | null
   id: string
   name: string

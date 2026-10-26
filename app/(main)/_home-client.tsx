@@ -7,11 +7,15 @@ import { SubscriptionCard } from '@/components/cards/subscription-card'
 import { ProviderCard } from '@/components/cards/provider-card'
 import { SkeletonCard } from '@/components/ui/skeleton'
 import { useCityStore } from '@/lib/store/city'
+import { useAuthStore } from '@/lib/store/auth'
+import { useFavoritesStore } from '@/lib/store/favorites'
 import { getHome, getSubscriptions } from '@/lib/api/subscriptions'
 import type { HomeResponse, Subscription } from '@/types'
 
 export default function HomeClient() {
   const { selectedCity, hasChosen } = useCityStore()
+  const userId = useAuthStore(state => state.user?.id)
+  const favoriteRevision = useFavoritesStore(state => state.revision)
   const [data, setData] = useState<HomeResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
@@ -26,11 +30,13 @@ export default function HomeClient() {
     if (!selectedCity) return
     setLoading(true)
     setError(false)
+    let current = true
     getHome(selectedCity.id)
-      .then(setData)
-      .catch(() => setError(true))
-      .finally(() => setLoading(false))
-  }, [selectedCity])
+      .then(data => { if (current) setData(data) })
+      .catch(() => { if (current) setError(true) })
+      .finally(() => { if (current) setLoading(false) })
+    return () => { current = false }
+  }, [selectedCity, userId, favoriteRevision])
 
   useEffect(() => {
     if (searchTimeout.current) clearTimeout(searchTimeout.current)
@@ -46,7 +52,7 @@ export default function HomeClient() {
       }
     }, 350)
     return () => { if (searchTimeout.current) clearTimeout(searchTimeout.current) }
-  }, [search, selectedCity])
+  }, [search, selectedCity, userId, favoriteRevision])
 
   return (
     <>
@@ -71,11 +77,11 @@ export default function HomeClient() {
               </button>
             </div>
             {searchLoading ? (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 min-[440px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
                 {Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)}
               </div>
             ) : searchResults.length ? (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 min-[440px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
                 {searchResults.map((sub) => <SubscriptionCard key={sub.id} subscription={sub} />)}
               </div>
             ) : (
@@ -123,12 +129,12 @@ export default function HomeClient() {
               </div>
               {loading ? (
                 <div className="flex gap-4 overflow-x-auto pb-2 -mx-6 px-6 hide-scrollbar">
-                  {Array.from({ length: 4 }).map((_, i) => <div key={i} className="flex-shrink-0 w-48 h-[268px]"><SkeletonCard /></div>)}
+                  {Array.from({ length: 4 }).map((_, i) => <div key={i} className="flex-shrink-0 w-[min(72vw,260px)] h-80 sm:w-64"><SkeletonCard /></div>)}
                 </div>
               ) : data?.popular?.length ? (
                 <div className="flex gap-4 overflow-x-auto pb-2 -mx-6 px-6 hide-scrollbar">
                   {data.popular.map((sub) => (
-                    <div key={sub.id} className="flex-shrink-0 w-48 h-[268px]">
+                    <div key={sub.id} className="flex-shrink-0 w-[min(72vw,260px)] sm:w-64">
                       <SubscriptionCard subscription={sub} variant="compact" />
                     </div>
                   ))}
@@ -150,12 +156,12 @@ export default function HomeClient() {
               </div>
               {loading ? (
                 <div className="flex gap-4 overflow-x-auto pb-2 -mx-6 px-6 hide-scrollbar">
-                  {Array.from({ length: 4 }).map((_, i) => <div key={i} className="flex-shrink-0 w-48 h-[268px]"><SkeletonCard /></div>)}
+                  {Array.from({ length: 4 }).map((_, i) => <div key={i} className="flex-shrink-0 w-[min(72vw,260px)] h-80 sm:w-64"><SkeletonCard /></div>)}
                 </div>
               ) : data?.recent?.length ? (
                 <div className="flex gap-4 overflow-x-auto pb-2 -mx-6 px-6 hide-scrollbar">
                   {data.recent.map((sub) => (
-                    <div key={sub.id} className="flex-shrink-0 w-48 h-[268px]">
+                    <div key={sub.id} className="flex-shrink-0 w-[min(72vw,260px)] sm:w-64">
                       <SubscriptionCard subscription={sub} variant="compact" />
                     </div>
                   ))}
