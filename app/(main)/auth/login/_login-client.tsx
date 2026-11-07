@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import toast from 'react-hot-toast'
-import { showApiError } from '@/lib/utils/api-error'
+import { getLoginErrorMessage } from '@/lib/utils/api-error'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { login, getUserProfile } from '@/lib/api/auth'
@@ -26,7 +26,8 @@ function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const redirect = searchParams.get('redirect') || '/'
-  const { setAuth, updateUser } = useAuthStore()
+  const { setAuth, updateUser, sessionExpired, clearSessionNotice } = useAuthStore()
+  const [loginError, setLoginError] = useState<string | null>(null)
   const { setCity } = useCityStore()
   const [showPassword, setShowPassword] = useState(false)
 
@@ -35,6 +36,8 @@ function LoginForm() {
   })
 
   const onSubmit = async (data: FormData) => {
+    setLoginError(null)
+    clearSessionNotice()
     try {
       const result = await login(data)
       if (!result.user.isVerified) {
@@ -46,12 +49,14 @@ function LoginForm() {
       if (profileCity && profileCity.country) {
         setCity(profileCity, profileCity.country)
       }
-      getUserProfile().then(updateUser).catch(() => {})
+      getUserProfile().then(profile => {
+        if (useAuthStore.getState().user?.id === profile.id) updateUser(profile)
+      }).catch(() => {})
       toast.success('Connexion réussie !')
       const defaultRoute = result.user.role === 'PROVIDER' ? '/dashboard' : '/profile'
-      router.push(redirect === '/' ? defaultRoute : redirect)
+      router.replace(redirect === '/' || !redirect.startsWith('/') || redirect.startsWith('//') || redirect.includes('\\') ? defaultRoute : redirect)
     } catch (err: unknown) {
-      showApiError(err)
+      setLoginError(getLoginErrorMessage(err))
     }
   }
 
@@ -96,6 +101,9 @@ function LoginForm() {
             <Link href="/auth/forgot-password" className="text-sm text-primary hover:underline">Mot de passe oublié ?</Link>
           </div>
 
+          {(loginError || sessionExpired) && <p role="alert" className="rounded-lg border border-error/20 bg-red-50 p-3 text-sm text-error">
+            {loginError ?? 'Session expirée. Veuillez vous reconnecter.'}
+          </p>}
           <Button type="submit" variant="primary" size="lg" loading={isSubmitting} className="w-full">
             Se connecter
           </Button>

@@ -126,7 +126,7 @@ export default function DashboardOrderDetailPage() {
           )}
           {order.notes && <Row label="Notes" value={order.notes} />}
           {order.paymentMethod && (
-            <Row label="Paiement" value={PAYMENT_LABELS[order.paymentMethod] ?? order.paymentMethod} />
+            <Row label="Paiement" value={PAYMENT_LABELS[order.paymentMethod] ?? 'Mode non renseigné'} />
           )}
           {order.scheduledFor && (
             <Row label="Planifié pour" value={formatDate(order.scheduledFor)} />
@@ -159,7 +159,7 @@ const PAYMENT_LABELS: Record<string, string> = {
   MOBILE_MONEY_MOOV:   'Moov Money',
   MOBILE_MONEY_ORANGE: 'Orange Money',
   CARD:                'Carte bancaire',
-  CASH:                'Espèces',
+  MOBILE_MONEY_CELTIIS: 'Celtiis',
 }
 
 function Row({ label, value, bold }: { label: string; value: string; bold?: boolean }) {

@@ -74,7 +74,7 @@ export default function PrivacyPage() {
         </Subsection>
         <Subsection title="Données de paiement">
           <ul>
-            <li>Numéro Mobile Money utilisé pour le paiement (transmis à notre prestataire de paiement PawaPay)</li>
+            <li>Numéro Mobile Money utilisé pour le paiement (transmis à notre prestataire de paiement FeexPay)</li>
             <li>Juna Eats ne stocke pas vos numéros de carte bancaire ni vos informations de paiement complètes</li>
           </ul>
         </Subsection>
@@ -105,9 +105,9 @@ export default function PrivacyPage() {
         </p>
         <ul>
           <li>
-            <strong>PawaPay</strong> — prestataire de paiement Mobile Money (MTN MoMo, Moov Money, Orange Money, Wave).
-            Votre numéro de téléphone est transmis à PawaPay pour initier et valider les transactions.
-            PawaPay dispose de sa propre politique de confidentialité consultable sur <span className="text-primary">pawapay.io</span>.
+            <strong>FeexPay</strong> — prestataire de paiement Mobile Money (MTN, Moov et Celtiis au Bénin).
+            Votre numéro de téléphone est transmis à FeexPay pour initier et valider les transactions.
+            FeexPay dispose de sa propre politique de confidentialité consultable sur <span className="text-primary">feexpay.me</span>.
           </li>
           <li>
             <strong>Prestataires de repas</strong> — votre nom et votre adresse de livraison sont transmis au prestataire

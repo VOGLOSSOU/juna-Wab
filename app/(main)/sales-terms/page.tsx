@@ -45,7 +45,7 @@ export default function SalesTermsPage() {
         <ol>
           <li><strong>Sélection d'un abonnement</strong> — l'utilisateur choisit un abonnement proposé par un prestataire disponible dans sa ville.</li>
           <li><strong>Choix du mode de réception</strong> — livraison à domicile ou retrait sur place, selon les options proposées par le prestataire.</li>
-          <li><strong>Paiement</strong> — règlement en ligne via Mobile Money (ou en espèces selon le prestataire).</li>
+          <li><strong>Paiement</strong> — règlement en ligne via Mobile Money via la plateforme Juna Eats.</li>
           <li><strong>Confirmation de commande</strong> — la commande est confirmée après validation du paiement. Un récapitulatif est accessible depuis le profil de l'utilisateur.</li>
           <li><strong>Activation par l'utilisateur</strong> — l'utilisateur active sa commande une fois qu'il confirme avoir reçu son premier repas ou être prêt à démarrer l'abonnement.</li>
           <li><strong>Démarrage de l'abonnement</strong> — l'abonnement est actif et le prestataire assure la fourniture des repas.</li>
@@ -57,10 +57,9 @@ export default function SalesTermsPage() {
           <li>Les prix sont affichés en <strong>Francs CFA (XOF)</strong>, toutes taxes comprises.</li>
           <li>Le prix affiché inclut la <strong>commission de service Juna Eats de 10 %</strong> (voir article 5).</li>
           <li>
-            Le paiement s'effectue de manière sécurisée via <strong>PawaPay</strong>, qui prend en charge
-            les opérateurs Mobile Money suivants : MTN MoMo, Moov Money, Orange Money, Wave.
+            Le paiement s'effectue de manière sécurisée via <strong>FeexPay</strong>, qui prend en charge
+            les opérateurs Mobile Money suivants : MTN, Moov et Celtiis au Bénin.
           </li>
-          <li>Un paiement en espèces peut être possible selon les modalités définies par le prestataire.</li>
           <li>
             Les <strong>frais de livraison</strong>, s'ils s'appliquent, sont négociés directement entre
             l'utilisateur et le prestataire. Ils ne sont pas inclus dans le prix affiché sur la plateforme.
@@ -145,7 +144,7 @@ export default function SalesTermsPage() {
         </p>
         <ul>
           <li>Coupure ou instabilité du réseau internet ou mobile</li>
-          <li>Indisponibilité temporaire d'un opérateur Mobile Money (MTN, Moov, Orange, Wave)</li>
+          <li>Indisponibilité temporaire d'un opérateur Mobile Money (MTN, Moov et Celtiis au Bénin)</li>
           <li>Interruption de service de l'hébergeur (Railway)</li>
           <li>Tout autre événement de force majeure au sens du droit applicable</li>
         </ul>

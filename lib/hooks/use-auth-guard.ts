@@ -16,7 +16,7 @@ export function useAuthGuard(redirectTo = '/auth/login') {
   useEffect(() => {
     if (!hydrated) return
     if (!isAuthenticated) {
-      router.push(`${redirectTo}?redirect=${window.location.pathname}`)
+      router.replace(`${redirectTo}?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`)
     }
   }, [hydrated, isAuthenticated, router, redirectTo])
 

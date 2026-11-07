@@ -79,7 +79,7 @@ export default function TermsPage() {
         <Subsection title="Juna Eats est responsable de">
           <ul>
             <li>Le bon fonctionnement technique de la plateforme</li>
-            <li>La sécurisation des paiements via PawaPay</li>
+            <li>La sécurisation des paiements via FeexPay</li>
             <li>La mise en relation entre utilisateurs et prestataires</li>
             <li>La disponibilité du service dans des conditions normales d'utilisation</li>
           </ul>

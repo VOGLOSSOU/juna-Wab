@@ -35,7 +35,7 @@ Date de lancement                 :
 - **Données d'inscription :** nom, email, numéro de téléphone, mot de passe (hashé)
 - **Données de commande :** adresse de livraison, ville, historique de commandes
 - **Données de localisation :** ville choisie par l'utilisateur pour personnaliser l'affichage
-- **Données de paiement :** numéro Mobile Money (transmis à PawaPay — JUNA ne stocke pas les numéros de carte)
+- **Données de paiement :** numéro Mobile Money (transmis à FeexPay — JUNA ne stocke pas les numéros de carte)
 - **Données techniques :** adresse IP, type de navigateur/appareil, logs de connexion
 
 #### 1.3 Pourquoi ces données sont collectées
@@ -46,7 +46,7 @@ Date de lancement                 :
 - Communication (notifications, emails transactionnels)
 
 #### 1.4 Partage avec des tiers
-- **PawaPay :** traitement des paiements Mobile Money (MTN, Moov, Orange, Wave)
+- **FeexPay :** traitement des paiements Mobile Money (MTN, Moov et Celtiis au Bénin)
 - **Prestataires de repas :** nom, adresse de livraison partagés pour exécuter la commande
 - **Railway :** hébergement de l'infrastructure backend
 - Aucune vente de données à des tiers à des fins publicitaires
@@ -136,15 +136,15 @@ Date de lancement                 :
 #### 3.2 Processus de commande
 1. Sélection d'un abonnement
 2. Choix du mode de réception (livraison ou retrait)
-3. Paiement en ligne (Mobile Money) ou en espèces
+3. Paiement en ligne via la plateforme (Mobile Money)
 4. Confirmation de commande
 5. Activation par l'utilisateur une fois satisfait
 6. Démarrage de l'abonnement
 
 #### 3.3 Prix et paiement
 - Prix affichés en Francs CFA (XOF), toutes taxes comprises
-- Paiement sécurisé via PawaPay (MTN MoMo, Moov Money, Orange Money, Wave)
-- Paiement en espèces possible selon le prestataire
+- Paiement sécurisé via FeexPay (MTN, Moov et Celtiis au Bénin)
+- Le règlement de l’abonnement passe par la plateforme, en livraison comme en retrait
 - Frais de livraison : négociés directement avec le prestataire (non inclus dans le prix affiché)
 - Le prix affiché inclut la commission Juna Eats de 10 %
 - La commande n'est confirmée qu'après validation du paiement
@@ -157,7 +157,7 @@ Date de lancement                 :
 #### 3.4 bis Commission et rémunération du prestataire
 - Commission fixe de 10 % du prix payé par le client, identique pour tous les prestataires
 - Le prestataire fixe ce qu'il veut recevoir ; prix client = prix prestataire / 0,9
-- Reversement au prestataire : manuel à ce jour (pas de disbursement automatique PawaPay). Mettre à jour les CGV quand le reversement automatique sera en place
+- Reversement au prestataire : manuel à ce jour (pas de disbursement automatique FeexPay). Mettre à jour les CGV quand le reversement automatique sera en place
 
 #### 3.5 Annulation et remboursement
 - Annulation possible avant activation de la commande

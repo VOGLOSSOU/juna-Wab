@@ -1,86 +1,72 @@
-import axios from 'axios'
+import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios'
 import { useAuthStore } from '@/lib/store/auth'
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://juna-app.up.railway.app/api/v1'
+const publicAuthPaths = new Set(['/auth/login', '/auth/register', '/auth/refresh',
+  '/auth/send-verification-code', '/auth/verify-code', '/auth/forgot-password', '/auth/reset-password', '/auth/logout'])
+type RequestConfig = InternalAxiosRequestConfig & { _retry?: boolean; _authRevision?: number }
+const pathOf = (url?: string) => (url ?? '').split('?')[0].replace(/\/$/, '')
+const token = (key: string) => typeof window === 'undefined' ? null : localStorage.getItem(key)
 
-export const apiClient = axios.create({
-  baseURL: BASE_URL,
-  headers: { 'Content-Type': 'application/json' },
-  withCredentials: false,
-})
-
-apiClient.interceptors.request.use((config) => {
-  if (typeof window !== 'undefined') {
-    const token = localStorage.getItem('accessToken')
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
-    }
-  }
+export const apiClient = axios.create({ baseURL: BASE_URL, timeout: 15000,
+  headers: { 'Content-Type': 'application/json' }, withCredentials: false })
+apiClient.interceptors.request.use((config: RequestConfig) => {
+  const access = token('accessToken')
+  config._authRevision = useAuthStore.getState().authRevision
+  if (access && !publicAuthPaths.has(pathOf(config.url))) config.headers.Authorization = `Bearer ${access}`
+  else delete config.headers.Authorization
   return config
 })
 
-let isRefreshing = false
-let failedQueue: { resolve: (v: unknown) => void; reject: (e: unknown) => void }[] = []
-
-function processQueue(error: unknown, token: string | null = null) {
-  failedQueue.forEach((p) => {
-    if (error) p.reject(error)
-    else p.resolve(token)
-  })
-  failedQueue = []
+let refreshing: { revision: number; access: string; refresh: string; promise: Promise<string> } | null = null
+async function refreshAccess(access: string, refresh: string, revision: number): Promise<string> {
+  const unchanged = () => useAuthStore.getState().authRevision === revision &&
+    token('accessToken') === access && token('refreshToken') === refresh
+  try {
+    const { data } = await axios.post(`${BASE_URL}/auth/refresh`, { refreshToken: refresh }, { timeout: 15000 })
+    if (!unchanged()) throw new Error('Session modifiée pendant la vérification.')
+    const nextAccess: unknown = data?.data?.accessToken
+    const nextRefresh: unknown = data?.data?.refreshToken ?? refresh
+    if (typeof nextAccess !== 'string' || !nextAccess || typeof nextRefresh !== 'string' || !nextRefresh) {
+      throw new Error('Le service de connexion est momentanément indisponible.')
+    }
+    useAuthStore.getState().setTokens(nextAccess, nextRefresh)
+    return nextAccess
+  } catch (error) {
+    const status = (error as AxiosError)?.response?.status
+    // Never expire a visitor, a newer account, or a session on network/5xx errors.
+    if (unchanged() && (status === 401 || status === 403)) useAuthStore.getState().expireSession()
+    throw error
+  }
 }
 
-apiClient.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config
-
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      if (isRefreshing) {
-        return new Promise((resolve, reject) => {
-          failedQueue.push({ resolve, reject })
-        })
-          .then((token) => {
-            originalRequest.headers.Authorization = `Bearer ${token}`
-            return apiClient(originalRequest)
-          })
-          .catch((err) => Promise.reject(err))
-      }
-
-      const refreshToken = localStorage.getItem('refreshToken')
-      if (!refreshToken) {
-        return Promise.reject(error)
-      }
-
-      originalRequest._retry = true
-      isRefreshing = true
-
-      try {
-        const { data } = await axios.post(`${BASE_URL}/auth/refresh`, { refreshToken })
-        const newAccessToken = data.data.accessToken
-
-        localStorage.setItem('accessToken', newAccessToken)
-        if (data.data.refreshToken) {
-          localStorage.setItem('refreshToken', data.data.refreshToken)
-        }
-
-        apiClient.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`
-        processQueue(null, newAccessToken)
-        return apiClient(originalRequest)
-      } catch (refreshError) {
-        processQueue(refreshError, null)
-        // Ne déconnecter que si le serveur répond explicitement (401/403)
-        // Une erreur réseau/timeout n'a pas de `response` — on garde les tokens
-        const hasServerResponse = (refreshError as { response?: unknown })?.response
-        if (hasServerResponse) {
-          useAuthStore.getState().logout()
-        }
-        return Promise.reject(refreshError)
-      } finally {
-        isRefreshing = false
-      }
-    }
-
+apiClient.interceptors.response.use(response => response, async (error: AxiosError) => {
+  const original = error.config as RequestConfig | undefined
+  if (!original || error.response?.status !== 401 || original._retry ||
+      publicAuthPaths.has(pathOf(original.url)) || !original.headers.Authorization) return Promise.reject(error)
+  const state = useAuthStore.getState()
+  if (original._authRevision !== state.authRevision) return Promise.reject(error)
+  const access = token('accessToken')
+  if (!access) return Promise.reject(error)
+  original._retry = true
+  // A parallel request may have already refreshed this same session.
+  if (original.headers.Authorization !== `Bearer ${access}`) return apiClient(original)
+  const refresh = token('refreshToken')
+  if (!refresh) {
+    state.expireSession()
     return Promise.reject(error)
   }
-)
+  if (!refreshing || refreshing.revision !== state.authRevision || refreshing.access !== access || refreshing.refresh !== refresh) {
+    const request = { revision: state.authRevision, access, refresh,
+      promise: refreshAccess(access, refresh, state.authRevision) }
+    refreshing = request
+    void request.promise.finally(() => { if (refreshing === request) refreshing = null }).catch(() => {})
+  }
+  try {
+    const revision = state.authRevision
+    const newAccess = await refreshing.promise
+    if (useAuthStore.getState().authRevision !== revision || token('accessToken') !== newAccess) return Promise.reject(error)
+    original.headers.Authorization = `Bearer ${newAccess}`
+    return apiClient(original)
+  } catch (refreshError) { return Promise.reject(refreshError) }
+})

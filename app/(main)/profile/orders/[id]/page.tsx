@@ -6,12 +6,13 @@ import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { getOrder, activateOrder } from '@/lib/api/orders'
-import { getSubscription } from '@/lib/api/subscriptions'
 import { StatusBadge } from '@/components/ui/status-badge'
 import { Button } from '@/components/ui/button'
 import { useAuthGuard } from '@/lib/hooks/use-auth-guard'
 import { formatPrice, formatDate, ORDER_STATUS_LABELS } from '@/lib/utils'
 import toast from 'react-hot-toast'
+import { hasUnresolvedPayment, paymentStatusLabel } from '@/lib/utils/payment'
+import { useAuthStore } from '@/lib/store/auth'
 import { showApiError } from '@/lib/utils/api-error'
 import type { Order } from '@/types'
 
@@ -19,36 +20,33 @@ export default function OrderDetailPage() {
   const { id } = useParams<{ id: string }>()
   const router = useRouter()
   const { isAuthenticated, hydrated } = useAuthGuard()
+  const accountId = useAuthStore(state => state.user?.id)
   const [order, setOrder] = useState<Order | null>(null)
   const [loading, setLoading] = useState(true)
   const [activating, setActivating] = useState(false)
 
   useEffect(() => {
     if (!hydrated || !isAuthenticated) return
+    let current = true
+    let sequence = 0
+    setOrder(null)
     setLoading(true)
-    getOrder(id)
-      .then(async (fetched) => {
-        if (!fetched.subscription && fetched.subscriptionId) {
-          try {
-            const sub = await getSubscription(fetched.subscriptionId)
-            setOrder({
-              ...fetched,
-              subscription: {
-                id: sub.id,
-                name: sub.name,
-                provider: sub.provider ? { id: sub.provider.id, name: sub.provider.name } : undefined,
-              },
-            })
-          } catch {
-            setOrder(fetched)
-          }
-        } else {
-          setOrder(fetched)
-        }
-      })
-      .catch((err) => showApiError(err))
-      .finally(() => setLoading(false))
-  }, [id, hydrated, isAuthenticated])
+    const load = async () => {
+      if (document.visibilityState === 'hidden') return
+      const request = ++sequence
+      try {
+        const fresh = await getOrder(id)
+        if (current && request === sequence) setOrder(fresh)
+      } catch (error) { if (current && request === sequence) showApiError(error) }
+      finally { if (current && request === sequence) setLoading(false) }
+    }
+    void load()
+    const resume = () => { void load() }
+    window.addEventListener('focus', resume)
+    document.addEventListener('visibilitychange', resume)
+    return () => { current = false; window.removeEventListener('focus', resume); document.removeEventListener('visibilitychange', resume) }
+  }, [id, hydrated, isAuthenticated, accountId])
+
 
   const handleActivateOrder = async () => {
     if (!order) return
@@ -57,7 +55,7 @@ export default function OrderDetailPage() {
       await activateOrder(order.id)
       const refreshed = await getOrder(order.id)
       setOrder(refreshed)
-      toast.success('Abonnement démarré ! Le paiement vient d\'être transféré au prestataire.')
+      toast.success('Votre abonnement a démarré !')
     } catch (err: unknown) {
       showApiError(err)
     } finally {
@@ -65,7 +63,7 @@ export default function OrderDetailPage() {
     }
   }
 
-  if (loading) return <div className="p-10 text-center text-text-secondary">Chargement...</div>
+  if (!hydrated || !isAuthenticated || loading) return <div className="p-10 text-center text-text-secondary">Chargement...</div>
   if (!order) return null
 
   const statusFlow = ['PENDING', 'CONFIRMED', 'ACTIVE', 'COMPLETED'] as const
@@ -91,7 +89,7 @@ export default function OrderDetailPage() {
         <div className="flex items-start justify-between gap-3">
           <div>
             <p className="text-sm font-medium text-text-secondary">Abonnement</p>
-            <p className="font-semibold">{order.subscription?.name ?? '—'}</p>
+            <p className="font-semibold">{order.subscription?.name ?? '-'}</p>
             <p className="text-sm text-text-secondary">{order.subscription?.provider?.businessName ?? order.subscription?.provider?.name}</p>
           </div>
           {(order.subscription?.id ?? order.subscriptionId) && (
@@ -121,9 +119,7 @@ export default function OrderDetailPage() {
               order.status === 'CANCELLED' ? 'bg-red-100 text-red-800' :
               'bg-green-100 text-green-800'
             }`}>
-              {order.status === 'PENDING' ? '⏳ En attente' :
-               order.status === 'CANCELLED' ? '✗ Échoué' :
-               '✓ Payé'}
+              {paymentStatusLabel(order)}
             </span>
           </div>
         </div>
@@ -173,7 +169,7 @@ export default function OrderDetailPage() {
       {/* Bouton PAYER pour commandes PENDING */}
       {order.status === 'PENDING' && (
         <Button variant="primary" onClick={() => router.push(`/checkout?orderId=${order.id}`)}>
-          Payer maintenant
+          {hasUnresolvedPayment(order) ? 'Vérifier le paiement' : 'Payer maintenant'}
         </Button>
       )}
 
@@ -182,8 +178,7 @@ export default function OrderDetailPage() {
         <div className="flex flex-col gap-3">
           <div className="bg-primary-surface border border-primary/20 rounded-xl px-4 py-3 text-sm text-text-secondary leading-relaxed">
             <strong className="text-text-primary block mb-1">À quoi sert ce bouton ?</strong>
-            En appuyant sur ce bouton, vous démarrez officiellement votre abonnement à partir d'aujourd'hui.
-            C'est à ce moment précis que le paiement est transféré au prestataire — pas avant.
+            En appuyant sur ce bouton, vous démarrez officiellement votre abonnement. Activez-le lorsque vous recevez votre premier repas.
             Cela ne signifie pas que vous avez reçu tous vos repas, mais simplement que votre abonnement est lancé et que le prestataire peut commencer à préparer vos repas.
           </div>
           <Button variant="primary" size="lg" className="w-full" onClick={handleActivateOrder} loading={activating}>

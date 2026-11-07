@@ -49,8 +49,8 @@ export type PaymentMethod =
   | 'MOBILE_MONEY_MTN'
   | 'MOBILE_MONEY_MOOV'
   | 'MOBILE_MONEY_ORANGE'
+  | 'MOBILE_MONEY_CELTIIS'
   | 'CARD'
-  | 'CASH'
 
 export type DeliveryMethod = 'DELIVERY' | 'PICKUP'
 
@@ -291,6 +291,7 @@ export interface Order {
   landmark?: Landmark
   notes?: string
   paymentMethod?: PaymentMethod
+  payment?: { id: string; status: import('@/lib/api/payments').PaymentState; method?: string; amount?: number } | null
   amount?: number
   totalAmount?: number
   deliveryCost?: number

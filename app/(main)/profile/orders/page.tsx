@@ -4,13 +4,14 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useAuthGuard } from '@/lib/hooks/use-auth-guard'
 import { useAuthStore } from '@/lib/store/auth'
-import { getMyOrders, activateOrder } from '@/lib/api/orders'
+import { getMyOrders, getOrder, activateOrder } from '@/lib/api/orders'
 import { StatusBadge } from '@/components/ui/status-badge'
 import { Button } from '@/components/ui/button'
 import { formatPrice, formatDate } from '@/lib/utils'
 import toast from 'react-hot-toast'
 import { showApiError } from '@/lib/utils/api-error'
 import type { Order } from '@/types'
+import { hasUnresolvedPayment } from '@/lib/utils/payment'
 
 function OrderSkeleton() {
   return (
@@ -39,13 +40,32 @@ export default function OrdersPage() {
 
   useEffect(() => {
     if (!hydrated || !isAuthenticated || isProvider) return
-    getMyOrders().then(setOrders).catch(console.error).finally(() => setLoading(false))
-  }, [hydrated, isAuthenticated, isProvider])
+    let current = true
+    let sequence = 0
+    setOrders([])
+    setLoading(true)
+    const load = async () => {
+      if (document.visibilityState === 'hidden') return
+      const request = ++sequence
+      try {
+        const fresh = await getMyOrders()
+        if (current && request === sequence) setOrders(fresh)
+      } catch (error) { if (current && request === sequence) showApiError(error) }
+      finally { if (current && request === sequence) setLoading(false) }
+    }
+    void load()
+    const resume = () => { void load() }
+    window.addEventListener('focus', resume)
+    document.addEventListener('visibilitychange', resume)
+    return () => { current = false; window.removeEventListener('focus', resume); document.removeEventListener('visibilitychange', resume) }
+  }, [hydrated, isAuthenticated, isProvider, user?.id])
+
 
   const handleActivateOrder = async (orderId: string) => {
     setActivatingOrderId(orderId)
     try {
-      const updatedOrder = await activateOrder(orderId)
+      await activateOrder(orderId)
+      const updatedOrder = await getOrder(orderId)
       setOrders(prev => prev.map(o => o.id === orderId ? updatedOrder : o))
       toast.success('Commande activée avec succès !')
     } catch (err: unknown) {
@@ -54,6 +74,8 @@ export default function OrdersPage() {
       setActivatingOrderId(null)
     }
   }
+
+  if (!hydrated || !isAuthenticated) return <p className="p-10 text-center">Chargement...</p>
 
   if (isProvider) {
     return (
@@ -179,7 +201,7 @@ export default function OrdersPage() {
               <div className="flex items-center gap-2 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                 {order.status === 'PENDING' && (
                   <Link href={`/checkout?orderId=${order.id}`}>
-                    <Button variant="primary" size="sm">Payer</Button>
+                    <Button variant="primary" size="sm">{hasUnresolvedPayment(order) ? 'Vérifier le paiement' : 'Payer'}</Button>
                   </Link>
                 )}
                 {order.status === 'CONFIRMED' && (

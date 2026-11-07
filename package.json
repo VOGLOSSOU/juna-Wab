@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test:favorites": "node --test tests/favorites.test.cjs"
+    "test:favorites": "node --test tests/favorites.test.cjs",
+    "test:checkout": "node --test tests/checkout.test.cjs",
+    "test:auth": "node --test tests/auth-session.test.cjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",

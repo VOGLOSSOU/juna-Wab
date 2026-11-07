@@ -898,13 +898,12 @@ POST /upload/providers  (pour le logo)
 | Moov Money | `MOBILE_MONEY_MOOV` | Moov Money |
 | Orange Money | `MOBILE_MONEY_ORANGE` | Orange Money |
 | Carte bancaire | `CARD` | Carte bancaire |
-| Espèces | `CASH` | À la livraison |
 
 **UI :**
 - Radio buttons visuels avec logo de chaque opérateur
 - Pour Mobile Money : champ numéro de téléphone
 - Pour Carte : champs numéro, expiry, CVV
-- Pour Cash : message "Paiement à la réception"
+- Le règlement de l’abonnement passe toujours par la plateforme.
 
 ---
 
@@ -1109,7 +1108,7 @@ Champ : `image` (multipart/form-data) — Types : JPG, PNG, WEBP — Max : 5 Mo
 `PENDING` | `CONFIRMED` | `PREPARING` | `READY` | `DELIVERING` | `DELIVERED` | `COMPLETED` | `CANCELLED`
 
 **PaymentMethod :**
-`MOBILE_MONEY_WAVE` | `MOBILE_MONEY_MTN` | `MOBILE_MONEY_MOOV` | `MOBILE_MONEY_ORANGE` | `CARD` | `CASH`
+`MOBILE_MONEY_WAVE` | `MOBILE_MONEY_MTN` | `MOBILE_MONEY_MOOV` | `MOBILE_MONEY_ORANGE` | `CARD`
 
 **DeliveryMethod :**
 `DELIVERY` | `PICKUP`
