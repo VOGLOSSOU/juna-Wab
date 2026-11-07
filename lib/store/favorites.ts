@@ -26,13 +26,23 @@ export const useFavoritesStore = create<FavoritesState>()((set, get) => ({
     if (get().pending[id]) return
     const generation = get().generation
     const value = current
-    set(state => ({ pending: { ...state.pending, [id]: true } }))
+    // Keep the heart visible immediately. Reload lists only after confirmation.
+    const optimisticRevision = advanceFavoriteRevision()
+    set(state => ({ pending: { ...state.pending, [id]: true },
+      flags: { ...state.flags, [id]: !value },
+      flagRevisions: { ...state.flagRevisions, [id]: optimisticRevision } }))
     try {
       const isFavorite = await setFavorite(id, !value)
       if (get().generation !== generation) return
       const revision = advanceFavoriteRevision()
       set(state => ({ flags: { ...state.flags, [id]: isFavorite },
         flagRevisions: { ...state.flagRevisions, [id]: revision }, revision }))
+    } catch (error) {
+      if (get().generation !== generation) return
+      const revision = advanceFavoriteRevision()
+      set(state => ({ flags: { ...state.flags, [id]: value },
+        flagRevisions: { ...state.flagRevisions, [id]: revision } }))
+      throw error
     } finally {
       if (get().generation === generation) {
         set(state => { const pending = { ...state.pending }; delete pending[id]; return { pending } })

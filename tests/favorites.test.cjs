@@ -53,7 +53,7 @@ test('visitor cannot mutate favorites', async () => {
   assert.equal(state.calls.length, 0)
 })
 
-test('mutations wait for success and block duplicate clicks', async () => {
+test('heart changes immediately and duplicate requests are blocked', async () => {
   const state = setup()
   state.auth.login('A')
   let resolve
@@ -62,7 +62,7 @@ test('mutations wait for success and block duplicate clicks', async () => {
   await state.store.getState().toggle('sub', false)
   assert.equal(state.calls.length, 1)
   assert.equal(state.store.getState().pending.sub, true)
-  assert.equal(state.store.getState().flags.sub, undefined)
+  assert.equal(state.store.getState().flags.sub, true)
   resolve(true)
   await pending
   assert.equal(state.store.getState().flags.sub, true)
@@ -213,12 +213,15 @@ function fallingHearts(element) {
     ...React.Children.toArray(element.props?.children).flatMap(fallingHearts)]
 }
 
-test('falling heart starts only after a confirmed addition, not while loading', async () => {
+test('heart fills and animates immediately while the API is still pending', async () => {
   const state = animatedButtonHarness()
   let resolve
   state.block(new Promise(done => { resolve = done }))
   const pending = state.render().props.onClick()
-  assert.equal(fallingHearts(state.render()).length, 0)
+  assert.equal(fallingHearts(state.render()).length, 1)
+  assert.equal(state.render().props['aria-pressed'], true)
+  assert.equal(state.render().props['aria-busy'], true)
+  assert.doesNotMatch(renderToStaticMarkup(state.render()), /animate-spin/)
   resolve(true)
   await pending
   const hearts = fallingHearts(state.render())
@@ -236,7 +239,7 @@ test('an existing favorite and a successful removal do not trigger the animation
   assert.equal(fallingHearts(state.render()).length, 0)
 })
 
-test('failed addition never plays the confirmation animation', async () => {
+test('failed addition stops the animation and displays an error', async () => {
   const state = animatedButtonHarness()
   state.fail()
   await state.render().props.onClick()
@@ -260,4 +263,42 @@ test('account changes cancel animation from a previous request', async () => {
   resolve(true)
   await pending
   assert.equal(fallingHearts(state.render()).length, 0)
+})
+
+for (const saved of [false, true]) {
+  test(`delayed ${saved ? 'removal' : 'addition'} failure restores the previous heart and displays an error`, async () => {
+    const state = animatedButtonHarness({saved})
+    let reject
+    state.block(new Promise((_, fail) => { reject = fail }))
+    const request = state.render().props.onClick()
+    assert.equal(state.render().props['aria-pressed'], !saved)
+    assert.equal(state.render().props.disabled, true)
+    reject(new Error('offline'))
+    await request
+    assert.equal(state.render().props['aria-pressed'], saved)
+    assert.equal(state.render().props.disabled, false)
+    assert.equal(fallingHearts(state.render()).length, 0)
+    assert.equal(state.notices.length, 1)
+  })
+}
+test('old account failure cannot revert the new account or display its error', async () => {
+  const state = animatedButtonHarness()
+  let reject
+  state.block(new Promise((_, fail) => { reject = fail }))
+  const request = state.render().props.onClick()
+  state.auth.login('B')
+  reject(new Error('offline'))
+  await request
+  assert.deepEqual(state.store.getState().flags, {})
+  assert.equal(state.notices.length, 0)
+})
+test('optimistic heart does not trigger a favorites list reload before API confirmation', async () => {
+  const state = setup();state.auth.login('A')
+  const before = state.store.getState().revision
+  let resolve
+  state.block(new Promise(done => { resolve = done }))
+  const request = state.store.getState().toggle('sub', false)
+  assert.equal(state.store.getState().revision, before)
+  resolve(true);await request
+  assert.ok(state.store.getState().revision > before)
 })

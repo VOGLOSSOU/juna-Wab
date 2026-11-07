@@ -22,7 +22,7 @@ export function FavoriteButton({ subscription }: { subscription: Subscription })
   const [hydrated, setHydrated] = useState(false)
   useEffect(() => setHydrated(true), [])
   const selected = hydrated && !!userId && accountId === userId &&
-    (override !== undefined && flagRevision > (subscription.favoriteRevision ?? -1)
+    (override !== undefined && (pending || flagRevision > (subscription.favoriteRevision ?? -1))
       ? override : subscription.favoriteAccountId === userId && !!subscription.isFavorite)
   const showLanding = !reduceMotion && selected && landing?.accountId === userId && landing?.subscriptionId === subscription.id
   const label = selected ? 'Retirer des favoris' : 'Ajouter aux favoris'
@@ -31,22 +31,25 @@ export function FavoriteButton({ subscription }: { subscription: Subscription })
       router.push(`/auth/login?redirect=${encodeURIComponent(pathname + window.location.search)}`)
       return
     }
+    if (useFavoritesStore.getState().pending[subscription.id]) return
     const generation = useFavoritesStore.getState().generation
     const adding = !selected
-    setLanding(null)
+    const animationSequence = ++sequence.current
+    setLanding(adding && !reduceMotion
+      ? { accountId: userId, subscriptionId: subscription.id, sequence: animationSequence }
+      : null)
     try {
       await useFavoritesStore.getState().toggle(subscription.id, selected)
-      const state = useFavoritesStore.getState()
-      if (adding && !reduceMotion && state.generation === generation &&
-          state.accountId === userId && state.flags[subscription.id] === true) {
-        setLanding({ accountId: userId, subscriptionId: subscription.id, sequence: ++sequence.current })
-      }
     } catch (error) {
-      if (useAuthStore.getState().user?.id === userId) showApiError(error, 'Impossible de modifier vos favoris. Réessayez.')
+      if (sequence.current === animationSequence) setLanding(null)
+      if (useFavoritesStore.getState().generation === generation &&
+          useAuthStore.getState().user?.id === userId) {
+        showApiError(error, 'Impossible de modifier vos favoris. Réessayez.')
+      }
     }
   }
   return (
-    <button type="button" onClick={toggle} disabled={pending} aria-pressed={selected}
+    <button type="button" onClick={toggle} disabled={pending} aria-busy={pending} aria-pressed={selected}
       aria-label={`${label} : ${subscription.name}`} title={label}
       className={`relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/95 shadow-sm backdrop-blur-sm transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-wait ${selected ? 'text-accent' : 'text-text-primary'}`}>
       {showLanding && landing && <motion.span key={landing.sequence} aria-hidden="true"
@@ -60,14 +63,13 @@ export function FavoriteButton({ subscription }: { subscription: Subscription })
           <path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 00-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 000-7.8z" />
         </svg>
       </motion.span>}
-      {pending ? <span role="status" aria-label="Enregistrement" className="h-4 w-4 animate-spin rounded-full border-2 border-primary/20 border-t-primary" /> :
         <motion.span className="inline-flex" aria-hidden="true"
           animate={{ scale: showLanding ? [1, 1.22, 0.94, 1] : 1 }}
           transition={showLanding ? { duration: 0.35, delay: 0.3, times: [0, 0.4, 0.7, 1] } : { duration: 0 }}>
         <svg width="20" height="20" viewBox="0 0 24 24" fill={selected ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
           <path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 00-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 000-7.8z" />
         </svg>
-        </motion.span>}
+        </motion.span>
     </button>
   )
 }
