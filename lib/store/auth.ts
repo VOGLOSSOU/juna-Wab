@@ -2,7 +2,18 @@
 
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { useCityStore } from './city'
 import type { User, Provider } from '@/types'
+
+// Apply the authenticated profile's location wherever that profile is refreshed.
+function syncProfileCity(user: User) {
+  const city = user.profile?.city ?? user.city
+  if (!city?.country) return
+  const current = useCityStore.getState()
+  if (current.selectedCity?.id === city.id && current.selectedCity?.name === city.name &&
+      current.selectedCountry?.id === city.country.id && current.selectedCountry?.code === city.country.code) return
+  current.setCity(city, city.country)
+}
 
 interface AuthState {
   user: User | null
@@ -49,6 +60,7 @@ export const useAuthStore = create<AuthState>()(
           sessionExpired: false,
           authRevision: get().authRevision + 1,
         })
+        syncProfileCity(user)
       },
 
       setTokens: (accessToken, refreshToken) => {
@@ -71,7 +83,11 @@ export const useAuthStore = create<AuthState>()(
       },
       setProvider: (provider) => set({ provider }),
 
-      updateUser: (user) => set(state => state.isAuthenticated && state.user?.id === user.id ? { user } : state),
+      updateUser: (user) => {
+        if (!get().isAuthenticated || get().user?.id !== user.id) return
+        set({ user })
+        syncProfileCity(user)
+      },
 
       logout: () => {
         if (typeof window !== 'undefined') {
@@ -104,6 +120,9 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'juna-auth',
+      onRehydrateStorage: () => (state) => {
+        if (state?.isAuthenticated && state.user) syncProfileCity(state.user)
+      },
       partialize: (state) => ({
         user: state.user,
         accessToken: state.accessToken,

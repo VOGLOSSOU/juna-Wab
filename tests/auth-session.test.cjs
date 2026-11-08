@@ -11,7 +11,8 @@ function setup(t){
   global.localStorage={getItem:key=>items.get(key)??null,setItem:(key,value)=>items.set(key,String(value)),removeItem:key=>items.delete(key)}
   global.fetch=async()=>({ok:true})
   t.after(()=>{axios.post=old.post;for(const key of ['window','localStorage','fetch']){if(old[key]===undefined)delete global[key];else global[key]=old[key]}})
-  const auth=compile('lib/store/auth.ts')
+  const city=compile('lib/store/city.ts')
+  const auth=compile('lib/store/auth.ts',{'./city':city})
   const {apiClient}=compile('lib/api/client.ts',{'@/lib/store/auth':auth})
   const calls=[]
   let refreshes=0
@@ -30,8 +31,8 @@ function setup(t){
     if(response.status===401)throw new axios.AxiosError('unauthorized','ERR_BAD_REQUEST',config,undefined,response)
     return response
   }
-  return{auth:auth.useAuthStore,api:apiClient,calls,items,get refreshes(){return refreshes},
-    fail:status=>{refreshError={response:{status}}},block:p=>{gate=p},result:v=>{refreshResult=v},reload:()=>compile('lib/store/auth.ts').useAuthStore}
+  return{city:city.useCityStore,auth:auth.useAuthStore,api:apiClient,calls,items,get refreshes(){return refreshes},
+    fail:status=>{refreshError={response:{status}}},block:p=>{gate=p},result:v=>{refreshResult=v},reload:()=>compile('lib/store/auth.ts',{'./city':city}).useAuthStore}
 }
 
 test('fresh visitor 401 never refreshes or creates an expired-session notice',async t=>{
@@ -149,4 +150,34 @@ test('late profile response cannot replace a new account or restore a logged-out
   s.auth.getState().setAuth({id:'B',role:'USER'},'B','B-refresh')
   s.auth.getState().updateUser({id:'A',role:'USER'});assert.equal(s.auth.getState().user.id,'B')
   s.auth.getState().expireSession();s.auth.getState().updateUser({id:'B',role:'USER'});assert.equal(s.auth.getState().user,null)
+})
+
+const locationCountry={id:'BJ',code:'BJ',translations:{fr:'Bénin',en:'Benin'}}
+const profileInCity=(id,cityId)=>({id,role:'USER',profile:{city:{id:cityId,name:cityId,country:locationCountry}}})
+test('login and every accepted profile refresh synchronize the header city',t=>{
+  const s=setup(t)
+  s.city.getState().setCity({id:'guest-city',name:'Guest'},locationCountry)
+  s.auth.getState().setAuth(profileInCity('A','Cotonou'),'access','refresh')
+  assert.equal(s.city.getState().selectedCity.id,'Cotonou')
+  s.auth.getState().updateUser(profileInCity('A','Calavi'))
+  assert.equal(s.city.getState().selectedCity.id,'Calavi')
+  assert.equal(s.city.getState().selectedCountry.code,'BJ')
+})
+test('reloading a stored session restores its profile city over an outdated local choice',t=>{
+  const s=setup(t)
+  s.auth.getState().setAuth(profileInCity('A','Calavi'),'access','refresh')
+  s.city.getState().setCity({id:'outdated',name:'Old city'},locationCountry)
+  s.reload()
+  assert.equal(s.city.getState().selectedCity.id,'Calavi')
+})
+test('guest choice survives logout and stale profiles cannot change the city of a new account',t=>{
+  const s=setup(t)
+  s.auth.getState().setAuth(profileInCity('A','Cotonou'),'access','refresh')
+  s.auth.getState().setAuth(profileInCity('B','Calavi'),'B-access','B-refresh')
+  s.auth.getState().updateUser(profileInCity('A','Old town'))
+  assert.equal(s.city.getState().selectedCity.id,'Calavi')
+  s.auth.getState().logout()
+  s.city.getState().setCity({id:'guest',name:'Guest choice'},locationCountry)
+  s.auth.getState().updateUser(profileInCity('B','Calavi'))
+  assert.equal(s.city.getState().selectedCity.id,'guest')
 })

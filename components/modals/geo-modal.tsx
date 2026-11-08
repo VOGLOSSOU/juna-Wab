@@ -2,279 +2,188 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { getCountries, getCities } from '@/lib/api/geo'
-import { updateLocation } from '@/lib/api/auth'
+import { updateLocation, getUserProfile } from '@/lib/api/auth'
 import { useAuthStore } from '@/lib/store/auth'
-import { showApiError } from '@/lib/utils/api-error'
+import { getApiErrorMessage } from '@/lib/utils/api-error'
 import { useCityStore } from '@/lib/store/city'
 import type { Country, City } from '@/types'
 
-function countryName(c: Country): string {
-  return c.translations?.fr ?? c.translations?.en ?? c.code
+function countryName(country: Country): string {
+  return country.translations?.fr ?? country.translations?.en ?? country.code
 }
 
 export function GeoModal({ onClose }: { onClose: () => void }) {
-  const { hasChosen, setCity } = useCityStore()
-  const savingRef = useRef(false)
-  const [saving, setSaving] = useState(false)
-  const dialogRef = useRef<HTMLDivElement>(null)
-  const [citiesError, setCitiesError] = useState(false)
-  const [step, setStep] = useState<'country' | 'city'>('country')
+  const { hasChosen } = useCityStore()
   const [countries, setCountries] = useState<Country[]>([])
   const [cities, setCities] = useState<City[]>([])
-  const [selectedCountry, setSelectedCountry] = useState<Country | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [country, setCountry] = useState<Country | null>(null)
+  const [city, setCity] = useState<City | null>(null)
   const [countriesLoading, setCountriesLoading] = useState(true)
+  const [citiesLoading, setCitiesLoading] = useState(false)
   const [countriesError, setCountriesError] = useState(false)
+  const [citiesError, setCitiesError] = useState(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
+  const [countriesRetry, retryCountries] = useState(0)
+  const [citiesRetry, retryCities] = useState(0)
   const [search, setSearch] = useState('')
-
-  const loadCountries = () => {
-    setCountriesLoading(true)
-    setCountriesError(false)
-    getCountries()
-      .then(setCountries)
-      .catch(() => setCountriesError(true))
-      .finally(() => setCountriesLoading(false))
-  }
+  const [saving, setSaving] = useState(false)
+  const savingRef = useRef(false)
+  const mounted = useRef(true)
+  const dialog = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    loadCountries()
+    mounted.current = true
+    return () => { mounted.current = false }
   }, [])
+
+  useEffect(() => {
+    let current = true
+    setCountriesLoading(true)
+    setCountriesError(false)
+    getCountries().then(data => {
+      if (!current) return
+      const available = data.filter(item => item.isActive !== false)
+      setCountries(available)
+      const stored = useCityStore.getState().selectedCountry
+      setCountry(available.find(item => item.id === stored?.id) ?? null)
+    }).catch(() => { if (current) setCountriesError(true) })
+      .finally(() => { if (current) setCountriesLoading(false) })
+    return () => { current = false }
+  }, [countriesRetry])
+
+  useEffect(() => {
+    if (!country) return
+    let current = true
+    setCitiesLoading(true)
+    setCitiesError(false)
+    getCities(country.code).then(data => {
+      if (!current) return
+      setCities(data)
+      const stored = useCityStore.getState()
+      if (stored.selectedCountry?.id === country.id) {
+        setCity(data.find(item => item.id === stored.selectedCity?.id) ?? null)
+      }
+    }).catch(() => { if (current) setCitiesError(true) })
+      .finally(() => { if (current) setCitiesLoading(false) })
+    return () => { current = false }
+  }, [country, citiesRetry])
 
   useEffect(() => {
     const previousFocus = document.activeElement as HTMLElement | null
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
-    dialogRef.current?.querySelector<HTMLInputElement>('input')?.focus()
-    const handleKeyDown = (event: KeyboardEvent) => {
+    dialog.current?.focus()
+    const keyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && hasChosen && !savingRef.current) onClose()
       if (event.key !== 'Tab') return
-      const elements = dialogRef.current?.querySelectorAll<HTMLElement>('button:not(:disabled), input:not(:disabled)')
-      if (!elements?.length) return
+      const elements = dialog.current?.querySelectorAll<HTMLElement>('button:not(:disabled), input:not(:disabled)')
+      if (!elements?.length) { event.preventDefault(); return }
       const first = elements[0]
       const last = elements[elements.length - 1]
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault()
-        last.focus()
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault()
-        first.focus()
+      if (event.shiftKey && (document.activeElement === first || document.activeElement === dialog.current)) {
+        event.preventDefault(); last.focus()
+      } else if (!event.shiftKey && (document.activeElement === last || document.activeElement === dialog.current)) {
+        event.preventDefault(); first.focus()
       }
     }
-    document.addEventListener('keydown', handleKeyDown)
+    document.addEventListener('keydown', keyDown)
     return () => {
       document.body.style.overflow = previousOverflow
-      document.removeEventListener('keydown', handleKeyDown)
+      document.removeEventListener('keydown', keyDown)
       previousFocus?.focus()
     }
   }, [hasChosen, onClose])
 
-  const handleSelectCountry = async (country: Country) => {
-    setSelectedCountry(country)
-    setLoading(true)
-    setSearch('')
-    setCitiesError(false)
-    setStep('city')
-    try {
-      const data = await getCities(country.code)
-      setCities(data)
-      setStep('city')
-    } catch {
-      setCitiesError(true)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleSelectCity = async (city: City) => {
-    if (!selectedCountry || savingRef.current) return
+  async function confirm() {
+    if (!country || !city || savingRef.current || countriesLoading || citiesLoading || countriesError || citiesError) return
     savingRef.current = true
     setSaving(true)
+    setSaveError(null)
+    const session = useAuthStore.getState()
+    const stillCurrent = () => mounted.current &&
+      useAuthStore.getState().authRevision === session.authRevision &&
+      useAuthStore.getState().user?.id === session.user?.id
     try {
-      const { isAuthenticated } = useAuthStore.getState()
-      if (isAuthenticated) {
+      if (session.isAuthenticated) {
         await updateLocation(city.id)
-        const { user, updateUser } = useAuthStore.getState()
-        if (user) {
-          const profileCity = { ...city, country: selectedCountry }
-          updateUser({
-            ...user,
-            cityId: city.id,
-            city: profileCity,
-            profile: { ...user.profile, city: profileCity },
-          })
+        if (!stillCurrent()) return
+        const profile = await getUserProfile()
+        if (!stillCurrent()) return
+        const savedCity = profile.profile?.city ?? profile.city
+        if (profile.id !== session.user?.id || savedCity?.id !== city.id || !savedCity.country) {
+          throw new Error('Impossible de confirmer votre ville. Réessayez.')
         }
+        useAuthStore.getState().updateUser(profile)
+      } else {
+        if (!stillCurrent()) return
+        useCityStore.getState().setCity(city, country)
       }
-      setCity(city, selectedCountry)
-      onClose()
+      if (stillCurrent()) onClose()
     } catch (error) {
-      showApiError(error, 'Impossible de mettre à jour votre ville. Réessayez.')
+      if (stillCurrent()) setSaveError(getApiErrorMessage(error, 'Impossible de mettre à jour votre ville. Réessayez.'))
     } finally {
       savingRef.current = false
-      setSaving(false)
+      if (mounted.current) setSaving(false)
     }
   }
 
-  const filteredCountries = countries.filter((c) =>
-    countryName(c).toLowerCase().includes(search.toLowerCase())
-  )
-  const filteredCities = cities.filter((c) =>
-    c.name.toLowerCase().includes(search.toLowerCase())
-  )
+  const filteredCities = cities.filter(item => item.name.toLocaleLowerCase('fr').includes(search.trim().toLocaleLowerCase('fr')))
+  const chip = 'rounded-xl border px-4 py-3 text-left text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-60'
+  const selectedChip = 'border-primary bg-primary-surface text-primary'
+  const plainChip = 'border-border bg-white text-text-primary hover:border-primary/40 hover:bg-primary-surface/50'
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-[2px] p-0 sm:p-4">
-      <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="city-dialog-title" className="relative bg-white w-full sm:max-w-md rounded-t-3xl sm:rounded-2xl shadow-2xl overflow-hidden animate-slide-up sm:animate-none">
+    <div className="fixed inset-0 z-[100] flex items-end justify-center bg-black/40 backdrop-blur-[2px] sm:items-center sm:p-4">
+      <div ref={dialog} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="city-dialog-title" aria-describedby="city-dialog-description"
+        className="relative flex max-h-[90dvh] w-full flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl outline-none sm:max-w-lg sm:rounded-2xl">
+        <header className="shrink-0 px-6 pb-5 pt-6">
+          <div className="mx-auto mb-5 h-1 w-10 rounded-full bg-border sm:hidden" aria-hidden="true" />
+          {hasChosen && <button type="button" disabled={saving} onClick={onClose} aria-label="Fermer le choix de ville" className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full text-text-secondary hover:bg-surface-grey disabled:opacity-50">✕</button>}
+          <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-primary">Pays et ville</p>
+          <h2 id="city-dialog-title" className="pr-8 text-xl font-semibold text-text-primary">Votre localisation</h2>
+          <p id="city-dialog-description" className="mt-2 text-sm leading-relaxed text-text-secondary">Choisissez votre pays et votre ville pour voir les abonnements disponibles près de vous.</p>
+        </header>
 
-        {hasChosen && (
-          <button type="button" disabled={saving} onClick={onClose} aria-label="Fermer le choix de ville" className="absolute right-3 top-3 w-8 h-8 rounded-full hover:bg-surface-grey text-text-secondary">✕</button>
-        )}
-        {/* Header avec icone */}
-        <div className="px-6 pt-7 pb-5">
-          {/* Poignée mobile */}
-          <div className="w-10 h-1 bg-border rounded-full mx-auto mb-6 sm:hidden" />
+        <div className="overflow-y-auto border-y border-border px-6 py-5">
+          <section aria-labelledby="country-label">
+            <h3 id="country-label" className="mb-3 text-sm font-semibold text-text-primary">Pays</h3>
+            {countriesLoading ? <p role="status" className="py-3 text-sm text-text-secondary">Chargement des pays...</p>
+              : countriesError ? <div role="alert" className="text-sm text-error"><p>Impossible de charger les pays.</p><button type="button" onClick={() => retryCountries(value => value + 1)} className="mt-2 font-semibold underline">Réessayer</button></div>
+              : countries.length === 0 ? <p className="text-sm text-text-secondary">Aucun pays disponible pour le moment.</p>
+              : <div className="flex flex-wrap gap-2">{countries.map(item => <button key={item.id} type="button" disabled={saving} aria-pressed={country?.id === item.id}
+                onClick={() => {
+                  if (country?.id === item.id) return
+                  setCountry(item); setCity(null); setCities([]); setCitiesLoading(true); setSearch(''); setSaveError(null)
+                }} className={`${chip} ${country?.id === item.id ? selectedChip : plainChip}`}>
+                {item.flag && <span className="mr-2" aria-hidden="true">{item.flag}</span>}{countryName(item)}
+              </button>)}</div>}
+          </section>
 
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-primary-surface flex items-center justify-center flex-shrink-0">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A5C2A" strokeWidth="1.8">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
-                <circle cx="12" cy="10" r="3"/>
-              </svg>
-            </div>
-            <div>
-              <h2 id="city-dialog-title" className="text-lg font-semibold text-text-primary leading-snug">
-                {step === 'country' ? 'Où êtes-vous ?' : `Quelle ville en ${selectedCountry ? countryName(selectedCountry) : ''} ?`}
-              </h2>
-              <p className="text-text-secondary text-sm mt-1 leading-relaxed">
-                {step === 'country'
-                  ? 'Choisissez votre pays pour découvrir les prestataires et abonnements disponibles près de chez vous.'
-                  : 'Sélectionnez votre ville — nous vous montrerons les abonnements les plus proches de vous en priorité.'
-                }
-              </p>
-            </div>
-          </div>
+          {country && <section aria-labelledby="city-label" className="mt-6">
+            <h3 id="city-label" className="mb-3 text-sm font-semibold text-text-primary">Ville</h3>
+            {citiesLoading ? <p role="status" className="py-3 text-sm text-text-secondary">Chargement des villes...</p>
+              : citiesError ? <div role="alert" className="text-sm text-error"><p>Impossible de charger les villes.</p><button type="button" onClick={() => retryCities(value => value + 1)} className="mt-2 font-semibold underline">Réessayer</button></div>
+              : cities.length === 0 ? <p className="text-sm text-text-secondary">Aucune ville disponible pour ce pays.</p>
+              : <>
+                <input type="search" aria-label="Rechercher une ville" placeholder="Rechercher une ville..." value={search} disabled={saving} onChange={event => setSearch(event.target.value)} className="mb-3 h-11 w-full rounded-xl border border-border bg-surface-grey px-4 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20" />
+                <div className="grid grid-cols-1 gap-2 min-[360px]:grid-cols-2">{filteredCities.map(item => <button key={item.id} type="button" disabled={saving} aria-pressed={city?.id === item.id} onClick={() => { setCity(item); setSaveError(null) }}
+                  className={`${chip} flex min-w-0 items-center justify-between gap-2 ${city?.id === item.id ? selectedChip : plainChip}`}>
+                  <span className="break-words">{item.name}</span>{city?.id === item.id && <span aria-hidden="true" className="shrink-0">✓</span>}
+                </button>)}</div>
+                {filteredCities.length === 0 && <p className="py-3 text-sm text-text-secondary">Aucune ville trouvée.</p>}
+              </>}
+          </section>}
         </div>
 
-        {/* Divider */}
-        <div className="h-px bg-border mx-6" />
-
-        {/* Corps */}
-        <div className="px-6 py-4">
-          {/* Retour */}
-          {step === 'city' && (
-            <button
-              disabled={loading || saving}
-              onClick={() => { setStep('country'); setSearch('') }}
-              className="flex items-center gap-1.5 text-sm text-text-secondary hover:text-primary transition-colors mb-4"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <polyline points="15 18 9 12 15 6"/>
-              </svg>
-              Changer de pays
-            </button>
-          )}
-
-          {/* Barre de recherche */}
-          <div className="relative mb-3">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#AAAAAA" strokeWidth="2" className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none">
-              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-            </svg>
-            <input
-              type="search"
-              placeholder={step === 'country' ? 'Rechercher un pays...' : 'Rechercher une ville...'}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              autoFocus
-              className="w-full h-11 pl-10 pr-4 rounded-xl border border-border bg-surface-grey text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
-            />
-          </div>
-
-          {/* Liste */}
-          {loading || (step === 'country' && countriesLoading) ? (
-            <div className="flex flex-col gap-1 py-1" aria-busy="true" aria-label="Chargement">
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className="flex items-center justify-between px-4 py-3">
-                  <div className="h-4 bg-surface-grey rounded-md animate-pulse" style={{ width: `${[45, 60, 38, 52][i]}%` }} />
-                  <div className="h-3.5 w-3.5 bg-surface-grey rounded animate-pulse" />
-                </div>
-              ))}
-            </div>
-          ) : step === 'country' && countriesError ? (
-            <div className="flex flex-col items-center gap-3 py-8">
-              <p className="text-center text-text-secondary text-sm">Impossible de charger les pays.</p>
-              <button
-                onClick={loadCountries}
-                className="h-9 px-4 rounded-lg border border-border text-sm font-medium text-text-primary hover:bg-surface-grey transition-colors"
-              >
-                Réessayer
-              </button>
-            </div>
-          ) : step === 'city' && citiesError ? (
-            <div className="flex flex-col items-center gap-3 py-8" role="alert">
-              <p className="text-center text-text-secondary text-sm">Impossible de charger les villes.</p>
-              <button type="button" onClick={() => selectedCountry && handleSelectCountry(selectedCountry)} className="h-9 px-4 rounded-lg border border-border text-sm hover:bg-surface-grey">Réessayer</button>
-            </div>
-          ) : step === 'country' ? (
-            filteredCountries.length === 0 ? (
-              <p className="text-center text-text-secondary text-sm py-8">Aucun pays trouvé</p>
-            ) : (
-              <ul className="max-h-60 overflow-y-auto flex flex-col gap-1 pr-1">
-                {filteredCountries.map((country) => (
-                  <li key={country.id}>
-                    <button
-                      onClick={() => handleSelectCountry(country)}
-                      className="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-primary-surface text-left transition-colors group"
-                    >
-                      <span className="text-sm font-medium text-text-primary group-hover:text-primary transition-colors">
-                        {country.flag && <span className="mr-2">{country.flag}</span>}
-                        {countryName(country)}
-                      </span>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#AAAAAA" strokeWidth="2" className="group-hover:stroke-primary transition-colors">
-                        <polyline points="9 18 15 12 9 6"/>
-                      </svg>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )
-          ) : (
-            filteredCities.length === 0 ? (
-              <p className="text-center text-text-secondary text-sm py-8">Aucune ville trouvée</p>
-            ) : (
-              <ul className="max-h-60 overflow-y-auto flex flex-col gap-1 pr-1">
-                {filteredCities.map((city) => (
-                  <li key={city.id}>
-                    <button
-                      disabled={saving}
-                      onClick={() => handleSelectCity(city)}
-                      className="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-primary-surface text-left transition-colors group"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-7 h-7 rounded-full bg-surface-grey flex items-center justify-center flex-shrink-0 group-hover:bg-primary/10 transition-colors">
-                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#AAAAAA" strokeWidth="2" className="group-hover:stroke-primary transition-colors">
-                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
-                            <circle cx="12" cy="10" r="3"/>
-                          </svg>
-                        </div>
-                        <span className="text-sm font-medium text-text-primary group-hover:text-primary transition-colors">{city.name}</span>
-                      </div>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#AAAAAA" strokeWidth="2" className="group-hover:stroke-primary transition-colors">
-                        <polyline points="9 18 15 12 9 6"/>
-                      </svg>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )
-          )}
-        </div>
-
-        {saving && <p role="status" className="px-6 pb-3 text-sm text-text-secondary text-center">Enregistrement de votre ville…</p>}
-        {/* Footer discret */}
-        <div className="px-6 pb-6 pt-1">
-          <p className="text-xs text-text-light text-center">
-            Vous pouvez changer de ville à tout moment depuis la barre de navigation.
-          </p>
-        </div>
+        <footer className="shrink-0 px-6 py-5" style={{ paddingBottom: 'max(1.25rem, env(safe-area-inset-bottom))' }}>
+          {city && country && <p className="mb-3 break-words text-sm text-text-secondary">Votre choix : <strong className="font-semibold text-primary">{city.name}, {countryName(country)}</strong></p>}
+          {saveError && <p role="alert" className="mb-3 text-sm text-error">{saveError}</p>}
+          <button type="button" onClick={confirm} disabled={!city || !country || countriesLoading || citiesLoading || countriesError || citiesError || saving} aria-busy={saving}
+            className="flex min-h-12 w-full items-center justify-center rounded-xl bg-primary px-4 py-3 font-semibold text-white transition-colors hover:bg-primary-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+            {saving ? 'Enregistrement...' : 'Confirmer'}
+          </button>
+          <p className="mt-3 text-center text-xs leading-relaxed text-text-light">Vous pouvez changer de ville à tout moment depuis la barre de navigation.</p>
+        </footer>
       </div>
     </div>
   )

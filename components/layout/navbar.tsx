@@ -25,8 +25,12 @@ export function Navbar() {
 
   useEffect(() => {
     if (!isAuthenticated) return
-    getUserProfile().then(updateUser).catch(() => {})
-  }, [isAuthenticated])
+    const requested = useAuthStore.getState()
+    getUserProfile().then(profile => {
+      const current = useAuthStore.getState()
+      if (current.authRevision === requested.authRevision && current.user === requested.user) updateUser(profile)
+    }).catch(() => {})
+  }, [isAuthenticated, user?.id, updateUser])
 
   const isProvider = user?.role === 'PROVIDER'
 

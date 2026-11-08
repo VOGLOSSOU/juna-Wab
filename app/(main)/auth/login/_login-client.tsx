@@ -13,7 +13,6 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { login, getUserProfile } from '@/lib/api/auth'
 import { useAuthStore } from '@/lib/store/auth'
-import { useCityStore } from '@/lib/store/city'
 
 const schema = z.object({
   email: z.string().email('Email invalide'),
@@ -28,7 +27,6 @@ function LoginForm() {
   const redirect = searchParams.get('redirect') || '/'
   const { setAuth, updateUser, sessionExpired, clearSessionNotice } = useAuthStore()
   const [loginError, setLoginError] = useState<string | null>(null)
-  const { setCity } = useCityStore()
   const [showPassword, setShowPassword] = useState(false)
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>({
@@ -45,12 +43,10 @@ function LoginForm() {
         return
       }
       setAuth(result.user, result.accessToken, result.refreshToken)
-      const profileCity = result.user.profile?.city
-      if (profileCity && profileCity.country) {
-        setCity(profileCity, profileCity.country)
-      }
+      const requested = useAuthStore.getState()
       getUserProfile().then(profile => {
-        if (useAuthStore.getState().user?.id === profile.id) updateUser(profile)
+        const current = useAuthStore.getState()
+        if (current.authRevision === requested.authRevision && current.user === requested.user) updateUser(profile)
       }).catch(() => {})
       toast.success('Connexion réussie !')
       const defaultRoute = result.user.role === 'PROVIDER' ? '/dashboard' : '/profile'
