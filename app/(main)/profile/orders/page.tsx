@@ -15,15 +15,21 @@ import { hasUnresolvedPayment } from '@/lib/utils/payment'
 
 function OrderSkeleton() {
   return (
-    <div className="bg-white rounded-xl border border-border p-4 flex items-center gap-4 animate-pulse">
-      <div className="w-10 h-10 rounded-lg bg-surface-grey flex-shrink-0" />
-      <div className="flex-1 flex flex-col gap-2">
-        <div className="h-3.5 bg-surface-grey rounded w-2/3" />
-        <div className="h-3 bg-surface-grey rounded w-1/3" />
+    <div className="animate-pulse rounded-2xl border border-border bg-white p-5" aria-hidden="true">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex-1 space-y-2">
+          <div className="h-4 w-3/4 rounded bg-surface-grey" />
+          <div className="h-3 w-1/2 rounded bg-surface-grey" />
+        </div>
+        <div className="h-6 w-20 rounded-full bg-surface-grey" />
       </div>
-      <div className="flex flex-col items-end gap-2">
-        <div className="h-5 w-20 bg-surface-grey rounded-full" />
-        <div className="h-3.5 w-16 bg-surface-grey rounded" />
+      <div className="my-5 space-y-3">
+        <div className="h-3 w-2/3 rounded bg-surface-grey" />
+        <div className="h-3 w-1/3 rounded bg-surface-grey" />
+      </div>
+      <div className="flex items-center justify-between border-t border-border pt-4">
+        <div className="h-5 w-24 rounded bg-surface-grey" />
+        <div className="h-10 w-28 rounded-lg bg-surface-grey" />
       </div>
     </div>
   )
@@ -79,7 +85,7 @@ export default function OrdersPage() {
 
   if (isProvider) {
     return (
-      <div className="max-w-xl mx-auto px-4 py-10">
+      <div className="max-w-2xl mx-auto px-4 py-8 sm:px-6 sm:py-10">
         <div className="flex items-center gap-3 mb-6">
           <Link href="/profile" className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-grey transition-colors text-text-secondary">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -112,7 +118,7 @@ export default function OrdersPage() {
   }
 
   return (
-    <div className="max-w-xl mx-auto px-4 py-10">
+    <div className="max-w-2xl mx-auto px-4 py-8 sm:px-6 sm:py-10">
 
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
@@ -161,70 +167,72 @@ export default function OrdersPage() {
         </div>
       )}
 
-      {/* Liste */}
+      {/* Cartes de commande : identité, informations, puis montant et action. */}
       {!loading && orders.length > 0 && (
-        <div className="flex flex-col gap-3">
-          {orders.map((order) => (
-            <div
-              key={order.id}
-              className="bg-white rounded-xl border border-border p-4 flex items-center gap-4 hover:shadow-sm hover:border-primary/20 transition-all"
-            >
-              {/* Icone */}
-              <div className="w-10 h-10 rounded-lg bg-primary-surface flex items-center justify-center flex-shrink-0 text-primary">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                  <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-                  <line x1="3" y1="6" x2="21" y2="6"/>
-                  <path d="M16 10a4 4 0 01-8 0"/>
-                </svg>
-              </div>
+        <div className="flex flex-col gap-4">
+          {orders.map((order) => {
+            const name = order.subscription?.name ?? 'Abonnement'
+            const provider = order.subscription?.provider?.businessName ?? order.subscription?.provider?.name
+            const delivery = order.deliveryMethod === 'DELIVERY'
+            const location = delivery
+              ? order.deliveryAddress || order.deliveryCity || 'Livraison à domicile'
+              : order.pickupLocation || 'Retrait sur place'
+            const detailUrl = `/profile/orders/${order.id}`
+            return (
+              <article key={order.id} className="relative rounded-2xl border border-border bg-white shadow-sm transition-shadow hover:shadow-md">
+                <Link href={detailUrl} aria-label={`Voir la commande ${order.orderNumber || name}`}
+                  className="absolute inset-0 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2" />
+                <div className="pointer-events-none relative">
+                  <div className="flex items-start justify-between gap-3 px-5 pt-5">
+                    <div className="min-w-0 flex-1">
+                      <h2 className="line-clamp-2 break-words text-base font-semibold leading-snug text-text-primary" title={name}>{name}</h2>
+                      {provider && <p className="mt-1 break-words text-sm text-text-secondary">{provider}</p>}
+                    </div>
+                    <div className="shrink-0"><StatusBadge status={order.status} /></div>
+                  </div>
 
-              {/* Infos */}
-              <div className="flex-1 min-w-0">
-                <p className="font-semibold text-sm text-text-primary truncate">
-                  {order.subscription?.name ?? 'Abonnement'}
-                </p>
-                <p className="text-xs text-text-secondary break-words mt-0.5">
-                  {order.subscription?.provider?.businessName ?? order.subscription?.provider?.name ?? '—'}
-                </p>
-                <p className="text-xs text-text-light mt-0.5">{formatDate(order.createdAt)}</p>
-              </div>
+                  <div className="space-y-2.5 px-5 py-4 text-sm text-text-secondary">
+                    <div className="flex items-start gap-2">
+                      <svg aria-hidden="true" className="mt-0.5 shrink-0 text-primary" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
+                        {delivery ? <><path d="M3 6h11v11H3zM14 10h4l3 4v3h-7"/><circle cx="7.5" cy="18" r="2"/><circle cx="17.5" cy="18" r="2"/></>
+                          : <><path d="M3 10h18l-2-6H5l-2 6zM5 10v10h14V10M9 20v-6h6v6"/></>}
+                      </svg>
+                      <div className="min-w-0">
+                        <p className="text-xs font-medium text-text-light">{delivery ? 'Livraison' : 'Retrait sur place'}</p>
+                        <p className="mt-0.5 break-words">{location}</p>
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+                      <p className="flex min-w-0 items-start gap-2">
+                        <svg aria-hidden="true" className="mt-0.5 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><path d="M4 9h16M3 15h16M10 3l-2 18M16 3l-2 18"/></svg>
+                        <span className="break-all" aria-label="Référence de commande">{order.orderNumber || order.id}</span>
+                      </p>
+                      <time dateTime={order.createdAt} className="text-xs text-text-light">{formatDate(order.createdAt)}</time>
+                    </div>
+                  </div>
 
-              {/* Statut + prix */}
-              <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
-                <StatusBadge status={order.status} />
-                <span className="font-semibold text-sm text-primary">
-                  {formatPrice(order.amount ?? order.totalAmount ?? 0, order.currency)}
-                </span>
-              </div>
-
-              {/* Actions + lien vers détail */}
-              <div className="flex items-center gap-2 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
-                {order.status === 'PENDING' && (
-                  <Link href={`/checkout?orderId=${order.id}`}>
-                    <Button variant="primary" size="sm">{hasUnresolvedPayment(order) ? 'Vérifier le paiement' : 'Payer'}</Button>
-                  </Link>
-                )}
-                {order.status === 'CONFIRMED' && (
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    onClick={() => handleActivateOrder(order.id)}
-                    loading={activatingOrderId === order.id}
-                  >
-                    Activer
-                  </Button>
-                )}
-                <Link
-                  href={`/profile/orders/${order.id}`}
-                  className="text-primary hover:text-primary-dark transition-colors"
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <polyline points="9 18 15 12 9 6" />
-                  </svg>
-                </Link>
-              </div>
-            </div>
-          ))}
+                  <div className="mx-5 flex flex-wrap items-center justify-between gap-3 border-t border-border py-4">
+                    <p className="text-lg font-bold text-accent">{formatPrice(order.amount ?? order.totalAmount ?? 0, order.currency)}</p>
+                    <div className="pointer-events-auto relative flex flex-wrap items-center gap-3">
+                      {order.status === 'PENDING' && (
+                        <Link href={`/checkout?orderId=${order.id}`}
+                          className="inline-flex min-h-10 items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
+                          {hasUnresolvedPayment(order) ? 'Vérifier le paiement' : 'Payer'}
+                        </Link>
+                      )}
+                      {order.status === 'CONFIRMED' && (
+                        <Button variant="primary" className="min-h-10" onClick={() => handleActivateOrder(order.id)} loading={activatingOrderId === order.id}>Activer</Button>
+                      )}
+                      <Link href={detailUrl} className="inline-flex min-h-10 items-center gap-1 text-sm font-semibold text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                        aria-label={`Voir le détail de la commande ${order.orderNumber || name}`}>
+                        Voir <span aria-hidden="true">→</span>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            )
+          })}
         </div>
       )}
     </div>
