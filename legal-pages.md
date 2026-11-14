@@ -93,7 +93,7 @@ Date de lancement                 :
 #### 2.3 Comptes prestataires
 - Processus de validation par JUNA avant activation
 - Obligations du prestataire (qualité, respect des commandes, disponibilité)
-- Commission Juna Eats fixe de 10 %, renvoi vers les CGV pour le reversement
+- Commission Juna Eats fixe de 3,3 %, renvoi vers les CGV pour le reversement
 - JUNA se réserve le droit de suspendre un prestataire en cas de manquement
 
 #### 2.4 Responsabilités
@@ -146,7 +146,7 @@ Date de lancement                 :
 - Paiement sécurisé via FeexPay (MTN, Moov et Celtiis au Bénin)
 - Le règlement de l’abonnement passe par la plateforme, en livraison comme en retrait
 - Frais de livraison : négociés directement avec le prestataire (non inclus dans le prix affiché)
-- Le prix affiché inclut la commission Juna Eats de 10 %
+- Le prix affiché inclut la commission Juna Eats de 3,3 %
 - La commande n'est confirmée qu'après validation du paiement
 
 #### 3.4 Activation de la commande
@@ -155,8 +155,8 @@ Date de lancement                 :
 - L'activation est la condition préalable au reversement au prestataire
 
 #### 3.4 bis Commission et rémunération du prestataire
-- Commission fixe de 10 % du prix payé par le client, identique pour tous les prestataires
-- Le prestataire fixe ce qu'il veut recevoir ; prix client = prix prestataire / 0,9
+- Commission fixe de 3,3 % du prix payé par le client, identique pour tous les prestataires
+- Le prestataire fixe ce qu'il veut recevoir ; le prix client est calculé par le backend (plus de formule côté front)
 - Reversement au prestataire : manuel à ce jour (pas de disbursement automatique FeexPay). Mettre à jour les CGV quand le reversement automatique sera en place
 
 #### 3.5 Annulation et remboursement

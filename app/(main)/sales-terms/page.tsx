@@ -25,7 +25,7 @@ export default function SalesTermsPage() {
 
       <div className="flex flex-col gap-3">
         <h1 className="text-3xl font-bold text-text-primary">Conditions Générales de Vente</h1>
-        <p className="text-sm text-text-secondary">Dernière mise à jour : septembre 2026</p>
+        <p className="text-sm text-text-secondary">Dernière mise à jour : novembre 2026</p>
       </div>
 
       <Section title="1. Objet">
@@ -55,7 +55,7 @@ export default function SalesTermsPage() {
       <Section title="3. Prix et paiement">
         <ul>
           <li>Les prix sont affichés en <strong>Francs CFA (XOF)</strong>, toutes taxes comprises.</li>
-          <li>Le prix affiché inclut la <strong>commission de service Juna Eats de 10 %</strong> (voir article 5).</li>
+          <li>Le prix affiché inclut la <strong>commission de service Juna Eats de 3,3 %</strong> (voir article 5).</li>
           <li>
             Le paiement s'effectue de manière sécurisée via <strong>FeexPay</strong>, qui prend en charge
             les opérateurs Mobile Money suivants : MTN, Moov et Celtiis au Bénin.
@@ -86,15 +86,15 @@ export default function SalesTermsPage() {
 
       <Section title="5. Commission et rémunération du prestataire">
         <p>
-          Juna Eats perçoit une <strong>commission fixe de 10 %</strong> sur le prix payé par l'utilisateur
+          Juna Eats perçoit une <strong>commission fixe de 3,3 %</strong> sur le prix payé par l'utilisateur
           pour chaque abonnement vendu via la plateforme. Ce taux est identique pour tous les prestataires
           et n'est pas négociable depuis l'application.
         </p>
         <p>
           Le prestataire fixe le montant qu'il souhaite percevoir pour un abonnement. Le prix affiché à
-          l'utilisateur est calculé à partir de ce montant de sorte que la commission représente 10 % du
+          l'utilisateur est calculé à partir de ce montant de sorte que la commission représente 3,3 % du
           prix payé. Le prestataire a donc vocation à recevoir l'intégralité du montant qu'il a fixé,
-          soit 90 % du prix payé par l'utilisateur.
+          soit 96,7 % du prix payé par l'utilisateur.
         </p>
         <p>
           <strong>À ce jour, le reversement au prestataire n'est pas automatisé.</strong> Il est traité
