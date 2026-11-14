@@ -9,7 +9,6 @@ import { uploadImage } from '@/lib/api/upload'
 import toast from 'react-hot-toast'
 import { SubscriptionInstructionsField } from '@/components/ui/subscription-instructions'
 import { showApiError } from '@/lib/utils/api-error'
-import { clientPriceFromProviderPrice, providerPriceFromClientPrice } from '@/lib/utils'
 import { PriceBreakdown } from '@/components/ui/price-breakdown'
 import type { Meal, Subscription, SubscriptionType, SubscriptionDuration, SubscriptionCategory } from '@/types'
 
@@ -112,7 +111,7 @@ export default function EditSubscriptionPage() {
         setName(sub.name)
         setDescription(sub.description ?? '')
         setInstructions(sub.instructions ?? '')
-        setPrice(String(providerPriceFromClientPrice(Number(sub.price))))
+        setPrice(String(sub.providerPrice ?? ''))
         setType(sub.type)
         setDuration(sub.duration)
         setCategory(sub.category)
@@ -181,14 +180,14 @@ export default function EditSubscriptionPage() {
     e.preventDefault()
     if (!canSubmit()) return
     setSubmitting(true)
-    // Prix inchangé : on ne renvoie rien pour éviter un écart d'arrondi sur le prix client existant
-    const priceChanged = subscription && Number(price) !== providerPriceFromClientPrice(Number(subscription.price))
+    // Prix inchangé : on ne renvoie rien, le backend ne recalcule alors rien
+    const priceChanged = subscription && Number(price) !== (subscription.providerPrice ?? 0)
     try {
       await updateSubscription(id, {
         name: name.trim(),
         description: description.trim(),
         instructions: instructions.trim() || null,
-        ...(priceChanged ? { price: clientPriceFromProviderPrice(Number(price)) } : {}),
+        ...(priceChanged ? { providerPrice: Number(price) } : {}),
         type,
         category,
         duration,

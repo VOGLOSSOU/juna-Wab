@@ -185,6 +185,7 @@ export interface Subscription {
   name: string
   description?: string
   price: number
+  providerPrice?: number
   currency?: string
   type: SubscriptionType
   duration: SubscriptionDuration
@@ -260,7 +261,7 @@ export interface ApproveProposalForm {
   instructions?: string | null
   name: string
   description: string
-  price: number
+  providerPrice: number
   imageUrl: string
   preparationHours?: number
   isImmediate?: boolean
@@ -278,6 +279,8 @@ export interface Order {
     instructions?: string | null
     id: string
     name: string
+    price?: number
+    providerPrice?: number
     provider?: { id: string; businessName?: string; name?: string }
   }
   userId?: string

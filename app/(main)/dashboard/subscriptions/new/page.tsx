@@ -9,7 +9,6 @@ import { uploadImage } from '@/lib/api/upload'
 import toast from 'react-hot-toast'
 import { SubscriptionInstructionsField } from '@/components/ui/subscription-instructions'
 import { showApiError } from '@/lib/utils/api-error'
-import { clientPriceFromProviderPrice } from '@/lib/utils'
 import { PriceBreakdown } from '@/components/ui/price-breakdown'
 import type { Meal, SubscriptionType, SubscriptionDuration, SubscriptionCategory } from '@/types'
 
@@ -191,7 +190,7 @@ export default function NewSubscriptionPage() {
         name: name.trim(),
         description: description.trim(),
         instructions: instructions.trim() || null,
-        price: clientPriceFromProviderPrice(Number(price)),
+        providerPrice: Number(price),
         type,
         category,
         duration,

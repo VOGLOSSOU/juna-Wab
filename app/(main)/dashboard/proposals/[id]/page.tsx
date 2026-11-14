@@ -15,7 +15,7 @@ import { Input } from '@/components/ui/input'
 import { PriceBreakdown } from '@/components/ui/price-breakdown'
 import { showApiError } from '@/lib/utils/api-error'
 import {
-  formatDate, formatPrice, getInitials, mealDisplayPrice, clientPriceFromProviderPrice,
+  formatDate, formatPrice, getInitials, mealDisplayPrice,
   SUBSCRIPTION_TYPE_LABELS, SUBSCRIPTION_DURATION_LABELS, SUBSCRIPTION_CATEGORY_LABELS,
 } from '@/lib/utils'
 import toast from 'react-hot-toast'
@@ -114,7 +114,7 @@ export default function DashboardProposalDetailPage() {
         name: name.trim(),
         description: description.trim(),
         instructions: instructions.trim() || null,
-        price: clientPriceFromProviderPrice(Number(price)),
+        providerPrice: Number(price),
         imageUrl,
         isImmediate,
         preparationHours: !isImmediate ? Number(preparationHours) : undefined,

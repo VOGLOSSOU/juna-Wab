@@ -65,7 +65,7 @@ export async function createSubscription(data: {
   name: string
   description: string
   instructions?: string | null
-  price: number
+  providerPrice: number
   type: string
   category: string
   duration: string
@@ -83,7 +83,7 @@ export async function updateSubscription(id: string, data: Partial<{
   name: string
   description: string
   instructions?: string | null
-  price: number
+  providerPrice: number
   type: string
   category: string
   duration: string
@@ -91,6 +91,15 @@ export async function updateSubscription(id: string, data: Partial<{
   mealIds: string[]
 }>) {
   const res = await apiClient.put<ApiResponse<Subscription>>(`/subscriptions/${id}`, data)
+  return res.data.data
+}
+
+// Demande au backend le prix client correspondant à un prix prestataire,
+// sans calcul côté front — juste pour l'aperçu en direct à la saisie.
+export async function previewSubscriptionPrice(providerPrice: number): Promise<{ providerPrice: number; price: number }> {
+  const res = await apiClient.get<ApiResponse<{ providerPrice: number; price: number }>>(
+    `/subscriptions/price-preview?providerPrice=${providerPrice}`
+  )
   return res.data.data
 }
 

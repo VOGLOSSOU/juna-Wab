@@ -5,7 +5,7 @@ import { useAuthGuard } from '@/lib/hooks/use-auth-guard'
 import { getProviderOrders } from '@/lib/api/orders'
 import { getProviderSubscriptions } from '@/lib/api/subscriptions'
 import { getMyMeals } from '@/lib/api/meals'
-import { providerAmountFromOrder, providerPriceFromClientPrice, formatPrice } from '@/lib/utils'
+import { providerAmountFromOrder, formatPrice } from '@/lib/utils'
 import type { Order, Subscription, Meal, OrderStatus } from '@/types'
 
 const COMPLETED_STATUSES: OrderStatus[] = ['COMPLETED']
@@ -221,7 +221,7 @@ export default function DashboardStatsPage() {
                 </div>
                 <div className="flex items-center gap-3 flex-shrink-0">
                   <span className={`w-2 h-2 rounded-full ${sub.isActive ? 'bg-green-500' : 'bg-surface-grey border border-border'}`} />
-                  <div className="text-right"><p className="text-xs text-text-secondary">Votre prix</p><span className="font-semibold text-sm text-primary">{formatPrice(providerPriceFromClientPrice(Number(sub.price)), sub.currency)}</span></div>
+                  <div className="text-right"><p className="text-xs text-text-secondary">Votre prix</p><span className="font-semibold text-sm text-primary">{formatPrice(sub.providerPrice ?? 0, sub.currency)}</span></div>
                 </div>
               </div>
             ))}

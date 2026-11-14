@@ -12,21 +12,10 @@ export function formatPrice(amount: number, currency = 'XOF'): string {
   return `${amount.toLocaleString('fr-FR')} ${currency}`
 }
 
-// Commission Juna Eats fixée côté serveur, ajoutée par-dessus le prix du prestataire
-export const JUNA_COMMISSION_RATE = 0.10
-
-export function clientPriceFromProviderPrice(providerPrice: number): number {
-  return Math.round(providerPrice / (1 - JUNA_COMMISSION_RATE))
-}
-
-export function providerPriceFromClientPrice(clientPrice: number): number {
-  return Math.round(clientPrice * (1 - JUNA_COMMISSION_RATE))
-}
-
-// La commission concerne l'abonnement, pas les éventuels frais de livraison.
-export function providerAmountFromOrder(order: Pick<Order, 'amount' | 'totalAmount' | 'deliveryCost'>): number {
-  const subscriptionAmount = Math.max(0, (order.amount ?? order.totalAmount ?? 0) - (order.deliveryCost ?? 0))
-  return providerPriceFromClientPrice(subscriptionAmount)
+// Le taux de commission n'est plus calculé ici : providerPrice vient directement
+// de l'API (subscription.providerPrice), le backend est seul responsable du calcul.
+export function providerAmountFromOrder(order: Pick<Order, 'subscription'>): number {
+  return order.subscription?.providerPrice ?? 0
 }
 
 export const MEAL_TYPE_LABELS: Record<MealType, string> = {
