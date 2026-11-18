@@ -149,6 +149,8 @@ export interface Provider {
   rating?: number
   totalReviews?: number
   phone?: string
+  payoutPhoneNumber?: string | null
+  payoutNetwork?: 'MTN' | 'MOOV' | null
   cityId?: string
   city?: City
   landmarks?: { landmark: Landmark }[]
