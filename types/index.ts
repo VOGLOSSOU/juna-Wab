@@ -333,6 +333,8 @@ export interface ActiveSubscription {
     name: string
     category: SubscriptionCategory
     type: SubscriptionType
+    price?: number
+    providerPrice?: number
     provider: {
       id: string
       businessName: string

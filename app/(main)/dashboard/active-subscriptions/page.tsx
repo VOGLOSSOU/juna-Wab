@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useAuthGuard } from '@/lib/hooks/use-auth-guard'
 import { getProviderActiveSubscriptions } from '@/lib/api/active-subscriptions'
-import { formatDate, SUBSCRIPTION_TYPE_LABELS, SUBSCRIPTION_DURATION_LABELS } from '@/lib/utils'
+import { formatDate, formatPrice, SUBSCRIPTION_TYPE_LABELS, SUBSCRIPTION_DURATION_LABELS } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import type { ActiveSubscription } from '@/types'
 
@@ -38,6 +38,8 @@ export default function ProviderActiveSubscriptionsPage() {
 
   if (!hydrated || loading) return <Skeleton />
 
+  const totalProviderAmount = subs.reduce((sum, s) => sum + (s.subscription.providerPrice ?? 0), 0)
+
   return (
     <div className="max-w-content mx-auto px-6 py-10 flex flex-col gap-6">
       <div className="flex items-center justify-between">
@@ -49,6 +51,13 @@ export default function ProviderActiveSubscriptionsPage() {
           ← Tableau de bord
         </Link>
       </div>
+
+      {subs.length > 0 && (
+        <div className="bg-primary-surface border border-primary/15 rounded-xl px-6 py-5 flex items-center justify-between">
+          <p className="text-sm font-medium text-text-primary">Total dû sur ces abonnements actifs</p>
+          <p className="text-xl font-bold text-primary">{formatPrice(totalProviderAmount)}</p>
+        </div>
+      )}
 
       {subs.length === 0 ? (
         <div className="bg-white rounded-xl border border-border p-16 flex flex-col items-center gap-3 text-center">
