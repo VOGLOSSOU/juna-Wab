@@ -148,7 +148,7 @@ export interface Provider {
   deliveryZones?: { city: string; country: string; cost: number }[]
   rating?: number
   totalReviews?: number
-  phone?: string
+  phone?: string | null
   payoutPhoneNumber?: string | null
   payoutNetwork?: 'MTN' | 'MOOV' | null
   cityId?: string

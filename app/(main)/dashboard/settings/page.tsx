@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useAuthGuard } from '@/lib/hooks/use-auth-guard'
 import { getProviderProfile } from '@/lib/api/auth'
@@ -53,6 +53,13 @@ export default function DashboardSettingsPage() {
       .catch(() => toast.error('Impossible de charger votre profil'))
       .finally(() => setLoading(false))
   }, [hydrated, isAuthenticated])
+
+  // Le numéro de contact du compte peut servir de suggestion, mais seulement
+  // s'il est déjà dans un format exploitable pour un versement.
+  const accountPhoneNormalized = useMemo(
+    () => (provider?.phone ? normalizePaymentPhone(provider.phone) : null),
+    [provider?.phone]
+  )
 
   if (!hydrated || loading) {
     return (
@@ -136,6 +143,36 @@ export default function DashboardSettingsPage() {
               ))}
             </div>
           </div>
+
+          {provider?.phone && (
+            accountPhoneNormalized ? (
+              <div className="flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl bg-surface-grey border border-border text-sm">
+                <span className="text-text-secondary">
+                  Numéro lié à votre compte : <strong className="text-text-primary">{formatPayoutPhone(accountPhoneNormalized)}</strong>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setPhone(formatPayoutPhone(accountPhoneNormalized))}
+                  className="text-primary font-medium hover:underline flex-shrink-0"
+                >
+                  Utiliser ce numéro
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-start gap-2 px-3 py-2.5 rounded-xl bg-amber-50 border border-amber-200 text-sm text-amber-800">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 mt-0.5">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                  <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+                <span>
+                  Le numéro de votre compte ({provider.phone}) n&apos;est pas dans un format valide pour un versement
+                  (10 chiffres commençant par 01). Mettez-le à jour dans{' '}
+                  <Link href="/profile/settings" className="underline font-medium">vos informations de compte</Link>{' '}
+                  avant de pouvoir l&apos;utiliser ici.
+                </span>
+              </div>
+            )
+          )}
 
           <Input
             label="Votre numéro Mobile Money"
