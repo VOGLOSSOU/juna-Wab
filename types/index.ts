@@ -381,6 +381,32 @@ export interface PaginatedResponse<T> {
   totalPages?: number
 }
 
+export type ProviderPayoutStatus = 'MANUAL' | 'PROCESSING' | 'SUCCESS' | 'NEEDS_REVIEW'
+
+export interface ProviderPayoutItem {
+  orderId: string
+  orderNumber: string
+  subscriptionName: string
+  clientName: string
+  clientAmount: number
+  providerAmount: number
+  activatedAt: string
+  payout: {
+    automatic: boolean
+    status: ProviderPayoutStatus
+    label: string
+    paidAt: string | null
+  }
+}
+
+export interface ProviderPayoutsResponse {
+  items: ProviderPayoutItem[]
+  total: number
+  page: number
+  limit: number
+  totalPages: number
+}
+
 export interface HomeResponse {
   popular: Subscription[]
   recent: Subscription[]
