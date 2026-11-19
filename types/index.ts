@@ -390,7 +390,7 @@ export interface ProviderPayoutItem {
   clientName: string
   clientAmount: number
   providerAmount: number
-  activatedAt: string
+  activatedAt: string | null
   payout: {
     automatic: boolean
     status: ProviderPayoutStatus
